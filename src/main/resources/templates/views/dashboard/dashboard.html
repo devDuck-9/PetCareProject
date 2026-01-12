@@ -3,6 +3,9 @@
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 		layout:decorate="~{layouts/main_layout}">
+<script th:if="${errorMsg}" th:inline="javascript">
+	alert(/*[[${errorMsg}]]*/'');
+</script>
 <th:block layout:fragment="content">
 
 	<link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
@@ -149,6 +152,6 @@
 	<script>Modal.bind('#pickPetModal');</script>
 
 	<script th:src="@{/js/dashboard.js}"></script>
-
+	
 </th:block> <!-- layout:fragment="content" END -->
 </html>

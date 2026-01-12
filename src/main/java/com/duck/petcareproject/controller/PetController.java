@@ -1,12 +1,9 @@
 package com.duck.petcareproject.controller;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,6 +16,7 @@ import com.duck.petcareproject.domain.Member;
 import com.duck.petcareproject.domain.Pet;
 import com.duck.petcareproject.service.MemberService;
 import com.duck.petcareproject.service.PetService;
+import com.duck.petcareproject.service.storage.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,11 +24,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PetController {
 	
-	@Value("${app.upload.dir}")
-	private String uploadDir;
-	
 	private final PetService petService;
 	private final MemberService memberService;
+	private final FileStorageService fileStorageService;
+	
 	
 	// 펫 등록
 	@PostMapping("/insertPet")
@@ -59,7 +56,7 @@ public class PetController {
 		// 이미지 저장
 		String petImagePath = null;
 		if (photo != null && !photo.isEmpty()) {
-			petImagePath = savePetImage(photo);
+			petImagePath = fileStorageService.savePetImage(photo);
 		}
 
 		// 나이 계산 (birthDate -> petAge)
@@ -86,34 +83,4 @@ public class PetController {
 		return "redirect:/";
 	}
 	
-	// 파일(이미지)
-	private String savePetImage(MultipartFile file) throws Exception {
-		// 저장 폴더
-		File dir = new File(uploadDir, "pet");
-		if (!dir.exists()) dir.mkdirs();
-		
-		// 확장자
-		String original = file.getOriginalFilename();
-		String ext = getExtLower(original);
-		
-		// 파일명
-		String savedName = UUID.randomUUID().toString().replace("-", "") + "." + ext;
-		
-		// 저장
-		File target = new File(dir, savedName);
-		file.transferTo(target);
-		
-		// DB에 저장할 웹 접근 경로
-		return "/resources/files/pet/" + savedName;
-		
-	}
-	private String getExtLower(String filename) {
-		if (filename == null) return "jpg";
-		int idx = filename.lastIndexOf('.');
-		if (idx < 0) return "jpg";
-		return filename.substring(idx + 1).toLowerCase();
-	}
-	
-	
-
 }

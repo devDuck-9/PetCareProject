@@ -1,9 +1,7 @@
-package com.duck.petcareproject.service;
+package com.duck.petcareproject.util;
 
-import org.springframework.stereotype.Service;
-
-@Service
-public class CommonUtils {
+public class PagingUtils {
+	private PagingUtils() {} 
 	
 	public static int pageOrDefault(Integer page) {
 		return (page == null || page < 1) ? 1 : page;

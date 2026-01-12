@@ -14,6 +14,7 @@ import com.duck.petcareproject.mapper.CommunityPostMapper;
 import com.duck.petcareproject.mapper.MemberMapper;
 import com.duck.petcareproject.mapper.PetMapper;
 import com.duck.petcareproject.mapper.ScheduleMapper;
+import com.duck.petcareproject.util.PagingUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,9 +54,9 @@ public class DashboardServiceImplement implements DashboardService {
 		// =========================
 		// 펫 페이징
 		// =========================
-		int petPage = CommonUtils.pageOrDefault(petPageParam);
+		int petPage = PagingUtils.pageOrDefault(petPageParam);
 		int petTotalCount = petMapper.countPetsByUser(userSeq);
-		int petTotalPage = CommonUtils.calcTotalPage(petTotalCount, pageSize);
+		int petTotalPage = PagingUtils.calcTotalPage(petTotalCount, pageSize);
 		
 		// 요청 페이지가 마지막 페이지보다 크면 마지막 페이지로 보정
 		if (petTotalPage <= 0) petTotalPage = 1;
@@ -71,9 +72,9 @@ public class DashboardServiceImplement implements DashboardService {
 		// =========================
 		// 일정 페이징
 		// =========================
-		int schPage = CommonUtils.pageOrDefault(schPageParam);
+		int schPage = PagingUtils.pageOrDefault(schPageParam);
 		int schTotalCount = scheduleMapper.countSchedulesByUser(userSeq);
-		int schTotalPage = CommonUtils.calcTotalPage(schTotalCount, pageSize);
+		int schTotalPage = PagingUtils.calcTotalPage(schTotalCount, pageSize);
 		
 		if (schTotalPage <= 0) schTotalPage = 1;
 		if (schPage > schTotalPage) schPage = schTotalPage;
@@ -88,9 +89,9 @@ public class DashboardServiceImplement implements DashboardService {
 		// =========================
 		// 오늘의 게시글 페이징
 		// =========================
-		int postPage = CommonUtils.pageOrDefault(postPageParam);
+		int postPage = PagingUtils.pageOrDefault(postPageParam);
 		int postTotalCount = postMapper.countTodayPostsByUser(userSeq);
-		int postTotalPage = CommonUtils.calcTotalPage(postTotalCount, pageSize);
+		int postTotalPage = PagingUtils.calcTotalPage(postTotalCount, pageSize);
 
 		if (postTotalPage <= 0) postTotalPage = 1;
 		if (postPage > postTotalPage) postPage = postTotalPage;
