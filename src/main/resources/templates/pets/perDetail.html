@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/pet.css}"/>
+	<link rel="stylesheet" th:href="@{/css/pet_detail.css}"/>
+
+	<section class="pet-shell">
+		<div class="pet-card">
+			<div class="pet-panel pet-detail">
+
+				<!-- 헤더 -->
+				<div class="pet-head">
+					<span class="pet-head-title">우리집&nbsp;</span>
+					<span class="pet-name" th:text="${pet.petName}">반려동물</span>
+					<span class="pet-head-title">&nbsp;정보</span>
+				</div>
+
+				<!-- 바디 -->
+				<div class="pet-detail-body">
+
+					<!-- 사진/아바타 -->
+					<div class="pet-photo-wrap">
+						<div class="pet-photo">
+
+							<!-- 사진이 있으면 -->
+							<th:block th:if="${pet.petImage != null and !#strings.isEmpty(pet.petImage)}">
+								<img th:src="@{${pet.petImage}}" alt="pet photo"/>
+							</th:block>
+
+							<!-- 사진 없으면 기본 아이콘 -->
+							<th:block th:if="${pet.petImage == null or #strings.isEmpty(pet.petImage)}">
+								<span class="pet-photo-icon">🐾</span>
+							</th:block>
+
+						</div>
+					</div>
+
+					<!-- 정보 표 -->
+					<div class="pet-info-table">
+						<div class="info-row">
+							<div class="info-label">이름</div>
+							<div class="info-value" th:text="${pet.petName}"></div>
+						</div>
+
+						<div class="info-row">
+							<div class="info-label">품종</div>
+							<div class="info-value" th:text="${pet.petType != null ? pet.petType : ''}"></div>
+						</div>
+
+						<div class="info-row">
+							<div class="info-label">성별</div>
+							<div class="info-value" th:text="${pet.gender != null ? pet.gender : '선택없음'}"></div>
+						</div>
+
+						<div class="info-row">
+							<div class="info-label">태어난 날</div>
+							<div class="info-value" th:text="${pet.birthDate != null ? #temporals.format(pet.birthDate, 'yyyy 년 M 월 d 일') : ''}"></div>
+						</div>
+
+						<div class="info-row">
+							<div class="info-label">메모</div>
+							<div class="info-value" th:text="${(pet.memo != null and !#strings.isEmpty(pet.memo)) ? pet.memo : ''}"></div>
+						</div>
+					</div>
+					
+					<div class="pet-detail-actions">
+						<!-- 수정 -->
+						<a class="pc-btn pc-btn--primary" th:href="@{/pets/{id}/edit(id=${pet.petSeq})}">정보 수정</a>
+
+						<!-- 삭제 -->
+						<form id="deleteForm" th:action="@{/pets/{id}/delete(id=${pet.petSeq})}" method="post">
+							<button type="button" id="btnDelete" class="pc-btn pc-btn--danger">정보 삭제</button>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 공통 모달 재사용 -->
+	<div th:replace="~{fragments/modal :: modal('petDeleteModal', '알림')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/pet_detail.js}"></script>
+
+</th:block>
+</html>
