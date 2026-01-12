@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Cafe24Dangdanghae';
+  src: url('/fonts/Cafe24Dangdanghae.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SANGJUDajungdagam';
+  src: url('/fonts/SANGJUDajungdagam.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'OwnglyphPDH';
+  src: url('/fonts/OwnglyphPDH.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SejongGeulggot';
+  src: url('/fonts/SejongGeulggot.ttf') format('opentype');
+}

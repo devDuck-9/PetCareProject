@@ -1,0 +1,188 @@
+/* ===== 공통 모달 ===== */
+
+.pc-modal-backdrop{
+	position: fixed;
+	inset: 0;
+	background: rgba(31,42,68,.35);
+	display: none;
+	place-items: center;
+	z-index: 9999;
+	padding: 18px;
+}
+
+.pc-modal-backdrop.is-open{
+	display: grid;
+}
+
+.pc-modal{
+	width: min(420px, 100%);
+	background: #f4f6ff;
+	border: 1px solid #d2d9ef;
+	border-radius: 18px;
+	box-shadow: 0 20px 60px rgba(31,42,68,.25);
+	overflow: hidden;
+}
+
+.pc-modal-head{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 16px;
+	border-bottom: 1px solid #d2d9ef;
+}
+
+.pc-modal-title{
+	font-weight: 900;
+	color: #1f2a44;
+	font-size: 18px;
+}
+
+.pc-modal-x{
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	font-size: 18px;
+	color: #2a3b66;
+	font-weight: 900;
+}
+
+.pc-modal-body{
+	padding: 20px 24px 8px;
+}
+
+.pc-modal-msg{
+	text-align: center;
+	margin: 0;
+	color: #2a3b66;
+	font-weight: 800;
+	line-height: 1.5;
+}
+
+.pc-modal-foot{
+	justify-content: center;
+	padding: 12px 16px 16px;
+	display: flex;
+}
+
+.pc-modal-ok{
+	height: 44px;
+	padding: 0 16px;
+	background: #cfd6ea;
+	color: #2a3b66;
+	border: 1px solid #d2d9ef;
+	box-shadow: 0 8px 18px rgba(31,42,68,.08);
+	border-radius: 10px;
+	font-weight: 900;
+	cursor: pointer;
+	transition: transform .1s ease, background-color .15s ease, box-shadow .15s ease;
+	min-width: 88px;
+}
+
+.pc-modal-ok:hover{
+	background: #bcc6e6;
+	transform: translateY(-1px);
+}
+
+.pc-modal-ok:active{
+	background: #aeb9dc;
+	transform: translateY(0);
+}
+
+/* ===== 액션 모달 확장 ===== */
+
+.pc-modal--action{
+	width: min(520px, 100%);
+	border-radius: 22px;
+}
+
+/* 가운데 정렬 느낌 */
+.pc-modal-head--center{
+	justify-content: center;
+	position: relative;
+}
+.pc-modal-head--center .pc-modal-x{
+	position: absolute;
+	right: 14px;
+}
+
+/* 메시지/컨텐츠 중앙 */
+.pc-modal-body--center{
+	padding: 26px 26px 10px;
+}
+.pc-modal-body--center .pc-modal-msg{
+	text-align: center;
+	font-size: 18px;
+	font-weight: 900;
+	color: #2a3b66;
+	margin-bottom: 12px;
+}
+
+/* slot 가운데 */
+.pc-modal-slot{
+	display: grid;
+	place-items: center;
+	gap: 10px;
+}
+
+/* 셀렉트 박스 스타일 */
+.pc-modal-select{
+	border: 0;
+	outline: 0;
+	background: rgba(255,255,255,.35);
+	border: 1px solid rgba(31,42,68,.14);
+	border-radius: 12px;
+	padding: 10px 14px;
+	font-weight: 900;
+	color: #1f2a44;
+	cursor: pointer;
+
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	padding-right: 34px;
+	background-image:
+		linear-gradient(45deg, transparent 50%, #2a3b66 50%),
+		linear-gradient(135deg, #2a3b66 50%, transparent 50%);
+	background-position:
+		calc(100% - 18px) 55%,
+		calc(100% - 12px) 55%;
+	background-size: 6px 6px, 6px 6px;
+	background-repeat: no-repeat;
+
+	min-width: 120px;
+}
+
+/* 2버튼 */
+.pc-modal-foot--two{
+	gap: 12px;
+	padding: 14px 20px 20px;
+}
+
+.pc-modal-primary{
+	height: 44px;
+	min-width: 110px;
+	border-radius: 999px;
+	border: 0;
+	cursor: pointer;
+	font-weight: 900;
+	color: #fff;
+	background: #d6772a;
+	box-shadow: 0 14px 22px rgba(214,119,42,.25);
+	transition: transform .1s ease, filter .15s ease;
+}
+.pc-modal-primary:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+.pc-modal-primary:active{ transform: translateY(0); filter: brightness(.98); }
+
+.pc-modal-secondary{
+	height: 44px;
+	min-width: 110px;
+	border-radius: 999px;
+	border: 0;
+	cursor: pointer;
+	font-weight: 900;
+	color: #2a3b66;
+	background: #cfd6ea;
+	border: 1px solid #d2d9ef;
+	box-shadow: 0 8px 18px rgba(31,42,68,.08);
+}

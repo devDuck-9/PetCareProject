@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<!-- 공통 모달 -->
+	<th:block th:fragment="modal(id, title)">
+	
+		<div class="pc-modal-backdrop" th:id="${id}" aria-hidden="true">
+			<div class="pc-modal" role="dialog" aria-modal="true">
+				<div class="pc-modal-head">
+					<div class="pc-modal-title" th:text="${title}">모달 제목</div>
+					<button type="button" class="pc-modal-x" data-modal-close>✕</button>
+				</div>
+	
+				<div class="pc-modal-body">
+					<p class="pc-modal-msg" data-modal-message>메시지</p>
+				</div>
+	
+				<div class="pc-modal-foot">
+					<button type="button" class="pc-modal-ok" data-modal-close>확인</button>
+				</div>
+			</div>
+		</div>
+	
+	</th:block>
+	
+	<!-- 액션/선택 모달 (2버튼 + slot) -->
+	<th:block th:fragment="actionModal(id, title)">
+		<div class="pc-modal-backdrop" th:id="${id}" aria-hidden="true">
+			<div class="pc-modal pc-modal--action" role="dialog" aria-modal="true">
+
+				<!-- 헤더는 필요하면 쓰고, UI처럼 보이려면 숨김처리 가능 -->
+				<div class="pc-modal-head pc-modal-head--center">
+					<div class="pc-modal-title" th:text="${title}">알림</div>
+					<button type="button" class="pc-modal-x" data-modal-close>✕</button>
+				</div>
+
+				<div class="pc-modal-body pc-modal-body--center">
+					<p class="pc-modal-msg" data-modal-message>메시지</p>
+
+					<!-- ✅ 여기 안에 select 같은 걸 동적으로 넣을 slot -->
+					<div class="pc-modal-slot" data-modal-slot></div>
+				</div>
+
+				<div class="pc-modal-foot pc-modal-foot--two">
+					<button type="button" class="pc-modal-primary" data-modal-primary>선택하기</button>
+					<button type="button" class="pc-modal-secondary" data-modal-close>취소</button>
+				</div>
+
+			</div>
+		</div>
+	</th:block>
+	
+</body>
+</html>

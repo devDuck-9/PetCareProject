@@ -1,0 +1,144 @@
+/* =========================================
+	Schedule Add Form UI
+========================================= */
+
+.sch-shell{
+	width: min(980px, 100%);
+	display: grid;
+	place-items: center;
+}
+
+.sch-card{
+	width: min(860px, 100%);
+	background: rgba(255,255,255,.25);
+	border: 1px solid rgba(255,255,255,.35);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	padding: 22px;
+}
+
+.sch-panel{
+	background: #f4f6ff;
+	border: 1px solid var(--stroke);
+	border-radius: var(--radius);
+	overflow: hidden;
+}
+
+.sch-head{
+	padding: 18px 22px 14px;
+	border-bottom: 1px solid rgba(31,42,68,.10);
+	background: rgba(255,255,255,.35);
+}
+
+.sch-title{
+	margin: 0;
+	font-size: 32px;
+	letter-spacing: -0.02em;
+	color: var(--text);
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+}
+
+.sch-body{
+	padding: 18px 22px 22px;
+}
+
+.sch-form{
+	display: grid;
+	gap: 12px;
+}
+
+.sch-field{
+	display: grid;
+	grid-template-columns: 90px 1fr;
+	align-items: center;
+	gap: 12px;
+
+	background: #dde3f3;
+	border: 1px solid var(--stroke);
+	border-radius: 14px;
+	padding: 12px 14px;
+	min-height: 54px;
+}
+
+.sch-label{
+	color: #2a3b66;
+	font-weight: 900;
+	letter-spacing: -0.02em;
+}
+
+.sch-input{
+	width: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	font-size: 15px;
+	color: var(--text);
+	font-weight: 800;
+}
+.sch-input::placeholder{
+	color: #4f5c7d;
+	font-weight: 800;
+	opacity: .75;
+}
+
+/* 날짜 셀렉트 */
+.sch-date{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.sch-select{
+	border: 0;
+	outline: 0;
+	background: rgba(255,255,255,.25);
+	border: 1px solid rgba(31,42,68,.12);
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-weight: 900;
+	color: var(--text);
+	cursor: pointer;
+
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	padding-right: 34px;
+	background-image:
+		linear-gradient(45deg, transparent 50%, #2a3b66 50%),
+		linear-gradient(135deg, #2a3b66 50%, transparent 50%);
+	background-position:
+		calc(100% - 18px) 55%,
+		calc(100% - 12px) 55%;
+	background-size: 6px 6px, 6px 6px;
+	background-repeat: no-repeat;
+}
+
+.sch-unit{
+	font-weight: 900;
+	color: #2a3b66;
+	opacity: .85;
+}
+
+/* 알림 라디오 */
+.sch-radios{
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+
+.sch-radio{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 900;
+	color: #2a3b66;
+}
+
+.sch-radio input{
+	width: 16px;
+	height: 16px;
+	accent-color: #5a6aa0;
+}

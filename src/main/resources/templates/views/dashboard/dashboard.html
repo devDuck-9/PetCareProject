@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+		layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
+
+	 <!-- 로그인 전 -->
+	  <th:block sec:authorize="isAnonymous()">
+		<section class="before-wrap">
+
+			<div class="before-hero">
+				<div class="before-title">
+					소중한 반려동물을 기록하고<br/>간편하게 관리해보세요.
+				</div>
+
+				<div class="before-sub">
+					지금 가입하고 다양한 반려동물 관리 기능을 경험해보세요 !
+				</div>
+
+				<div class="before-actions">
+					<a class="btn-cta signup" th:href="@{/joinForm}">회원가입</a>
+					<a class="btn-cta login" th:href="@{/loginForm}">로그인</a>
+				</div>
+				
+				<div class="before-cards">
+					<div class="feature-card">
+						<div class="feature-icon">
+							<img th:src="@{/images/feature_paw.png}" alt="반려동물 관리">
+						</div>
+						<div class="feature-text">
+							<div class="feature-title">반려동물 관리</div>
+							<div class="feature-desc">내 반려동물의<br/>정보를 간편하게<br/>관리해보세요.</div>
+						</div>
+					</div>
+
+					<div class="feature-card">
+						<div class="feature-icon">
+							<img th:src="@{/images/feature_hospital.png}" alt="내주변 동물병원">
+						</div>
+						<div class="feature-text">
+							<div class="feature-title">내주변 동물병원</div>
+							<div class="feature-desc">내 주변의<br/>병원을 손쉽게<br/>찾을 수 있어요.</div>
+						</div>
+					</div>
+
+					<div class="feature-card">
+						<div class="feature-icon">
+							<img th:src="@{/images/feature_chat.png}" alt="반려동물 커뮤니티">
+						</div>
+						<div class="feature-text">
+							<div class="feature-title">다양한 반려동물<br/>커뮤니티</div>
+							<div class="feature-desc">같은 반려인들과<br/>다양한 소통을 해보세요.</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</section> <!-- 'before-wrap' END -->
+	  </th:block> <!-- loginUser == null END -->
+
+	<!-- 로그인 후 (대시보드) -->
+	<th:block sec:authorize="isAuthenticated()">
+		<section class="dash-wrap">
+			
+			<!-- 상단 배너 -->
+			<div class="dash-hero">
+				<div class="dash-title">반려동물 관리 대시보드</div>
+				<div class="dash-sub">
+					<span th:text="${loginMember.userName}" class="dash-bold"></span> 님 ! 반려동물 관리를 시작해보세요!
+				</div>
+			</div> <!-- 'dash-hero' END -->
+			
+			<th:block sec:authorize="!hasRole('ADMIN')">
+				<!-- 1열: 내 반려동물 / 다가오는 일정 -->
+				<div class="dash-grid-2">
+					<!-- 내 반려동물 -->
+					<div class="panel">
+						<div class="panel-head space">
+							<div class="panel-title">내 반려동물</div>
+							<a class="btn-pill" th:href="@{/addPetForm}"><span class="plus">＋</span> 반려동물 등록</a>
+						</div>
+						
+						<div class="panel-body">
+							
+							<div class="pc-loading" data-loading="pets">
+								<div class="pc-spinner"></div>
+							</div>
+							
+							<div id="petPanelWrap">
+								<div th:replace="~{views/dashboard/fragments :: petPanel}"></div>
+							</div>
+							
+						</div>
+						
+					</div> <!-- 'panel (내 반려동물)' END -->
+					
+					<!-- 다가오는 일정 -->
+					<div class="panel">
+						<div class="panel-head space">
+							<div class="panel-title">다가오는 일정</div>
+							<a id="btnAddSchedule" class="btn-pill" th:href="@{/addScheduleForm}"><span class="plus">＋</span> 일정 추가</a>
+						</div> 
+						<div class="panel-body">
+							
+							<div class="pc-loading" data-loading="schedules">
+								<div class="pc-spinner"></div>
+							</div>
+							
+							<div id="schedulePanelWrap">
+								<div th:replace="~{views/dashboard/fragments :: schedulePanel}"></div>
+							</div>
+							
+						</div> <!-- 'panel-body' END -->
+					</div> <!-- 'panel (다가오는 일정)' END -->
+						
+				</div> <!-- 'dash-grid-2' END -->
+			</th:block>
+				
+			<!-- 2열: 오늘의 게시물 -->
+			<div class="panel mt-18">
+				<div class="panel-head space">
+					<div class="panel-title">내가 작성한 오늘의 게시물</div>
+					 <a class="btn-pill" th:href="@{/addPostForm}">
+						<span class="plus">＋</span> 글쓰기
+					</a>
+				</div>
+				
+				<div class="panel-body">
+					
+					<div class="pc-loading" data-loading="posts">
+						<div class="pc-spinner"></div>
+					</div>
+					
+					<div id="postPanelWrap">
+						<div th:replace="~{views/dashboard/fragments :: postPanel}"></div>
+					</div>
+					
+				</div> <!-- 'panel-body' END -->
+			</div> <!-- 'panel mt-18' END -->
+			
+		</section> <!-- 'dash-wrap' END -->
+	</th:block> <!-- loginUser != null END -->
+	
+	<div th:replace="~{fragments/modal :: actionModal('pickPetModal', '알림')}"></div>
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>Modal.bind('#pickPetModal');</script>
+
+	<script th:src="@{/js/dashboard.js}"></script>
+
+</th:block> <!-- layout:fragment="content" END -->
+</html>

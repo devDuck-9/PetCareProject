@@ -1,0 +1,81 @@
+<div th:fragment="header" class="pc-header" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<div class="pc-header-inner">
+
+		<!-- 왼쪽: 로고 -->
+		<a class="pc-logo" th:href="@{/}">
+			<img th:src="@{/images/logo.png}" alt="PetCare">
+		</a>
+
+		<!-- 가운데: 메뉴 -->
+		<nav class="pc-nav">
+			<a th:href="@{/}" th:classappend="${activeMenu == 'dashboard'} ? 'active' : ''">홈</a>
+			<a th:href="@{/community}" th:classappend="${activeMenu == 'community'} ? 'active' : ''">커뮤니티</a>
+			<a th:href="@{/hospital}" th:classappend="${activeMenu == 'hospital'} ? 'active' : ''">병원정보</a>
+		</nav>
+
+		<!-- 오른쪽 -->
+		<div class="pc-user">
+			 <!-- 로그인 전 -->
+			<th:block sec:authorize="isAnonymous()">
+				<a class="pc-login-btn" th:href="@{/loginForm}">로그인</a>
+				<a class="pc-login-btn ms-4" th:href="@{/joinForm}">회원가입</a>
+			</th:block>
+
+			<!-- 로그인 후 -->
+			<th:block sec:authorize="isAuthenticated()">
+				<div class="pc-profile-dd" id="profileDD">
+
+					<button type="button" class="pc-profile-dd__btn" id="profileBtn" aria-expanded="false">
+						프로필 <span class="pc-profile-dd__caret">▼</span>
+					</button>
+
+					<div class="pc-profile-dd__menu" id="profileMenu" role="menu" aria-hidden="true">
+						<a class="pc-profile-dd__item" th:classappend="${activeMenu == 'mypage'} ? ' is-active' : ''" th:href="@{/mypage}">내정보</a>
+						<a class="pc-profile-dd__item" th:href="@{/logout}" role="menuitem">로그아웃</a>
+					</div>
+
+				</div>
+
+				<script>
+					(function () {
+						const wrap = document.getElementById('profileDD');
+						const btn	= document.getElementById('profileBtn');
+						const menu = document.getElementById('profileMenu');
+						if (!wrap || !btn || !menu) return;
+
+						function openMenu() {
+							menu.classList.add('open');
+							btn.setAttribute('aria-expanded', 'true');
+							menu.setAttribute('aria-hidden', 'false');
+						}
+
+						function closeMenu() {
+							menu.classList.remove('open');
+							btn.setAttribute('aria-expanded', 'false');
+							menu.setAttribute('aria-hidden', 'true');
+						}
+
+						btn.addEventListener('click', function (e) {
+							e.preventDefault();
+							const isOpen = menu.classList.contains('open');
+							if (isOpen) closeMenu();
+							else openMenu();
+						});
+
+						// 바깥 클릭 닫기
+						document.addEventListener('click', function (e) {
+							if (!e.target.closest('#profileDD')) closeMenu();
+						});
+
+						// ESC 닫기
+						document.addEventListener('keydown', function (e) {
+							if (e.key === 'Escape') closeMenu();
+						});
+					})();
+				</script>
+			</th:block>
+		</div>
+
+	</div>
+	
+</div>

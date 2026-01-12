@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/community_post_form.css}"/>
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}"/>
+
+	<main class="comm-page">
+		<section class="comm-shell">
+
+			<!-- 왼쪽 사이드바 -->
+			<div th:replace="~{fragments/community_sidebar :: communitySidebar('ALL')}"></div>
+
+			<!-- 오른쪽 : 글쓰기 카드 -->
+			<div class="comm-main">
+				<div class="comm-card">
+
+					<div class="comm-card-head">
+						<div class="comm-card-title">
+							<span class="comm-paw">🐾</span> 글쓰기
+						</div>
+					</div>
+
+					<div class="comm-card-body">
+						<form id="postForm" th:action="@{/insertPost}" method="post">
+
+							<!-- 말머리(카테고리) : select -->
+							<div class="cf-row">
+								<div class="cf-label">말머리</div>
+
+								<select class="cf-select" name="category" id="categorySelect">
+									<!-- PET_NEWS(펫케어 소식) 제외 -->
+									<option value="FREE" selected>자유 게시판</option>
+									<option value="INFO">정보 공유</option>
+									<option value="BOAST">자랑 하기</option>
+									<option value="QNA">질문 &amp; 답변</option>
+								</select>
+							</div>
+
+							<!-- 제목 -->
+							<div class="cf-row">
+								<div class="cf-label">제목</div>
+								<input class="cf-input" type="text" name="title" id="title"
+									   placeholder="제목을 입력해주세요.">
+							</div>
+
+							<!-- 본문 -->
+							<div class="cf-row">
+								<div class="cf-label">본문</div>
+								<textarea class="cf-textarea" name="content" id="content"
+										  placeholder="내용을 입력해주세요."></textarea>
+							</div>
+
+							<!-- 버튼 -->
+							<div class="cf-actions">
+								<button type="submit" class="btn-pill-orange">등록</button>
+								<button type="button" class="btn-pill" onclick="confirmCancelWithModal('#confirmModal','게시글 등록을 취소할까요?')">취소</button>
+							</div>
+
+						</form>
+					</div>
+
+				</div>
+			</div>
+
+		</section>
+	</main>
+
+	<!-- 알림 모달 -->
+	<div th:replace="~{fragments/modal :: modal('postModal', '알림')}"></div>
+	<!-- 취소 확인 모달 -->
+	<div th:replace="~{fragments/modal :: actionModal('confirmModal', '알림')}"></div>
+	
+	<script th:src="@{/js/components/modal.js}"></script>
+	
+	<script>
+		Modal.bind('#postModal');
+		Modal.bind('#confirmModal');
+	</script>
+
+	<script th:src="@{/js/community_post_form.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+</th:block>
+</html>

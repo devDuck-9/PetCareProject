@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+				PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duck.petcareproject.mapper.MemberMapper">
+	
+	<!-- userId 의 회원 정보 조회 -->
+	<select id="selectMember" resultType="Member">
+		SELECT
+			user_seq,
+			user_id,
+			user_name,
+			password,
+			email,
+			gender,
+			mobile,
+			zipcode,
+			address1,
+			address2,
+			role,
+			status,
+			created_at,
+			updated_at
+		FROM member
+		WHERE user_id = #{userId}
+	</select>
+	
+	<!-- userId 의 비밀번호 조회 -->
+	<select id="isPassMatched" resultType="string">
+		SELECT TRIM(password) FROM member WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insetMember" parameterType="Member" useGeneratedKeys="true" keyProperty="userSeq">
+		INSERT INTO member (
+			user_id, password, user_name,
+			email, gender, mobile, zipcode, address1, address2,
+			role, status
+		) VALUES (
+			#{userId}, #{password}, #{userName},
+			NULLIF(#{email}, ''),
+			NULLIF(#{gender}, ''),
+			NULLIF(#{mobile}, ''),
+			NULLIF(#{zipcode}, ''),
+			NULLIF(#{address1}, ''),
+			NULLIF(#{address2}, ''),
+			'USER', 'ACTIVE'
+		)
+	</insert>
+	
+	<!-- 아이디 중복확인 -->
+	<select id="existsByUserId" resultType="int">
+			SELECT COUNT(*)
+			FROM member
+			WHERE user_id = #{userId}
+	</select>
+	
+</mapper>

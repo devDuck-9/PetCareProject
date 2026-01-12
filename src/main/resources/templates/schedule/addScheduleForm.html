@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/schedule.css}">
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}">
+
+	<main class="page">
+		<section class="sch-shell">
+			<div class="sch-card">
+				<div class="sch-panel">
+
+					<div class="sch-head">
+						<h1 class="sch-title">선택한 반려동물 : <span th:text="${petName}">이름</span></h1>
+					</div>
+
+					<div class="sch-body">
+
+						<form class="sch-form" id="schForm" th:action="@{/insertSchedule}" method="post">
+							<input type="hidden" name="petSeq" th:value="${petSeq}">
+							<!-- 제목 -->
+							<div class="sch-field">
+								<div class="sch-label">제목</div>
+								<input class="sch-input" type="text" name="title" placeholder="제목을 입력해주세요.">
+							</div>
+
+							<!-- 일정 날짜 -->
+							<div class="sch-field">
+								<div class="sch-label">일정 날짜</div>
+
+								<div class="sch-date">
+									<select class="sch-select" name="year" id="schYear"></select>
+									<span class="sch-unit">년</span>
+
+									<select class="sch-select" name="month" id="schMonth"></select>
+									<span class="sch-unit">월</span>
+
+									<select class="sch-select" name="day" id="schDay"></select>
+									<span class="sch-unit">일</span>
+
+									<input type="hidden" name="scheduleDate" id="schDateHidden">
+								</div>
+							</div>
+
+							<!-- 메모 -->
+							<div class="sch-field">
+								<div class="sch-label">메모</div>
+								<input class="sch-input" type="text" name="memo" placeholder="메모를 입력해주세요.">
+							</div>
+
+							<!-- 알림 -->
+							<div class="sch-field">
+								<div class="sch-label">알림</div>
+								<div class="sch-radios">
+									<label class="sch-radio">
+										<input type="radio" name="alarm" value="Y">
+										동의
+									</label>
+									<label class="sch-radio">
+										<input type="radio" name="alarm" value="N" checked>
+										미동의
+									</label>
+								</div>
+							</div>
+							
+							<div class="form-actions">
+								<button type="submit" class="btn-pill-orange">등록</button>
+								<button type="button" class="btn-pill" onclick="confirmCancelWithModal('#confirmModal','게시글 등록을 취소할까요?')">취소</button>
+							</div>
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- 알림 모달 -->
+	<div th:replace="~{fragments/modal :: modal('schModal', '알림')}"></div>
+	<!-- 취소 확인 모달 -->
+	<div th:replace="~{fragments/modal :: actionModal('confirmModal', '알림')}"></div>
+	
+	<script th:src="@{/js/components/modal.js}"></script>
+	
+	<script>
+		Modal.bind('#schModal');
+		Modal.bind('#confirmModal');
+	</script>
+
+	<script th:src="@{/js/schedule.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+</th:block>
+</html>

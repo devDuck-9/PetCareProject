@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duck.petcareproject.mapper.CommunityPostMapper">
+
+		<!-- 게시글 등록 -->
+		<insert id="insertPost" parameterType="CommunityPost" useGeneratedKeys="true" keyProperty="postSeq">
+			INSERT INTO communication_post (user_seq, category, title, content)
+			VALUES (#{userSeq}, #{category}, #{title}, #{content})
+		</insert>
+		
+		<!-- 전체 게시글 목록 (카테고리 선택 시 필터) -->
+		<select id="selectPostsPaging" resultType="CommunityPost">
+			<![CDATA[
+				SELECT
+					p.post_seq,
+					p.user_seq,
+					m.user_name AS userName,
+					p.category,
+					p.title,
+					p.content,
+					p.view_count,
+					p.created_at,
+					p.updated_at,
+					(
+						SELECT COUNT(*)
+						FROM communication_comment c
+						WHERE c.post_seq = p.post_seq
+					) AS commentCount
+				FROM communication_post p
+				JOIN member m ON m.user_seq = p.user_seq
+			]]>
+			<where>
+				<if test="category != null and category != ''">
+					p.category = #{category}
+				</if>
+			</where>
+			<![CDATA[
+				ORDER BY p.post_seq DESC
+				LIMIT #{limit} OFFSET #{offset}
+			]]>
+		</select>
+		
+		<!-- 전체 게시글 전체 수 (페이징용 count) -->
+		<select id="countPosts" resultType="int">
+			SELECT COUNT(*)
+			FROM communication_post p
+			<where>
+				<if test="category != null and category != ''">
+					p.category = #{category}
+				</if>
+			</where>
+		</select>
+		
+		<!-- userSeq 기준 오늘의 게시글 페이지 목록 (페이징) - 대시보드용 -->
+		<select id="selectTodayPostsByUserPaging" resultType="CommunityPost">
+			<![CDATA[
+				SELECT
+					p.post_seq,
+					p.user_seq,
+					m.user_name AS userName,
+					p.category,
+					p.title,
+					p.content,
+					p.view_count,
+					p.created_at,
+					p.updated_at,
+					(
+						SELECT COUNT(*)
+						FROM communication_comment c
+						WHERE c.post_seq = p.post_seq
+					) AS commentCount
+				FROM communication_post p
+				JOIN member m ON m.user_seq = p.user_seq
+				WHERE p.user_seq = #{userSeq}
+					AND p.created_at >= CURDATE()
+					AND p.created_at < CURDATE() + INTERVAL 1 DAY
+				ORDER BY p.created_at DESC
+				LIMIT #{limit} OFFSET #{offset}
+			]]>
+		</select>
+		
+		<!-- userSeq 기준 오늘의 게시글 전체 수 -->
+		<select id="countTodayPostsByUser" resultType="int">
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM communication_post p
+				WHERE p.user_seq = #{userSeq}
+					AND p.created_at >= CURDATE()
+					AND p.created_at < CURDATE() + INTERVAL 1 DAY
+			]]>
+		</select>
+
+</mapper>

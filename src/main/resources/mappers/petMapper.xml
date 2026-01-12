@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+				PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duck.petcareproject.mapper.PetMapper">
+	
+	<!-- 선택한 반려동물 조회 -->
+	<select id="selectPetBySeqAndUser" resultType="Pet">
+		SELECT pet_seq, user_seq, pet_name, pet_type, pet_age, pet_image, created_at, updated_at
+		FROM pet
+		WHERE pet_seq = #{petSeq} AND user_seq = #{userSeq}
+	</select>
+	
+	<!-- userSeq 의 반려동물 전체 목록 -->
+	<select id="selectPetsByUser" resultType="Pet">
+		SELECT
+			pet_seq,
+			user_seq,
+			pet_name,
+			pet_type,
+			pet_age,
+			pet_image,
+			created_at,
+			updated_at
+		FROM pet
+		WHERE user_seq = #{userSeq}
+		ORDER BY pet_seq DESC
+	</select>
+	
+	<!-- 반려동물 등록 -->
+	<insert id="insertPet" parameterType="Pet" useGeneratedKeys="true" keyProperty="petSeq">
+		INSERT INTO pet (user_seq, pet_name, pet_type, pet_age, pet_image)
+		VALUES (#{userSeq}, #{petName}, #{petType}, #{petAge}, #{petImage})
+	</insert>
+	
+	<!-- userSeq 의 반려동물 페이지 목록 -->
+	<select id="selectPetsByUserPaging" resultType="Pet">
+		SELECT
+			pet_seq, user_seq, pet_name, pet_type, pet_age, pet_image, created_at, updated_at
+		FROM pet
+		WHERE user_seq = #{userSeq}
+		ORDER BY pet_seq DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+	
+	<!-- userSeq 의 반려동물 전체수 -->
+	<select id="countPetsByUser" resultType="int">
+		SELECT COUNT(*)
+		FROM pet
+		WHERE user_seq = #{userSeq}
+	</select>
+
+</mapper>

@@ -1,0 +1,137 @@
+<!-- 오늘의 게시글 -->
+<th:block th:fragment="postPanel">
+	<div class="post-card">
+		<th:block th:if="${!#lists.isEmpty(todayPosts)}">
+			<th:block th:each="post : ${todayPosts}">
+				<a class="post-row" th:href="@{/community/{id}(id=${post.postSeq})}">
+					<div class="post-left">
+						<div class="avatar" th:text="${post.userName != null ? #strings.substring(post.userName,0,1) : '🙂'}">🙂</div>
+						<div class="post-title" th:text="${post.title != null ? post.title : '(제목 없음)'}">
+							고양이가 사료를 잘 안먹을 때 어떻게 할까요?
+						</div>
+					</div> <!-- 'post-left' END -->
+					
+					<div class="post-right">
+						<div class="meta">
+							<span>작성자</span>
+							<b th:text="${post.userName != null ? post.userName : '익명'}">홍길동</b>
+						</div> 
+						
+						  <div class="meta">
+							<span class="bubble">💬</span>
+							<b th:text="${post.commentCount != null ? post.commentCount : 0}">23</b>
+						</div>
+					</div> <!-- 'post-right' END -->
+				</a> <!-- 'post-row' END -->
+			</th:block>
+		</th:block>
+		<th:block th:if="${#lists.isEmpty(todayPosts)}">
+			<a class="post-row" th:href="@{/addPostForm}">
+				<span class="play"></span>
+				<div class="post-title"> 오늘 작성하신 게시글이 없습니다.<br>게시글을 등록해 보세요.</div>
+				<div class="row-right">›</div>
+			</a>
+		</th:block>
+	</div> <!-- 'post-card' END -->
+	
+	<div class="pager center mt-10">
+		<a class="pg-btn" th:href="@{/dashboard/today-posts(postPage=${postPage > 1 ? postPage-1 : 1})}">◀</a>
+		<a class="pg-num" th:each="p : ${#numbers.sequence(1, postTotalPage)}"
+						th:href="@{/dashboard/today-posts(postPage=${p})}"
+						th:classappend="${p == postPage} ? 'active' : ''"
+						th:text="${p}">1</a>
+		<a class="pg-btn" th:href="@{/dashboard/today-posts(postPage=${postPage < postTotalPage ? postPage+1 : postTotalPage})}">▶</a>
+	</div> <!-- 'pager center mt-10' END -->
+</th:block>
+
+<!-- 일정 -->
+<th:block th:fragment="schedulePanel">
+	<div class="list-card">
+		<th:block th:if="${!#lists.isEmpty(schedules)}">
+			<th:block th:each="s : ${schedules}">
+				<a class="list-row" th:href="@{/schedule/{id}(id=${s.scheduleSeq})}">
+					<div class="row-left">
+						<span class="icon play">▶</span>
+						<span class="row-text">
+							<b th:text="${#temporals.format(s.scheduleTime, 'M/d')}">날짜</b>
+							<span class="sep">|</span>
+							<span th:text="${s.title}">제목</span>
+							
+							<th:block th:if="${s.memo != null and !#strings.isEmpty(s.memo)}">
+								<span class="sep">|</span>
+								<span th:text="${s.memo}">메모</span>
+							</th:block> 
+						</span> <!-- 'row-text' END -->
+					</div> <!-- 'row-left' END -->
+					<div class="row-right">›</div>
+				</a> 
+			</th:block>
+		</th:block>
+		<!-- 일정이 없을 경우 -->
+		<th:block th:if="${#lists.isEmpty(schedules)}">
+			<div class="list-row empty-row">
+				<div class="row-left">
+					<img class="icon icon-img" th:src="@{/images/schedule.png}" alt="PetCare">
+					<span class="row-text">
+						<span>등록된 일정이 없습니다.</span>
+					</span>
+				</div>
+				<div class="row-right">›</div>
+			</div>
+		</th:block>
+	</div> <!-- 'list-card' END -->
+	
+	<!-- 일정 페이지 버튼 -->
+	<div class="pager">
+		<a class="pg-btn" th:href="@{/dashboard/schedules(schPage=${schPage > 1 ? schPage-1 : 1})}">◀</a>
+		<a class="pg-num" th:each="p : ${#numbers.sequence(1, schTotalPage)}"
+						th:href="@{/dashboard/schedules(schPage=${p})}"
+						th:classappend="${p == schPage} ? 'active' : ''"
+						th:text="${p}">1</a>
+		<a class="pg-btn" th:href="@{/dashboard/schedules(schPage=${schPage < schTotalPage ? schPage+1 : schTotalPage})}">▶</a>
+	</div> <!-- 'pager' END -->
+</th:block>
+
+<!-- 반려동물 -->
+<th:block th:fragment="petPanel">
+	<div class="list-card">
+		<th:block th:if="${!#lists.isEmpty(pets)}">
+			<th:block th:each="pet : ${pets}">
+				<a class="list-row" th:href="@{/pets/{id}(id=${pet.petSeq})}">
+					<div class="row-left">
+						<img class="icon icon-img" th:src="@{/images/hand_heart.png}" alt="PetCare">
+						<span class="row-text">
+							<b th:text="${pet.petName}">콩이</b>
+							<span class="sep">|</span>
+							<span th:text="${pet.petType}">강아지</span>
+						</span>
+					</div>
+					<div class="row-right">›</div>
+				</a>
+			</th:block>
+		</th:block>
+		
+		<!-- 반려동물이 없을 경우 -->
+		<th:block th:if="${#lists.isEmpty(pets)}">
+			<div class="list-row empty-row">
+				<div class="row-left">
+					<img class="icon icon-img" th:src="@{/images/hand_heart.png}" alt="PetCare">
+					<span class="row-text">
+						<span>등록된 반려동물이 없습니다.</span>
+					</span>
+				</div>
+				<div class="row-right">›</div>
+			</div>
+		</th:block>
+	</div> <!-- ' list-card ' END -->
+	
+	 <!-- 페이지 버튼 -->
+	 <div class="pager">
+		<a class="pg-btn" th:href="@{/dashboard/pets(petPage=${petPage > 1 ? petPage-1 : 1})}">◀</a>
+		<a class="pg-num" th:each="p : ${#numbers.sequence(1, petTotalPage)}"
+						th:href="@{/dashboard/pets(petPage=${p})}"
+						th:classappend="${p == petPage} ? 'active' : ''"
+						th:text="${p}">1</a>
+		<a class="pg-btn" th:href="@{/dashboard/pets(petPage=${petPage < petTotalPage ? petPage+1 : petTotalPage})}">▶</a>
+	 </div> <!-- 'pager' END -->
+</th:block>

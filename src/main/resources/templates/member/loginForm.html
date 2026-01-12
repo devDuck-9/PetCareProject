@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main_layout}">
+	<th:block layout:fragment="content">
+	
+	<link rel="stylesheet" th:href="@{/css/join.css}">
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}"/>
+	
+	<main class="page">
+		<section class="join-shell">
+			<div class="join-card">
+
+				<!-- LEFT: 일러스트 영역 -->
+				<div class="join-illustration" aria-hidden="true">
+					<img th:src="@{/images/join_dog.png}">
+				</div>
+				
+				<!-- RIGHT: 폼 영역 -->
+				<div class="join-form-panel">
+					<h1 class="join-title">로그인</h1>
+					<p class="join-subtitle">반려동물을 위해 로그인 하세요 !</p>
+
+					<form class="join-form" th:action="@{/loginResult}" name="loginForm" method="post" id="loginForm">
+						
+						<!-- 아이디 -->
+						<div class="field">
+							<span class="icon" aria-hidden="true">
+								<!-- user icon -->
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
+									<path d="M4 20c0-3.2 3.58-5 8-5s8 1.8 8 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+							</span>
+							<input class="input" type="text" name="userId" placeholder="아이디" autocomplete="username" required>
+						</div>
+
+						<!-- 비밀번호 -->
+						<div class="field">
+							<span class="icon" aria-hidden="true">
+								<!-- key icon -->
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M7.5 14.5 10 12a4.5 4.5 0 1 1 1.5 1.5l-1 1H9.5v1H8.5v1H7.5v1H6.5v-2.5Z"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</span>
+							<input class="input" type="password" name="password" placeholder="비밀번호를 입력해주세요." autocomplete="new-password" required>
+						</div>
+
+						<button class="btn btn-primary" type="submit">로그인</button>
+
+						<p class="login-hint">
+							아직 계정이 없으신가요? 
+							<a href="/joinForm" class="login-link">회원가입</a>
+						</p>
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+	<!-- fragment modal 준비 -->
+	<div th:replace="~{fragments/modal :: modal('loginFailModal', '로그인 실패')}"></div>
+	<script th:src="@{/js/components/modal.js}"></script>
+	
+	<!-- 로그인 실패 모달 오픈 -->
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function () {
+			/*Security failureHandler 가 넘긴 메시지 : /loginForm?errorMsg=...
+			JS 주석을 빌린 Thymeleaf 전용 치환 문법 [[...]]
+			${param.errorMsg} 값이 있으면 → 그 값으로 치환 , 없으면 null 유지*/
+			const errorMsg = /*[[${loginErrorMsg}]]*/ null;
+
+			function openIfError() {
+				if (!errorMsg) return;
+				Modal.bind('#loginFailModal');
+				Modal.open('#loginFailModal', errorMsg);
+			}
+			
+			// 일반 로드
+			$(openIfError);
+			
+			// 뒤로가기(BFCache)로 복원되는 경우에도 안전하게
+			window.addEventListener('pageshow', function (e) {
+				openIfError();
+			});
+			
+		});
+		/*]]>*/
+	</script>
+	
+	</th:block>
+</html>

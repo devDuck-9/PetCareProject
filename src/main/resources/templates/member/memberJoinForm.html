@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main_layout}">
+	<th:block layout:fragment="content">
+	
+	<link rel="stylesheet" th:href="@{/css/join.css}">
+	
+	<main class="page">
+		<section class="join-shell">
+			<div class="join-card">
+
+				<!-- LEFT: 일러스트 영역 -->
+				<div class="join-illustration" aria-hidden="true">
+					<img th:src="@{/images/join_dog.png}">
+				</div>
+				
+				<!-- RIGHT: 폼 영역 -->
+				<div class="join-form-panel">
+					<h1 class="join-title">회원가입</h1>
+					<p class="join-subtitle">반려동물을 간편하게 관리해보세요 !</p>
+
+					<form class="join-form" th:action="@{/joinResult}" name="joinForm" method="post" id="joinForm">
+					
+						<!-- 아이디 + 중복확인 -->
+						<div class="field-row">
+							<div class="field">
+								<span class="icon" aria-hidden="true">
+									<!-- user icon -->
+									<svg viewBox="0 0 24 24" fill="none">
+										<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
+										<path d="M4 20c0-3.2 3.58-5 8-5s8 1.8 8 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+									</svg>
+								</span>
+								<input class="input" type="text" name="userId" placeholder="아이디" autocomplete="username" required>
+							</div>
+
+							<button class="btn btn-ghost" type="button" id="btnCheckId">중복확인</button>
+						</div>
+
+						<!-- 비밀번호 -->
+						<div class="field">
+							<span class="icon" aria-hidden="true">
+								<!-- key icon -->
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M7.5 14.5 10 12a4.5 4.5 0 1 1 1.5 1.5l-1 1H9.5v1H8.5v1H7.5v1H6.5v-2.5Z"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</span>
+							<input class="input" type="password" name="password" placeholder="비밀번호를 입력해주세요." autocomplete="new-password" required>
+						</div>
+
+						<!-- 비밀번호 확인 -->
+						<div class="field">
+							<span class="icon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M7.5 14.5 10 12a4.5 4.5 0 1 1 1.5 1.5l-1 1H9.5v1H8.5v1H7.5v1H6.5v-2.5Z"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</span>
+							<input id="pw2" class="input" type="password" name="passwordConfirm" placeholder="비밀번호 확인" autocomplete="new-password" required>
+						</div>
+
+						<!-- 에러 메시지(예: 비번 불일치) -->
+						<p class="error-text" id="pwError" style="display:none;">비밀번호를 다시 입력해주세요.</p>
+
+						<!-- 이름 -->
+						<div class="field">
+							<span class="icon" aria-hidden="true">
+								<!-- person icon -->
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
+									<path d="M4 20c0-3.2 3.58-5 8-5s8 1.8 8 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+							</span>
+						<input class="input" type="text" name="userName" placeholder="이름(닉네임)" required>
+						</div>
+
+						<!-- 이메일 (좌 input + @ + 우 select) -->
+						<div class="field email-field">
+							<span class="icon" aria-hidden="true">
+								<!-- mail icon -->
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="2"/>
+									<path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</span>
+
+							<input class="input email-left" type="text" name="emailId" placeholder="이메일" required>
+							<span class="at">@</span>
+
+							<!--  직접입력용 도메인 input (기본 숨김) -->
+							<input class="input email-domain-input"type="text" name="emailDomainInput" placeholder="도메인 직접입력">
+							
+							<!--  도메인 select -->
+							<select class="select email-right" name="emailDomainSelect" required>
+							  <option value="manual" selected>직접입력 ▼</option>
+							  <option value="gmail.com">gmail.com</option>
+							  <option value="naver.com">naver.com</option>
+							  <option value="daum.net">daum.net</option>
+							</select>
+
+							<!--  서버로 보낼 최종 도메인(숨김) -->
+							<input type="hidden" name="emailDomain" id="emailDomainFinal">
+						</div>
+
+						<!-- 성별 -->
+						<div class="gender">
+							<div class="gender-label">성별</div>
+
+							<label class="radio">
+								<input type="radio" name="gender" value="M">
+								<span>남성</span>
+							</label>
+
+							<label class="radio">
+								<input type="radio" name="gender" value="F" checked>
+								<span>여성</span>
+							</label>
+
+							<label class="radio">
+								<input type="radio" name="gender" value="">
+								<span>선택안함</span>
+							</label>
+						</div>
+
+						<button class="btn btn-primary" type="submit">가입하기</button>
+
+						<p class="login-hint">
+							이미 계정이 있으신가요? 
+							<a href="/login" class="login-link">로그인하기</a>
+						</p>
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	
+	<!-- fragment modal -->
+	<div th:replace="~{fragments/modal :: modal('idCheckModal', '아이디 중복확인')}"></div>
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>Modal.bind('#idCheckModal');</script>
+	
+	<!-- 비번 불일치 확인 & 모달 오픈 -->
+	<script src="/js/join.js"></script>
+
+	</th:block>
+</html>

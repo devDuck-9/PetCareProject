@@ -1,0 +1,528 @@
+/* ======================
+	대시보드 로그인 후
+=========================*/
+.dash-wrap{
+	font-family: 'SejongGeulggot', sans-serif;
+	background: var(--bg);
+	border-radius: 22px;
+	padding: 22px;
+	margin-top: 10px;
+}
+
+/* 대시보드 주요 제목 */
+.dash-title,
+.panel-title {
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+	color: var(--ink);
+}
+
+.dash-bold{
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+}
+
+.dash-title{
+	font-size: 34px;
+	margin: 10px 10px 14px;
+}
+
+.panel-title{
+	font-size: 22px;
+	margin: 0 0 10px;
+}
+
+/* 2열 레이아웃 */
+.dash-grid{
+	display: grid;
+	grid-template-columns: 1.2fr .8fr;
+	gap: 18px;
+}
+
+/* 공통 패널 */
+.panel{
+	background: var(--panel);
+	border-radius: 20px;
+	border: 2px solid var(--line);
+	padding: 18px 18px 16px;
+	box-shadow: 0 14px 26px rgba(32,42,87,.07);
+}
+
+/* 왼쪽: 메인 */
+.panel-main{
+	min-height: 420px;
+}
+
+/* 오른쪽: 사이드 */
+.panel-side{
+	background: var(--panel2);
+}
+
+/* 텍스트 */
+.text-muted{
+	color: var(--muted);
+	font-weight: 600;
+}
+
+/* 버튼/링크 */
+.dash-link{
+	color: var(--accent);
+	font-weight: 800;
+	text-decoration: none;
+}
+.dash-link:hover{
+	text-decoration: underline;
+}
+
+/* 반응형 */
+@media (max-width: 900px){
+	.dash-grid{
+		grid-template-columns: 1fr;
+	}
+	.dash-title{
+		font-size: 30px;
+	}
+}
+
+/* =========================
+	Hover
+========================= */
+
+/* 내 반려동물/다가오는 일정 */
+.list-row{
+	transition: background-color .15s ease, transform .08s ease;
+}
+
+/* empty-row(등록된 ~ 없습니다)는 hover 효과 제외 */
+.list-row:not(.empty-row):hover{
+	background: #f7f8ff; /* 살짝만 */
+}
+
+/* 오늘의 게시물 */
+.post-row{
+	transition: background-color .15s ease, transform .08s ease;
+}
+
+.post-row:hover{
+	background: #f7f8ff;
+}
+
+/* 상단 배너(반려동물 관리 대시보드) */
+.dash-hero{
+	background: #dfe3f6;
+	border: 2px solid var(--line);
+	border-radius: 22px;
+	padding: 22px 22px 18px;
+	margin-bottom: 18px;
+}
+
+.dash-sub{
+	font-family: 'SejongGeulggot', sans-serif;
+	color: var(--ink);
+	font-weight: 600;
+	margin: 0 10px 6px;
+}
+
+/* 2열: 내 반려동물 / 다가오는 일정 */
+.dash-grid-2{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 18px;
+}
+
+/* 목록 커서 고정 */
+.empty-row{
+  cursor: default;
+}
+
+@media (max-width: 900px){
+	.dash-grid-2{ grid-template-columns: 1fr; }
+}
+
+/* 패널 헤더 */
+.panel-head{
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+
+.panel-head.space{
+	justify-content: space-between;
+}
+
+/* 안쪽 리스트 카드(패널 내부의 흰 박스) */
+.list-card{
+	background: #dfe3f6;
+	border-radius: 18px;
+	padding: 14px;
+	border: 2px solid rgba(0,0,0,0.04);
+}
+
+/* 리스트 한 줄 */
+.list-row{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #fff;
+	border: 2px solid var(--line);
+	border-radius: 14px;
+	padding: 12px 14px;
+	text-decoration: none;
+	color: var(--ink);
+	margin-bottom: 10px;
+	box-shadow: 0 8px 14px rgba(32,42,87,.06);
+}
+
+.list-row:last-child{
+	margin-bottom: 0;
+}
+
+.row-left{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.row-text{
+	font-family: 'SejongGeulggot', sans-serif;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.sep{
+	margin: 0 10px;
+	opacity: 0.55;
+}
+
+.row-right{
+	font-size: 26px;
+	font-weight: 900;
+	opacity: 0.8;
+}
+
+/* 아이콘 */
+.icon-img{
+	width: 26px;
+	height: 26px;
+	display: block;
+}
+
+.icon.play{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 10px;
+	background: #e9edff;
+	border: 2px solid var(--line);
+	font-weight: 900;
+}
+
+.plus{
+	font-weight: 900;
+}
+
+/* 가운데 정렬 유틸 */
+.center{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.mt-10{ margin-top: 10px; }
+.mt-14{ margin-top: 14px; }
+.mt-18{ margin-top: 18px; }
+
+/* 페이지네이션 */
+.pager{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 12px;
+}
+
+.pg-btn, .pg-num{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	height: 36px;
+	border-radius: 12px;
+	background: #fff;
+	border: 2px solid var(--line);
+	text-decoration: none;
+	color: var(--ink);
+	font-family: 'SejongGeulggot', sans-serif;
+	font-weight: 900;
+}
+
+.pg-num.active{
+	background: #e9edff;
+}
+
+/* 오늘의 게시물 */
+.post-card{
+	background: #dfe3f6;
+	border-radius: 18px;
+	padding: 14px;
+	border: 2px solid rgba(0,0,0,0.04);
+}
+
+.post-row{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	background: #fff;
+	border: 2px solid var(--line);
+	border-radius: 999px;
+	padding: 12px 16px;
+	text-decoration: none;
+	color: var(--ink);
+	margin-bottom: 12px;
+}
+
+.post-row:last-child{ margin-bottom: 0; }
+
+.post-left{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+}
+
+.avatar{
+	width: 34px;
+	height: 34px;
+	border-radius: 999px;
+	background: #e9edff;
+	border: 2px solid var(--line);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 900;
+}
+
+.post-title{
+	font-family: 'SejongGeulggot', sans-serif;
+	font-size: 18px;
+	font-weight: 900;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 520px;
+}
+
+.post-right{
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	flex-shrink: 0;
+}
+
+.meta{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-family: 'SejongGeulggot', sans-serif;
+	font-weight: 800;
+}
+
+.bubble{
+	font-size: 18px;
+}
+
+/* =====================
+	로그인 전
+========================*/
+.before-wrap{
+	margin-top: 14px;
+}
+
+.before-hero{
+	background: var(--bg);
+	border-radius: 26px;
+	border: 2px solid var(--border);
+	padding: 56px 58px 46px;
+}
+
+/* 제목 */
+.before-title{
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+	font-size: 44px;
+	line-height: 1.15;
+	color: var(--ink);
+	letter-spacing: -0.5px;
+}
+
+.before-sub{
+	margin-top: 18px;
+	font-family: 'SejongGeulggot', sans-serif;
+	font-size: 20px;
+	color: var(--ink);
+}
+
+/* 버튼 */
+.before-actions{
+	margin-top: 32px;
+	display: flex;
+	gap: 22px;
+}
+
+.btn-cta{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 180px;
+	height: 64px;
+	border-radius: 12px;
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+	font-size: 30px;
+	text-decoration: none;
+	box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+	border: 2px solid rgba(0,0,0,0.06);
+}
+
+.btn-cta.signup{
+	background: var(--danger);
+	color: #fff;
+}
+
+.btn-cta.login{
+	background: #fff;
+	color: var(--ink);
+}
+
+/* 하단 기능 카드 */
+.before-cards{
+	margin-top: 54px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 18px;
+}
+
+.feature-card{
+	background: #fff;
+	border: 2px solid var(--border);
+	border-radius: 18px;
+	padding: 18px 18px;
+	display: grid;
+	grid-template-columns: 96px 1fr;
+	gap: 14px;
+	align-items: center;
+}
+
+.feature-icon{
+	width: 96px;
+	height: 96px;
+	border-radius: 999px;
+	background: #f1f3ff;
+	border: 2px solid var(--border);
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+
+.feature-icon img{
+	width: 58px;
+	height: 58px;
+	object-fit: contain;
+	display:block;
+}
+
+/* 텍스트 */
+.feature-title{
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+	font-size: 26px;
+	color: var(--ink);
+	line-height: 1.1;
+}
+
+.feature-desc{
+	margin-top: 8px;
+	font-family: 'SejongGeulggot', sans-serif;
+	font-size: 18px;
+	color: var(--ink);
+	line-height: 1.3;
+}
+
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px){
+	.before-hero{ padding: 42px 34px 34px; }
+	.before-title{ font-size: 40px; }
+}
+
+/* 태블릿 */
+@media (max-width: 992px){
+	.before-title{ font-size: 34px; }
+	.before-sub{ font-size: 18px; }
+	/* 3열 → 2열 */
+	.before-cards{
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.btn-cta{
+		width: 160px;
+		height: 58px;
+		font-size: 26px;
+	}
+}
+
+/* 모바일 */
+@media (max-width: 576px){
+	.before-hero{
+		padding: 28px 18px 22px;
+	}
+	.before-title{
+		font-size: 28px;
+		line-height: 1.2;
+	}
+	.before-sub{
+		font-size: 16px;
+	}
+	/* 버튼 세로 스택 */
+	.before-actions{
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+	.btn-cta{
+		width: 160px;
+		height: 54px;
+		font-size: 24px;
+	}
+	/* 2열 → 1열 */
+	.before-cards{
+		grid-template-columns: 1fr;
+		gap: 14px;
+		margin-top: 28px;
+	}
+	/* 카드 내부도 모바일 최적화 */
+	.feature-card{
+		grid-template-columns: 78px 1fr;
+		padding: 14px;
+	}
+	.feature-icon{
+		width: 78px;
+		height: 78px;
+	}
+	.feature-icon img{
+		width: 44px;
+		height: 44px;
+	}
+	.feature-title{
+		font-size: 22px;
+		/* 한글이 세로로 찢어지는 것 방지 */
+		word-break: keep-all;
+	}
+	.feature-desc{
+		font-size: 16px;
+		word-break: keep-all;
+	}
+}
+
+.feature-title{
+	  white-space: normal;
+	  word-break: keep-all;
+	  overflow-wrap: anywhere; /* 너무 길면 단어 단위로만 줄바꿈 */
+}

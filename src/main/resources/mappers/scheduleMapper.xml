@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duck.petcareproject.mapper.ScheduleMapper">
+
+	<!-- 일정 등록 -->
+	<insert id="insertSchedule" parameterType="Schedule" useGeneratedKeys="true" keyProperty="scheduleSeq">
+		INSERT INTO schedule
+		(pet_seq, title, schedule_time, memo)
+		VALUES
+		(#{petSeq}, #{title}, #{scheduleTime}, #{memo})
+	</insert>
+
+
+	<!-- userSeq 의 일정 페이지 목록 (페이징) -->
+	<select id="selectScheduleByUserPaging" resultType="Schedule">
+		SELECT
+			s.schedule_seq,
+			s.pet_seq,
+			s.title,
+			s.schedule_time,
+			s.memo,
+			s.status,
+			s.created_at,
+			s.updated_at
+		FROM schedule s
+		JOIN pet p ON p.pet_seq = s.pet_seq
+		WHERE p.user_seq = #{userSeq}
+		ORDER BY s.schedule_time ASC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+
+	<!-- userSeq 의 일정 전체수 -->
+	<select id="countSchedulesByUser" resultType="int">
+		SELECT COUNT(*)
+		FROM schedule s
+		JOIN pet p ON p.pet_seq = s.pet_seq
+		WHERE p.user_seq = #{userSeq}
+	</select>
+
+</mapper>

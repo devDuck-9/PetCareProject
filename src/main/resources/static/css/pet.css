@@ -1,0 +1,229 @@
+:root{
+	--pet-card: rgba(255,255,255,.25);
+	--pet-panel: #f4f6ff;
+	--pet-input: #dde3f3;
+}
+
+/* =========================================
+	Pet Register (내 반려동물 등록) - UI
+=========================================== */
+.pet-photo-hint{
+	margin: 6px 0 18px;
+	text-align: center;
+
+	font-size: 11px;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+
+	color: #516d99;
+}
+
+.pet-shell{
+	width: min(980px, 100%);
+	display: grid;
+	place-items: center;
+}
+
+.pet-card{
+	width: min(860px, 100%);
+	background: var(--pet-card);
+	border: 1px solid rgba(255,255,255,.35);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	padding: 22px;
+}
+
+.pet-panel{
+	background: var(--pet-panel);
+	border: 1px solid var(--stroke);
+	border-radius: var(--radius);
+	overflow: hidden;
+}
+
+/* 상단 헤더(제목/설명) */
+.pet-head{
+	padding: 18px 22px 14px;
+	border-bottom: 1px solid rgba(31,42,68,.10);
+	background: rgba(255,255,255,.35);
+}
+.pet-title{
+	margin: 0;
+	font-size: 32px;
+	letter-spacing: -0.02em;
+	color: var(--text);
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+}
+.pet-subtitle{
+	margin: 6px 0 0;
+	color: var(--muted);
+	font-weight: 800;
+}
+
+/* 본문 */
+.pet-body{
+	padding: 18px 22px 22px;
+}
+
+/* 사진 영역 */
+.pet-photo-row{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	padding: 12px 0 6px;
+}
+
+/* =========================
+	 반려동물 사진 미리보기
+========================= */
+.pet-photo-box{
+	width: 200px;
+	height: 200px;
+	border-radius: 16px;
+	background: rgba(255,255,255,.55);
+	border: 1px solid rgba(31,42,68,.12);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+}
+
+/* 기본: img 숨김 (깨진 이미지 방지) */
+.pet-photo-box img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: none;
+}
+
+/* 파일 선택 후: 박스에 클래스 붙이면 img 표시 */
+.pet-photo-box.has-image img{
+	display: block;
+}
+
+.pet-photo-icon{
+	font-size: 28px;
+	opacity: .55;
+	line-height: 1;
+}
+
+/* 파일 선택 후: 아이콘 숨김 */
+.pet-photo-box.has-image .pet-photo-icon{
+	display: none;
+}
+
+/* 필드 */
+.pet-form{
+	display: grid;
+	gap: 12px;
+}
+
+/* 라벨+필드 한 줄 */
+.pet-field{
+	display: grid;
+	grid-template-columns: 90px 1fr;
+	align-items: center;
+	gap: 12px;
+
+	background: var(--pet-input);
+	border: 1px solid var(--stroke);
+	border-radius: 14px;
+	padding: 12px 14px;
+	min-height: 54px;
+}
+
+.pet-label{
+	color: #2a3b66;
+	font-weight: 900;
+	letter-spacing: -0.02em;
+}
+
+/* input/textarea */
+.pet-input{
+	width: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	font-size: 15px;
+	color: var(--text);
+	font-weight: 800;
+}
+.pet-input::placeholder{
+	color: #4f5c7d;
+	font-weight: 800;
+	opacity: .75;
+}
+
+.pet-textarea{
+	width: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	resize: none;
+	min-height: 54px;
+	font-size: 15px;
+	color: var(--text);
+	font-weight: 800;
+}
+
+/* 성별 라디오 */
+.pet-radios{
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+.pet-radio{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 900;
+	color: #2a3b66;
+}
+.pet-radio input{
+	width: 16px;
+	height: 16px;
+	accent-color: #5a6aa0;
+}
+
+/* 생년월일 셀렉트 */
+.pet-birth{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.pet-select{
+	border: 0;
+	outline: 0;
+	background: rgba(255,255,255,.25);
+	border: 1px solid rgba(31,42,68,.12);
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-weight: 900;
+	color: var(--text);
+	cursor: pointer;
+
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	/* 커스텀 화살표 */
+	padding-right: 34px;
+	background-image:
+		linear-gradient(45deg, transparent 50%, #2a3b66 50%),
+		linear-gradient(135deg, #2a3b66 50%, transparent 50%);
+	background-position:
+		calc(100% - 18px) 55%,
+		calc(100% - 12px) 55%;
+	background-size: 6px 6px, 6px 6px;
+	background-repeat: no-repeat;
+}
+
+.pet-birth-unit{
+	font-weight: 900;
+	color: #2a3b66;
+	opacity: .85;
+}
