@@ -1,7 +1,7 @@
 $(function () {
 	const MODAL_ID = '#postModal';
 
-	const $form = $('#postForm');
+	const $form = $('#postEditForm');
 	const $category = $('#categorySelect');
 	const $title = $('#title');
 	const $content = $('#content');
@@ -13,6 +13,7 @@ $(function () {
 		}, 0);
 	}
 
+	// 저장 시 검증
 	$form.on('submit', function (e) {
 		const cat = ($category.val() || '').trim();
 		const title = ($title.val() || '').trim();
@@ -20,20 +21,19 @@ $(function () {
 
 		if (!cat) {
 			e.preventDefault();
-			openError('말머리를 선택해주세요.', $category);
+			openError('카테고리를 선택해주세요.', $category);
 			return;
 		}
-
 		if (!title) {
 			e.preventDefault();
 			openError('제목을 입력해주세요.', $title);
 			return;
 		}
-
 		if (!content) {
 			e.preventDefault();
 			openError('본문을 입력해주세요.', $content);
 			return;
 		}
+
 	});
 });

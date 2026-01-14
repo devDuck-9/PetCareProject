@@ -10,6 +10,12 @@ import com.duck.petcareproject.domain.Pet;
 @Mapper
 public interface PetMapper {
 	
+	// 내 반려동물 수정
+	int updatePetBySeqAndUser(Pet pet);
+
+	// 내 반려동물 삭제
+	int deletePetBySeqAndUser(@Param("petSeq") int petSeq, @Param("userSeq") int userSeq);
+	
 	// 선택한 반려동물 조회
 	public Pet selectPetBySeqAndUser(@Param("petSeq") int petSeq, @Param("userSeq") int userSeq);
 	

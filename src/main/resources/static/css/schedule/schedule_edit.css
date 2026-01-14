@@ -1,72 +1,83 @@
 /* =========================================
-	Schedule Add Form UI
+	Schedule Edit UI
 ========================================= */
 
-.sch-shell{
+.se-shell{
 	width: min(980px, 100%);
 	display: grid;
 	place-items: center;
+	margin: 0 auto;
+	padding-top: 20px;
 }
 
-.sch-card{
+.se-card{
 	width: min(860px, 100%);
-	background: rgba(255,255,255,.25);
+	background: #dde3f3;
 	border: 1px solid rgba(255,255,255,.35);
 	border-radius: var(--radius);
 	box-shadow: var(--shadow);
 	padding: 22px;
 }
 
-.sch-panel{
+.se-panel{
 	background: #f4f6ff;
 	border: 1px solid var(--stroke);
 	border-radius: var(--radius);
 	overflow: hidden;
 }
 
-.sch-head{
+.se-head{
 	padding: 18px 22px 14px;
 	border-bottom: 1px solid rgba(31,42,68,.10);
 	background: rgba(255,255,255,.35);
 }
 
-.sch-title{
-	margin: 0;
-	font-size: 32px;
+.se-head-top{
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+
+.se-title{
+	font-size: 28px;
 	letter-spacing: -0.02em;
-	color: var(--text);
+}
+
+.se-title-font{
 	font-family: 'Cafe24Dangdanghae', sans-serif;
+	color: var(--text);
 }
 
-.sch-body{
-	padding: 18px 22px 22px;
+.se-sub{
+	font-family: 'Griun_Cocochoitoon', sans-serif;
+	font-size: 22px;
+	opacity: .9;
 }
 
-.sch-form{
-	display: grid;
-	gap: 12px;
-}
+.se-body{ padding: 18px 22px 22px; }
+.se-form{ display: grid; gap: 12px; }
 
-.sch-field{
+.se-field{
 	display: grid;
 	grid-template-columns: 90px 1fr;
 	align-items: center;
 	gap: 12px;
-
-	background: #dde3f3;
+	background: #fff;
 	border: 1px solid var(--stroke);
 	border-radius: 14px;
 	padding: 12px 14px;
 	min-height: 54px;
 }
 
-.sch-label{
+.se-label{
 	color: #2a3b66;
 	font-weight: 900;
 	letter-spacing: -0.02em;
 }
 
-.sch-input{
+.se-input{
 	width: 100%;
 	border: 0;
 	outline: 0;
@@ -75,21 +86,11 @@
 	color: var(--text);
 	font-weight: 800;
 }
-.sch-input::placeholder{
-	color: #4f5c7d;
-	font-weight: 800;
-	opacity: .75;
-}
 
-/* 날짜 셀렉트 */
-.sch-date{
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	flex-wrap: wrap;
-}
+.se-input::placeholder{ color: #4f5c7d; font-weight: 800; opacity: .75; }
+.se-date{ display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-.sch-select{
+.se-select{
 	border: 0;
 	outline: 0;
 	background: rgba(255,255,255,.25);
@@ -115,30 +116,32 @@
 	background-repeat: no-repeat;
 }
 
-.sch-unit{
-	font-weight: 900;
-	color: #2a3b66;
-	opacity: .85;
+.se-unit{ font-weight: 900; color: #2a3b66; opacity: .85; }
+
+.se-hint{
+	grid-column: 2 / 3;
+	font-size: 12px;
+	font-weight: 800;
+	color: #4f5c7d;
+	opacity: .9;
+	margin-top: -2px;
 }
 
-/* 알림 라디오 */
-.sch-radios{
+.se-radios{ display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.se-radio{ display: inline-flex; align-items: center; gap: 8px; font-weight: 900; color: #2a3b66; }
+.se-radio input{ width: 16px; height: 16px; accent-color: #5a6aa0; }
+
+/* 하단 버튼 가운데 정렬 */
+.se-actions-bottom{
 	display: flex;
-	align-items: center;
-	gap: 14px;
+	gap: 10px;
+	justify-content: center;
+	padding-top: 6px;
 	flex-wrap: wrap;
 }
 
-.sch-radio{
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	font-weight: 900;
-	color: #2a3b66;
-}
-
-.sch-radio input{
-	width: 16px;
-	height: 16px;
-	accent-color: #5a6aa0;
+@media (max-width: 640px){
+	.se-field{ grid-template-columns: 1fr; }
+	.se-hint{ grid-column: 1 / -1; }
+	.se-actions-bottom{ justify-content: center; }
 }

@@ -122,10 +122,7 @@ $(function () {
 		$day.empty();
 
 		for (let d = 1; d <= max; d++) {
-			const disabled = !isSelectableDate(y, m, d);
-			$day.append(
-				`<option value="${pad2(d)}" ${disabled ? 'disabled' : ''}>${pad2(d)}</option>`
-			);
+			$day.append(`<option value="${pad2(d)}">${pad2(d)}</option>`);
 		}
 
 		// 1) 이전 선택이 유효하고 disabled가 아니면 유지
@@ -171,6 +168,16 @@ $(function () {
 	});
 
 	$day.on('change', function () {
+		const y = parseInt($year.val(), 10);
+		const m = parseInt($month.val(), 10);
+		const d = parseInt($day.val(), 10);
+
+		if (!isSelectableDate(y, m, d)) {
+			openError('과거 날짜는 선택할 수 없습니다.', $day);
+			forceDefaultTomorrow();
+			return;
+		}
+
 		syncHidden();
 	});
 
@@ -190,7 +197,7 @@ $(function () {
 
 		if (!dateVal) {
 			e.preventDefault();
-			openError('일정 날짜를 선택해주세요.');
+			openError('일정 날짜를 선택해주세요.', $year);
 			return;
 		}
 

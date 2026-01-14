@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/schedule/schedule_edit.css}">
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}">
+
+	<main class="page">
+		<section class="se-shell">
+			<div class="se-card">
+				<div class="se-panel">
+
+					<header class="se-head">
+						<div class="se-head-top">
+							<div class="se-title-wrap">
+								<span class="se-title se-title-font">일정 수정&nbsp;<span class="se-icon">🛠️</span></span>
+								<span class="se-sub" th:if="${petName != null}" th:text="${petName}">선택한 반려동물</span>
+							</div>
+						</div>
+					</header>
+
+					<div class="se-body">
+
+						<form class="se-form" id="schEditForm"
+									th:action="@{/updateSchedule/{id}(id=${schedule.scheduleSeq})}" method="post"
+									th:attr="data-initial-date=${#temporals.format(schedule.scheduleTime,'yyyy-MM-dd')}">
+
+							<input type="hidden" name="scheduleSeq" th:value="${schedule.scheduleSeq}">
+							<input type="hidden" name="scheduleDate" id="schDateHidden">
+
+							<!-- 제목 -->
+							<div class="se-field">
+								<div class="se-label">제목</div>
+								<input class="se-input" type="text" name="title" maxlength="50" th:value="${schedule.title}" placeholder="제목을 입력해주세요.">
+							</div>
+
+							<!-- 일정 날짜 -->
+							<div class="se-field">
+								<div class="se-label">일정 날짜</div>
+								<div class="se-date">
+									<select class="se-select" name="year" id="schYear"></select>
+									<span class="se-unit">년</span>
+
+									<select class="se-select" name="month" id="schMonth"></select>
+									<span class="se-unit">월</span>
+
+									<select class="se-select" name="day" id="schDay"></select>
+									<span class="se-unit">일</span>
+								</div>
+								<div class="se-hint">💡 날짜를 변경하지 않으면 기존 날짜가 유지돼요.</div>
+							</div>
+
+							<!-- 메모 -->
+							<div class="se-field">
+								<div class="se-label">메모</div>
+								<input class="se-input" type="text" name="memo" maxlength="1000"
+											 th:value="${schedule.memo}" placeholder="메모를 입력해주세요.">
+							</div>
+
+							<!-- 상태 -->
+							<div class="se-field">
+								<div class="se-label">상태</div>
+								<select class="se-select" name="status">
+									<option value="PLANNED" th:selected="${schedule.status?.name() == 'PLANNED'}">계획</option>
+									<option value="DONE" th:selected="${schedule.status?.name() == 'DONE'}">완료</option>
+									<option value="CANCELED" th:selected="${schedule.status?.name() == 'CANCELED'}">취소</option>
+								</select>
+							</div>
+
+							<!-- 알림 -->
+							<div class="se-field">
+								<div class="se-label">알림</div>
+								<div class="se-radios">
+									<label class="se-radio">
+										<input type="radio" name="notifyYn" value="Y"
+													 th:checked="${schedule.notifyEnabled?.name() == 'Y'}">동의
+									</label>
+									<label class="se-radio">
+										<input type="radio" name="notifyYn" value="N"
+													 th:checked="${schedule.notifyEnabled?.name() == 'N'}">미동의
+									</label>
+								</div>
+							</div>
+
+							<!-- 하단 버튼 가운데 정렬 -->
+							<div class="se-actions-bottom">
+								<button type="submit" class="btn-pill-orange" id="btnSave">저장</button>
+								<a class="btn-pill" id="btnCancle" th:href="@{/detailSchedule/{id}(id=${schedule.scheduleSeq})}">돌아가기</a>
+							</div>
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- 알림 모달 -->
+	<div th:replace="~{fragments/modal :: modal('schModal', '알림')}"></div>
+	<div th:replace="~{fragments/modal :: actionModal('scheduleCancleModal', '알림')}"></div>
+	
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+		Modal.bind('#schModal');
+		Modal.bind('#scheduleCancleModal');
+	</script>
+
+	<script th:src="@{/js/schedule/schedule_edit.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+
+</th:block>
+</html>

@@ -21,29 +21,20 @@ public class WebConfig implements WebMvcConfigurer{
 		// 반려동물 등록 폼
 		registry.addViewController("/addPetForm").setViewName("pets/addPetForm");
 		
-		// 회원가입 폼
-		registry.addViewController("/joinForm").setViewName("member/memberJoinForm");
+		// 회원가입 폼은 Controller 에서 모델을 주입해야 검증 메시지를 표시할 수 있으므로 제거
+//		registry.addViewController("/joinForm").setViewName("member/memberJoinForm");
 		
 	}
 	
+	// 파일
 	@Value("${app.upload.dir}")
 	private String uploadDir;
-	@Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/files/**")
 		.addResourceLocations("file:" + uploadDir + "/")
 		.setCachePeriod(1);
 	}
-	 
-	
-	
-	/*
-	 * @Override public void addInterceptors(InterceptorRegistry registry) {
-	 * registry.addInterceptor(new LoginCheckInterceptor())
-	 * .addPathPatterns("/write*", "/update*");
-	 * 
-	 * //.excludePathPatterns("/boardList"); }
-	 */
-	
-	
 	
 }

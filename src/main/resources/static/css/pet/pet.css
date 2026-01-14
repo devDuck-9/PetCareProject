@@ -1,7 +1,8 @@
 :root{
-	--pet-card: rgba(255,255,255,.25);
-	--pet-panel: #f4f6ff;
-	--pet-input: #dde3f3;
+	--pet-card: #dde3f3;
+	--pet-panel: #f4f6ff; /* 중바탕 */
+	--pet-soft: #f4f6ff; /* 소바탕 */
+	--pet-surface: #ffffff; /* 인풋 */
 }
 
 /* =========================================
@@ -22,6 +23,8 @@
 	width: min(980px, 100%);
 	display: grid;
 	place-items: center;
+	margin: 0 auto;
+	padding-top: 20px;
 }
 
 .pet-card{
@@ -61,7 +64,11 @@
 
 /* 본문 */
 .pet-body{
-	padding: 18px 22px 22px;
+	margin: 16px 22px 22px;
+	padding: 18px 18px 22px;
+	background: var(--pet-soft);
+	border: 1px solid rgba(31,42,68,.10);
+	border-radius: 18px;
 }
 
 /* 사진 영역 */
@@ -80,8 +87,9 @@
 	width: 200px;
 	height: 200px;
 	border-radius: 16px;
-	background: rgba(255,255,255,.55);
+	background: var(--pet-surface);
 	border: 1px solid rgba(31,42,68,.12);
+	box-shadow: 0 12px 30px rgba(31,42,68,.08);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -108,7 +116,7 @@
 	line-height: 1;
 }
 
-/* 파일 선택 후: 아이콘 숨김 */
+/* 파일 선택 후 아이콘 숨김 */
 .pet-photo-box.has-image .pet-photo-icon{
 	display: none;
 }
@@ -126,11 +134,13 @@
 	align-items: center;
 	gap: 12px;
 
-	background: var(--pet-input);
-	border: 1px solid var(--stroke);
+	background: var(--pet-surface);
+	border: 1px solid rgba(31,42,68,.12);
 	border-radius: 14px;
 	padding: 12px 14px;
 	min-height: 54px;
+
+	box-shadow: 0 10px 22px rgba(31,42,68,.06);
 }
 
 .pet-label{
@@ -196,10 +206,9 @@
 }
 
 .pet-select{
-	border: 0;
-	outline: 0;
-	background: rgba(255,255,255,.25);
 	border: 1px solid rgba(31,42,68,.12);
+	outline: 0;
+	background: #ffffff;
 	border-radius: 10px;
 	padding: 10px 12px;
 	font-weight: 900;

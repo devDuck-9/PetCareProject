@@ -10,10 +10,12 @@ import lombok.Setter;
 public class Schedule {
 		private int scheduleSeq;
 		private int petSeq;
-		private int notifyEnabled;	// 1:수신, 0:미수신
+		private NotifyYn notifyEnabled;	// 1:동의, 0:미동의
 		private String title;
 		private LocalDateTime scheduleTime;
 		private String memo;
-		private String status;
+		private ScheduleStatus status;
 		private LocalDateTime createdAt, updatedAt;
+		
+		private int userSeq;
 }

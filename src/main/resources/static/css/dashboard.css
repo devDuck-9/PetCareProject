@@ -1,3 +1,4 @@
+
 /* ======================
 	대시보드 로그인 후
 =========================*/
@@ -102,7 +103,10 @@
 }
 
 .post-row:hover{
-	background: #f7f8ff;
+	filter: brightness(.98);
+	transform: translateY(-1px);
+	transition: .15s ease;
+	background: #f4f6ff;
 }
 
 /* 상단 배너(반려동물 관리 대시보드) */
@@ -130,7 +134,7 @@
 
 /* 목록 커서 고정 */
 .empty-row{
-  cursor: default;
+	cursor: default;
 }
 
 @media (max-width: 900px){
@@ -216,6 +220,28 @@
 	background: #e9edff;
 	border: 2px solid var(--line);
 	font-weight: 900;
+}
+
+/* 상태 동그라미 공통 */
+.status-dot{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	border-radius: 999px;
+	background: #5a6aa0; /* 기본 (PLANNED) */
+	opacity: .95;
+}
+
+/* 완료 */
+.status-dot[data-status='DONE']{
+	background: #2ecc71; /* 초록 */
+}
+
+/* 취소 */
+.status-dot[data-status='CANCELED']{
+	background: #ff4d4d; /* 빨강 */
 }
 
 .plus{
@@ -522,7 +548,19 @@
 }
 
 .feature-title{
-	  white-space: normal;
-	  word-break: keep-all;
-	  overflow-wrap: anywhere; /* 너무 길면 단어 단위로만 줄바꿈 */
+	white-space: normal;
+	word-break: keep-all;
+	overflow-wrap: anywhere; /* 너무 길면 단어 단위로만 줄바꿈 */
+}
+
+.empty-link{
+	text-decoration: none;
+	color: inherit;
+}
+
+.empty-link:hover{
+	filter: brightness(.98);
+	transform: translateY(-1px);
+	transition: .15s ease;
+	background: #f4f6ff;
 }

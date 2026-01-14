@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/community/post_list.css}"/>
+	<link rel="stylesheet" th:href="@{/css/community/post_form.css}"/>
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}"/>
+	
+	<main class="comm-page">
+		<section class="comm-shell">
+
+			<!-- 왼쪽 사이드바 -->
+			<div th:replace="~{fragments/community_sidebar :: communitySidebar(${activeCategory})}"></div>
+
+			<!-- 오른쪽 메인 -->
+			<div class="comm-main">
+				<div class="comm-card">
+
+					<!-- 상단 : 검색/정렬/글쓰기 -->
+					<div class="pl-head">
+						<div class="pl-title">
+							<span class="comm-paw">🐾</span>
+							<span th:text="${categoryTitle}">전체글</span>
+						</div>
+
+						<div class="pl-tools">
+							<form class="pl-search" id="postSearchForm" th:action="@{${basePath}}" method="get">
+								<input type="hidden" name="size" th:value="${size}"/>
+
+								<div class="pl-searchbox">
+									<i class="bi bi-search"></i>
+									<input type="text" name="findkey" id="findkey" th:value="${findkey}" placeholder="게시글 검색"/>
+								</div>
+
+								<select class="pl-select" name="sort" id="sortSelect">
+									<option value="latest" th:selected="${sort == 'latest'}">최신순</option>
+									<option value="old" th:selected="${sort == 'old'}">오래된 순</option>
+								</select>
+
+								<button type="submit" class="btn-pill" id="btnSearch" title="검색">검색</button>
+							</form>
+
+							<a class="btn-pill-orange" th:href="@{/addPostForm}">글쓰기 <i class="bi bi-pencil-square"></i></a>
+						</div>
+					</div>
+
+					<!-- 리스트 -->
+					<div class="pl-body">
+						<div class="pl-empty" th:if="${posts == null || #lists.isEmpty(posts)}">
+							<div class="pl-empty__title">게시글이 없어요 🐶</div>
+							<div class="pl-empty__sub">첫 글을 작성해보세요!</div>
+						</div>
+
+						<div class="pl-list" th:if="${posts != null && !#lists.isEmpty(posts)}">
+							<a class="pl-item" th:each="p : ${posts}" th:href="@{/detailPost/{id}(id=${p.postSeq})}">
+								<div class="pl-item__left">
+									<div class="pl-item__top">
+										<span class="pl-badge" th:text="${p.category.label}">카테고리</span>
+										<h3 class="pl-item__title" th:text="${p.title}">제목</h3>
+									</div>
+
+									<div class="pl-item__meta">
+										<span class="pl-meta">
+											<i class="bi bi-person-circle"></i>
+											<span th:text="${p.userName}">작성자</span>
+										</span>
+										<span class="pl-dot">•</span>
+										<span class="pl-meta" th:text="${p.createdAt != null ? #temporals.format(p.createdAt,'yyyy.MM.dd') : ''}"></span>
+									</div>
+								</div>
+
+								<div class="pl-item__right">
+									<span class="pl-metric" title="댓글">
+										<i class="bi bi-chat-dots"></i>
+										<span th:text="${p.commentCount != null ? p.commentCount : 0}">0</span>
+									</span>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!-- 페이징 -->
+					<div class="pl-paging" th:if="${totalPage != null && totalPage > 1}">
+						<a class="pl-page" th:classappend="${page == 1} ? 'is-disabled' : ''"
+							 th:href="${page == 1} ? '#' : @{${basePath}(page=${page-1}, size=${size}, findkey=${findkey}, sort=${sort})}">
+							<i class="bi bi-caret-left-fill"></i>
+						</a>
+
+						<a class="pl-page"
+							 th:each="n : ${#numbers.sequence(1, totalPage)}"
+							 th:classappend="${n == page} ? 'is-active' : ''"
+							 th:href="@{${basePath}(page=${n}, size=${size}, findkey=${findkey}, sort=${sort})}"
+							 th:text="${n}">1</a>
+
+						<a class="pl-page" th:classappend="${page == totalPage} ? 'is-disabled' : ''"
+							 th:href="${page == totalPage} ? '#' : @{${basePath}(page=${page+1}, size=${size}, findkey=${findkey}, sort=${sort})}">
+							<i class="bi bi-caret-right-fill"></i>
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script th:src="@{/js/community/post_list.js}"></script>
+</th:block>
+
+</html>

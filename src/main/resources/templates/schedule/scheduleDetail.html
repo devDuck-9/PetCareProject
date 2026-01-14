@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/schedule/schedule_detail.css}">
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}">
+
+	<main class="page">
+		<section class="sd-shell">
+			<div class="sd-card">
+				<div class="sd-panel">
+
+					<header class="sd-head">
+						<div class="sd-head-top">
+							<div class="sd-title-wrap">
+								<span class="sd-title sd-title-font">일정 상세&nbsp;<span class="sd-icon">🗓️&nbsp;&nbsp;</span></span>
+								<span class="sd-sub" th:if="${petName != null}" th:text="${petName}"> 선택한 반려동물 </span>
+							</div>
+						</div>
+						
+					</header>
+
+					<div class="sd-body">
+						<div class="sd-section">
+							<div class="sd-label">제목</div>
+							<div class="sd-value" th:text="${schedule.title}">일정 제목</div>
+						</div>
+						
+						<div class="sd-section">
+							<div class="sd-label">일정 날짜</div>
+							<div class="sd-value" th:text="${#temporals.format(schedule.scheduleTime,'yyyy년 MM월 dd일')}">2026년 01월 01일</div>
+						</div>
+
+						<div class="sd-section">
+							<div class="sd-label">상태</div>
+							<div class="sd-value">
+								<span class="sd-status" th:attr="data-status=${schedule.status}" th:text="${schedule.status}">PLANNED</span>
+							</div>
+						</div>
+
+						<div class="sd-section">
+							<div class="sd-label">알림</div>
+							<div class="sd-value" th:text="${schedule.notifyEnabled?.name() == 'Y' ? '동의' : '미동의'}"> 동의 </div>
+						</div>
+
+						<div class="sd-section sd-section--memo">
+							<div class="sd-label">메모</div>
+							<div class="sd-memo" th:text="${schedule.memo != null && !#strings.isEmpty(schedule.memo) ? schedule.memo : '메모가 없습니다.'}">메모가 없습니다.</div>
+						</div>
+
+						<!-- 버튼 -->
+						<div class="sd-foot">
+
+							<!-- 가운데 : 수정하기 + 돌아가기 -->
+							<div class="sd-foot-center">
+								<a class="btn-pill-orange" th:href="@{/updateSchedule/{id}(id=${schedule.scheduleSeq})}"> 수정하기 </a>
+
+								<a class="btn-pill" th:href="@{/}"> 돌아가기 </a>
+							</div>
+
+							<!-- 오른쪽 끝 : 삭제 -->
+							<button type="button" class="btn-pill sd-btn-danger delete-btn" id="btnDeleteSchedule" th:attr="data-schedule-seq=${schedule.scheduleSeq}"> 삭제 </button>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- 삭제 확인 모달 -->
+	<div th:replace="~{fragments/modal :: actionModal('confirmModal', '알림')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>Modal.bind('#confirmModal');</script>
+
+	<script th:src="@{/js/schedule/schedule_detail.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+
+</th:block>
+</html>

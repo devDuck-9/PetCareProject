@@ -1,0 +1,23 @@
+/* 글 수정 화면 전용 */
+
+.pe-head-actions{
+		margin-left: auto;
+}
+
+.pe-hint{
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: -4px;
+		margin-bottom: 10px;
+		padding: 10px 12px;
+		border-radius: 14px;
+		border: 2px solid rgba(94,108,175,.15);
+		background: rgba(94,108,175,.06);
+		color: var(--ink);
+		font-weight: 900;
+}
+
+@media (max-width: 900px){
+		.pe-head-actions{ width: 100%; }
+}

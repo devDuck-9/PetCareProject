@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/pet/pet.css}">
+
+	<main class="page">
+		<section class="pet-shell">
+			<div class="pet-card">
+				<div class="pet-panel">
+
+					<div class="pet-head">
+						<h1 class="pet-title">반려동물 정보 수정</h1>
+						<p class="pet-subtitle">정보를 수정한 뒤 저장해주세요.</p>
+					</div>
+
+					<div class="pet-body">
+
+						<!-- 사진 미리보기 -->
+						<div class="pet-photo-row">
+							<div class="pet-photo-box" id="petPhotoBox"
+									 th:classappend="${pet.petImage != null} ? ' has-image' : ''">
+								<span class="pet-photo-icon">🐾</span>
+								<img id="petPhotoPreview" th:src="${pet.petImage}" alt="" />
+							</div>
+
+							<div>
+								<label class="btn-pill-orange is-sm" for="petPhoto">사진 변경</label>
+								<input type="file" id="petPhoto" name="photo" accept="image/*" style="display:none;" form="petForm">
+							</div>
+						</div>
+
+						<div class="pet-photo-hint">이미지는 JPG / PNG / WEBP 형식만 업로드할 수 있습니다.</div>
+
+						<form class="pet-form" id="petForm"
+									th:action="@{/updatePet/{id}(id=${pet.petSeq})}"
+									method="post" enctype="multipart/form-data">
+
+							<div class="pet-field">
+								<div class="pet-label">이름</div>
+								<input class="pet-input" type="text" name="petName" th:value="${pet.petName}">
+							</div>
+
+							<div class="pet-field">
+								<div class="pet-label">품종</div>
+								<input class="pet-input" type="text" name="petType" th:value="${pet.petType}">
+							</div>
+
+							<div class="pet-field">
+								<div class="pet-label">성별</div>
+								<div class="pet-radios">
+									<label class="pet-radio">
+										<input type="radio" name="gender" value="M" th:checked="${pet.gender.name() == 'M'}"> 남아
+									</label>
+									<label class="pet-radio">
+										<input type="radio" name="gender" value="F" th:checked="${pet.gender.name() == 'F'}"> 여아
+									</label>
+									<label class="pet-radio">
+										<input type="radio" name="gender" value="U" th:checked="${pet.gender.name() == 'U'}"> 선택안함
+									</label>
+								</div>
+							</div>
+
+							<div class="pet-field">
+								<div class="pet-label">태어난 날</div>
+								<div class="pet-birth">
+									<select class="pet-select" name="birthYear" id="birthYear"></select>
+									<span class="pet-birth-unit">년</span>
+
+									<select class="pet-select" name="birthMonth" id="birthMonth"></select>
+									<span class="pet-birth-unit">월</span>
+
+									<select class="pet-select" name="birthDay" id="birthDay"></select>
+									<span class="pet-birth-unit">일</span>
+
+									<input type="hidden" name="birthDate" id="birthDate" th:data-value="${pet.birthDate != null ? #temporals.format(pet.birthDate,'yyyy-MM-dd') : ''}">
+								</div>
+							</div>
+
+							<div class="pet-field">
+								<div class="pet-label">메모</div>
+								<textarea class="pet-textarea pet-input" name="memo" th:text="${pet.memo}"></textarea>
+							</div>
+
+							<div class="form-actions">
+								<button type="submit" class="btn-pill-orange">저장</button>
+								<a class="btn-pill" id="btnCancle" th:href="@{/detailPet/{id}(id=${pet.petSeq})}">취소</a>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+	
+	<div th:replace="~{fragments/modal :: modal('petModal', '알림')}"></div>
+	<div th:replace="~{fragments/modal :: actionModal('petCancleModal', '알림')}"></div>
+	
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+		Modal.bind('#petModal');
+		Modal.bind('#petCancleModal');
+	</script>
+	
+	<script th:src="@{/js/pet/petAddForm.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+</th:block>
+</html>

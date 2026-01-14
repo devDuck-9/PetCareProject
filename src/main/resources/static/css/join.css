@@ -319,6 +319,29 @@
 }
 .login-link:hover{ text-decoration: underline; }
 
+/* 핸드폰 */
+.phone-field{
+	gap: 6px;
+}
+
+.phone-prefix{
+	flex: 0 0 72px;
+	font-weight: 900;
+}
+
+.phone-mid,
+.phone-last{
+	flex: 1;
+	text-align: center;
+	font-weight: 900;
+}
+
+.dash{
+	font-weight: 900;
+	color: #2a3b66;
+	opacity: .6;
+}
+
 /* 반응형(태블릿) */
 @media (max-width: 900px){
 	.join-card{

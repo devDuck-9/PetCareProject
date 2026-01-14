@@ -8,7 +8,7 @@
 
 		<nav class="comm-side-nav">
 			<a th:href="@{/community}" th:classappend="${activeCategory == 'ALL'} ? 'is-active' : ''">전체글</a>
-			<!-- ❌ 펫케어 소식은 guide(관리자)라서 여기서 제외 -->
+			<a th:href="@{/community/guide}" th:classappend="${activeCategory == 'GUIDE'} ? 'is-active' : ''">공지사항</a>
 			<a th:href="@{/community/free}" th:classappend="${activeCategory == 'FREE'} ? 'is-active' : ''">자유 게시판</a>
 			<a th:href="@{/community/info}" th:classappend="${activeCategory == 'INFO'} ? 'is-active' : ''">정보 공유</a>
 			<a th:href="@{/community/boast}" th:classappend="${activeCategory == 'BOAST'} ? 'is-active' : ''">자랑 하기</a>

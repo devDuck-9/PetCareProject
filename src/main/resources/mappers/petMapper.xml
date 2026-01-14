@@ -5,9 +5,33 @@
 
 <mapper namespace="com.duck.petcareproject.mapper.PetMapper">
 	
+	<!-- 선택한 반려동물 수정 -->
+	<update id="updatePetBySeqAndUser" parameterType="Pet">
+		UPDATE pet
+		SET
+			pet_name = #{petName},
+			pet_type = #{petType},
+			gender = #{gender},
+			birth_date = #{birthDate},
+			pet_age	= #{petAge},
+			memo = #{memo},
+			pet_image = #{petImage},
+			updated_at = CURRENT_TIMESTAMP
+		WHERE pet_seq = #{petSeq}
+			AND user_seq = #{userSeq}
+	</update>
+	
+	<!-- 선택한 반려동물 삭제 -->
+	<delete id="deletePetBySeqAndUser">
+		DELETE FROM pet
+		WHERE pet_seq = #{petSeq}
+			AND user_seq = #{userSeq}
+	</delete>
+
 	<!-- 선택한 반려동물 조회 -->
 	<select id="selectPetBySeqAndUser" resultType="Pet">
-		SELECT pet_seq, user_seq, pet_name, pet_type, pet_age, gender, birth_date, pet_image, memo, created_at, updated_at
+		SELECT pet_seq, user_seq, pet_name, pet_type, pet_age, gender,
+				 birth_date, pet_image, memo, created_at, updated_at
 		FROM pet
 		WHERE pet_seq = #{petSeq} AND user_seq = #{userSeq}
 	</select>

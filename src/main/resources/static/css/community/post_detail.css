@@ -1,0 +1,269 @@
+/* =========================
+	 게시글 상세 UI
+========================= */
+
+.comm-page{ margin-top: 10px; }
+
+.comm-shell{
+		display: grid;
+		grid-template-columns: 260px 1fr;
+		gap: 18px;
+		background: var(--bg);
+		border-radius: 22px;
+		padding: 22px;
+}
+
+.comm-main{ min-width: 0; }
+
+.comm-card{
+		background: var(--panel);
+		border-radius: 20px;
+		border: 2px solid var(--line);
+		box-shadow: 0 14px 26px rgba(32,42,87,.07);
+		overflow: hidden;
+}
+
+/* ===== 헤더 ===== */
+.pd-head{
+		padding: 18px;
+		border-bottom: 2px solid var(--line);
+		background: #f5f7ff;
+}
+
+.pd-head-top{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		margin-bottom: 10px;
+}
+
+.pd-badges{ display:flex; gap:8px; align-items:center; }
+
+.pd-badge{
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 6px 10px;
+		border-radius: 999px;
+		border: 2px solid rgba(0,0,0,.06);
+		background: #ffffff;
+		color: var(--ink);
+		font-weight: 900;
+		letter-spacing: .2px;
+}
+
+.pd-badge--sub{
+		background: rgba(94,108,175,.10);
+		color: var(--accent);
+}
+
+.pd-actions{
+		display:flex;
+		gap: 10px;
+		align-items:center;
+		flex-wrap: wrap;
+}
+
+.pd-btn-danger{
+		background: var(--danger);
+}
+
+.pd-btn-danger:hover{
+		background: #c84f4f;
+}
+
+.pd-title{
+		font-family: 'Cafe24Dangdanghae', sans-serif;
+		font-size: 30px;
+		color: var(--ink);
+		line-height: 1.22;
+		margin: 10px 0 12px;
+		word-break: break-word;
+}
+
+.pd-meta{
+		display:flex;
+		align-items:center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-wrap: wrap;
+		color: var(--muted);
+		font-weight: 800;
+}
+
+.pd-meta-left, .pd-meta-right{ display:flex; align-items:center; gap: 10px; }
+
+.pd-writer{ display:flex; align-items:center; gap: 8px; }
+.pd-dot{ opacity: .7; }
+
+.pd-metric{
+		display:inline-flex;
+		align-items:center;
+		gap: 6px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(255,255,255,.75);
+		border: 2px solid rgba(0,0,0,.05);
+		color: var(--ink);
+}
+
+/* ===== 본문 ===== */
+.pd-body{ padding: 18px; }
+
+.pd-content{
+		background: #ffffff;
+		border: 2px solid var(--line);
+		border-radius: 16px;
+		padding: 16px;
+		line-height: 1.75;
+		font-weight: 700;
+		color: var(--text);
+		white-space: normal;
+		word-break: break-word;
+		box-shadow: 0 12px 20px rgba(32,42,87,.05);
+}
+
+.pd-mini-actions{
+		display:flex;
+		gap: 10px;
+		justify-content: flex-end;
+		margin-top: 12px;
+		flex-wrap: wrap;
+}
+
+/* ===== 댓글 ===== */
+.pd-comments{
+		border-top: 2px solid var(--line);
+		background: #fbfcff;
+		padding: 18px;
+}
+
+.pd-comments-head{
+		display:flex;
+		align-items:center;
+		justify-content: space-between;
+		margin-bottom: 12px;
+}
+
+.pd-comments-title{
+		font-family: 'Cafe24Dangdanghae', sans-serif;
+		font-size: 24px;
+		color: var(--ink);
+		display:flex;
+		align-items:center;
+		gap: 10px;
+}
+
+.pd-comments-count{
+		display:inline-flex;
+		align-items:center;
+		justify-content:center;
+		min-width: 34px;
+		height: 28px;
+		padding: 0 10px;
+		border-radius: 999px;
+		background: rgba(94,108,175,.10);
+		border: 2px solid rgba(94,108,175,.15);
+		color: var(--accent);
+		font-weight: 900;
+		font-size: 14px;
+}
+
+.pc-form{ margin-bottom: 14px; }
+
+.pc-input-wrap{
+		border: 2px solid var(--line);
+		border-radius: 16px;
+		background: #ffffff;
+		padding: 12px;
+		box-shadow: 0 12px 20px rgba(32,42,87,.05);
+}
+
+.pc-textarea{
+		width: 100%;
+		border: none;
+		outline: none;
+		resize: none;
+		font-weight: 800;
+		color: var(--ink);
+		background: transparent;
+		min-height: 84px;
+}
+
+.pc-input-foot{
+		display:flex;
+		justify-content: space-between;
+		align-items:center;
+		gap: 10px;
+		margin-top: 10px;
+}
+
+.pc-counter{ color: var(--muted); font-weight: 900; }
+
+.pc-list{ display:grid; gap: 10px; }
+
+.pc-item{
+		background: #ffffff;
+		border: 2px solid var(--line);
+		border-radius: 16px;
+		padding: 12px;
+}
+
+.pc-item-head{
+		display:flex;
+		justify-content: space-between;
+		align-items:center;
+		gap: 10px;
+		color: var(--muted);
+		font-weight: 900;
+		margin-bottom: 8px;
+}
+
+.pc-item-writer{ display:flex; align-items:center; gap: 8px; color: var(--ink); }
+.pc-item-date{ font-size: 13px; }
+
+.pc-item-body{
+		font-weight: 800;
+		color: var(--text);
+		line-height: 1.6;
+		white-space: pre-wrap;
+		word-break: break-word;
+}
+
+.pc-item-actions{
+		display:flex;
+		justify-content:flex-end;
+		gap: 12px;
+		margin-top: 8px;
+}
+
+.pc-link{
+		border: none;
+		background: transparent;
+		padding: 0;
+		color: var(--accent);
+		font-weight: 900;
+		text-decoration: underline;
+		cursor: pointer;
+}
+
+.pc-link--danger{ color: var(--danger); }
+
+.pc-empty{
+		padding: 18px;
+		border-radius: 16px;
+		border: 2px dashed rgba(94,108,175,.25);
+		background: rgba(94,108,175,.06);
+		color: var(--ink);
+		font-weight: 900;
+		text-align: center;
+}
+
+/* 반응형 */
+@media (max-width: 900px){
+		.comm-shell{ grid-template-columns: 1fr; }
+		.pd-title{ font-size: 26px; }
+		.pd-mini-actions{ justify-content: flex-start; }
+}

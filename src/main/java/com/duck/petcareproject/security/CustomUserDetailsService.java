@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.duck.petcareproject.domain.Member;
+import com.duck.petcareproject.domain.Role;
 import com.duck.petcareproject.service.MemberService;
 
 @Service
@@ -26,9 +27,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("존재하지 않는 아이디: " + userId);
         }
 
-        // 권한 문자열 정리 : DB에 USER/ADMIN
         // Spring Security 는 "ROLE_" prefix 형태를 권장
-        String role = member.getRole();
+        Role roleEnum = member.getRole();
+        String role = (roleEnum == null ? "USER" : roleEnum.name());
         if (role != null && !role.startsWith("ROLE_")) {
             role = "ROLE_" + role;
         }
@@ -36,7 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 member.getUserId(),
                 member.getPassword().trim(), // DB에 BCrypt로 저장된 값
-                List.of(new SimpleGrantedAuthority(role == null ? "ROLE_USER" : role))
+                List.of(new SimpleGrantedAuthority(role))
         );
     }
 }

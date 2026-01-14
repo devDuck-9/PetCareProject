@@ -2,21 +2,20 @@
 
 .pet-head-title{
 	font-family: 'Cafe24Dangdanghae', sans-serif;
-	font-size: 23px;
-	letter-spacing: -0.02em;
-	color: var(--ink);
+	font-size: 28px;
 }
 
 .pet-name{
-	font-family: 'Cafe24Dangdanghae', sans-serif;
-	font-weight: 900;
+	font-family: 'Griun_Cocochoitoon', sans-serif;
 	font-size: 28px;
-	color: #d97a1e;
-	font-weight: 900;
 }
 
 .pet-detail-body{
+	margin: 16px 22px 22px;
 	padding: 26px 22px 24px;
+	background: #f4f6ff;
+	border: 1px solid rgba(31,42,68,.10);
+	border-radius: 18px;
 }
 
 .pet-photo-wrap{
@@ -29,8 +28,8 @@
 	width: 200px;
 	height: 200px;
 	border-radius: 18px;
-	background: rgba(255,255,255,.55);
-	border: 1px solid rgba(31,42,68,.10);
+	background: #ffffff;
+	border: 1px solid rgba(31,42,68,.12);
 	box-shadow: 0 12px 30px rgba(31,42,68,.08);
 	display: grid;
 	place-items: center;
@@ -58,10 +57,12 @@
 	grid-template-columns: 110px 1fr;
 	align-items: center;
 
-	background: rgba(255,255,255,.55);
-	border: 1px solid rgba(31,42,68,.08);
+	background: #ffffff;
+	border: 1px solid rgba(31,42,68,.12);
 	border-radius: 12px;
 	padding: 14px 16px;
+
+	box-shadow: 0 10px 22px rgba(31,42,68,.06);
 }
 
 .info-label{
@@ -83,6 +84,9 @@
 	justify-content: center;
 	gap: 12px;
 	padding: 22px 0 0;
+	
+	position: relative;
+	z-index: 10;
 }
 
 .pc-btn{
@@ -100,7 +104,7 @@
 }
 
 .pc-btn--primary{
-	background: #d97a1e;
+	background: #545C7F;
 	color: #fff;
 }
 
@@ -113,4 +117,30 @@
 .pc-btn--primary:hover,
 .pc-btn--danger:hover{
 	filter: brightness(.97);
+}
+
+/* actions */
+.pet-detail-actions{
+	position: relative;
+	display: flex;
+	justify-content: center;	 /* 가운데 기준 */
+	align-items: center;
+	gap: 12px;
+	padding: 22px 0 0;
+}
+
+/* 삭제만 오른쪽 끝으로 */
+.pet-detail-actions > form{
+	position: absolute;
+	right: 0;
+}
+
+/* 삭제 버튼 */
+.pc-btn--danger.delete-btn{
+	background: #e5533d; /* 빨강 계열 */
+}
+
+/* hover 대비 */
+.pc-btn--danger.delete-btn:hover{
+	filter: brightness(.95);
 }

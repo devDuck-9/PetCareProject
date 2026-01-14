@@ -1,4 +1,4 @@
- // 아이디 중복확인 상태 관리
+// 아이디 중복확인 상태 관리
 const $idInput	= $('input[name="userId"]');
 const $checkBtn = $('#btnCheckId');
 
@@ -17,19 +17,12 @@ function resetIdCheck() {
 		$checkBtn.removeClass('is-done');
 		$checkBtn.text('중복확인');
 	}
-	
-	// 중복 확인 완료 후 readonly 처리를 고려했으나
-	// UX가 저하된다고 판단하여 해당 로직 제거
-	/*if ($idInput.length) {
-		$idInput.prop('readonly', false);
-	}*/
-	
 }
 
 // 아이디 입력이 바뀌면 다시 확인 필요
 if ($idInput.length) {
 	lastUserId = $idInput.val();
-	
+
 	$idInput.on('input', function () {
 		const now = $(this).val();
 		if (now !== lastUserId) {
@@ -43,12 +36,11 @@ if ($idInput.length) {
 if ($checkBtn.length) {
 	$checkBtn.on('click', async function (e) {
 		e.preventDefault();
-		
-		// 이미 확인완료 상태일 경우
+
 		if (isIdChecked) return;
-		
+
 		const userId = ($idInput.length ? $idInput.val() : '').trim();
-		
+
 		if (!userId) {
 			Modal.open('#idCheckModal', '아이디를 입력해주세요.');
 			if ($idInput.length) $idInput.trigger('focus');
@@ -67,21 +59,17 @@ if ($checkBtn.length) {
 			}
 
 			const data = await res.json();
-
-			// 모달 메시지
 			Modal.open('#idCheckModal', data.message);
 
-			// exists=true 일 때 이미 사용중 , false 일 경우 사용 가능한 아이디
 			if (data.exists === false) {
 				isIdChecked = true;
-				
-				// 
+
 				if ($checkBtn.length) {
 					$checkBtn.addClass('is-done');
 					$checkBtn.text('확인완료 !');
 				}
 			}
-			
+
 		} catch (err) {
 			Modal.open('#idCheckModal', '네트워크 오류가 발생했어요.');
 		}
@@ -95,9 +83,8 @@ const $pw2	= $form.find('input[name="passwordConfirm"]');
 const $err	= $('#pwError');
 
 function validatePw() {
-	// submit 에서 쓰기 위해 true 반환
 	if (!$pw1.length || !$pw2.length || !$err.length) return true;
-	
+
 	const show = $pw1.val() && $pw2.val() && $pw1.val() !== $pw2.val();
 	$err.css('display', show ? 'block' : 'none');
 	return !show;
@@ -114,42 +101,34 @@ const $domainFinal	= $('#emailDomainFinal');
 function setManualMode() {
 	if (!$domainSelect.length || !$domainInput.length || !$domainFinal.length) return;
 
-	$domainInput.val('');		// 비우기
-	$domainInput.prop('readonly', false);	// 입력 가능
+	$domainInput.val('');
+	$domainInput.prop('readonly', false);
 	$domainInput.attr('placeholder', '도메인 직접입력');
 	$domainInput.trigger('focus');
 
-	$domainFinal.val('');	// hidden 비우기
+	$domainFinal.val('');
 }
 
 function setPresetMode(domain) {
 	if (!$domainSelect.length || !$domainInput.length || !$domainFinal.length) return;
 
-	$domainInput.val(domain);	// 선택값을 input에 보여주기
-	$domainInput.prop('readonly', true);	// 수정 불가
+	$domainInput.val(domain);
+	$domainInput.prop('readonly', true);
 	$domainInput.attr('placeholder', '');
 
-	$domainFinal.val(domain);	// hidden에 최종값 저장
+	$domainFinal.val(domain);
 }
 
 function syncDomainFromSelect() {
 	if (!$domainSelect.length || !$domainInput.length || !$domainFinal.length) return;
 
 	const v = $domainSelect.val();
-
-	if (v === 'manual') {
-		setManualMode();
-	} else {
-		setPresetMode(v);
-	}
+	if (v === 'manual') setManualMode();
+	else setPresetMode(v);
 }
 
-// select 변경 시 모드 전환
-if ($domainSelect.length) {
-	$domainSelect.on('change', syncDomainFromSelect);
-}
+if ($domainSelect.length) $domainSelect.on('change', syncDomainFromSelect);
 
-// 도메인 직접입력에서 타이핑하면 hidden에 반영
 if ($domainInput.length) {
 	$domainInput.on('input', function () {
 		if (!$domainFinal.length || !$domainSelect.length) return;
@@ -159,37 +138,75 @@ if ($domainInput.length) {
 	});
 }
 
-// 초기 상태 반영
 syncDomainFromSelect();
 
+// --------------------
+// 휴대폰(select + input)
+// --------------------
+const $m1 = $('#mobile1');
+const $m2 = $('#mobile2');
+const $m3 = $('#mobile3');
+const $mFinal = $('#mobileFinal');
+const $mErr = $('#mobileError');
+
+function syncMobile() {
+	if (!$m1.length || !$m2.length || !$m3.length || !$mFinal.length) return;
+
+	const v1 = $m1.val();
+	const v2 = ($m2.val() || '').replace(/\D/g, '').slice(0, 4);
+	const v3 = ($m3.val() || '').replace(/\D/g, '').slice(0, 4);
+
+	$m2.val(v2);
+	$m3.val(v3);
+
+	// 가운데 3~4자리, 끝 4자리
+	if (v2.length >= 3 && v3.length === 4) $mFinal.val(`${v1}-${v2}-${v3}`);
+	else $mFinal.val('');
+}
+
+if ($m2.length) $m2.on('input', function(){ syncMobile(); if ($mErr.length) $mErr.hide(); });
+if ($m3.length) $m3.on('input', function(){ syncMobile(); if ($mErr.length) $mErr.hide(); });
+if ($m1.length) $m1.on('change', function(){ syncMobile(); if ($mErr.length) $mErr.hide(); });
+
+syncMobile();
+
+// --------------------
 // submit 이벤트
+// --------------------
 if ($form.length) {
 	$form.on('submit', function (e) {
-		
 		// 비밀번호 불일치 방지
 		const pwOk = validatePw();
 		if (!pwOk) {
 			e.preventDefault();
 			return;
 		}
-		
+
+		// 휴대폰 hidden 동기화 + 검증
+		syncMobile();
+		if ($mFinal.length && !$mFinal.val()) {
+			e.preventDefault();
+			if ($mErr.length) $mErr.show();
+			if ($m2.length) $m2.trigger('focus');
+			return;
+		}
+
 		// 이메일 도메인 검증 (manual일 때만)
 		if ($domainSelect.length && $domainSelect.val() === 'manual') {
 			const d = $domainInput.length ? $domainInput.val().trim() : '';
 			if (!d) {
 				e.preventDefault();
 				if ($domainInput.length) $domainInput.trigger('focus');
-				alert('이메일 도메인을 입력해주세요.');
+				Modal.open('#emailCheckModal', '이메일 도메인을 입력해주세요.');
 				return;
 			}
 		}
-		
+
 		// 아이디 중복확인
 		if (!isIdChecked) {
 			e.preventDefault();
 			Modal.open('#idCheckModal', '아이디 중복확인을 먼저 해주세요.');
 			return;
 		}
-
 	});
 }

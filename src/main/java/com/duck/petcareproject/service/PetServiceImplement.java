@@ -16,6 +16,16 @@ public class PetServiceImplement implements PetService {
 	
 	private final PetMapper petMapper;
 	
+	// 펫 수정
+	public void updatePet(Pet pet) {
+		petMapper.updatePetBySeqAndUser(pet);
+	}
+
+	// 펫 삭제 (성공여부 반환)
+	public boolean deletePet(int petSeq, int userSeq) {
+		return petMapper.deletePetBySeqAndUser(petSeq, userSeq) == 1;
+	}
+	
 	// 선택한 펫 정보
 	public Pet getPetBySeq(int petSeq, int userSeq) {
 		return petMapper.selectPetBySeqAndUser(petSeq, userSeq);

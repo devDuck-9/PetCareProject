@@ -40,11 +40,11 @@
 		) VALUES (
 			#{userId}, #{password}, #{userName},
 			NULLIF(#{email}, ''),
-			NULLIF(#{gender}, ''),
+			#{gender},
 			NULLIF(#{mobile}, ''),
 			NULLIF(#{zipcode}, ''),
 			NULLIF(#{address1}, ''),
-			NULLIF(#{address2}, ''),
+			#{address2},
 			'USER', 'ACTIVE'
 		)
 	</insert>

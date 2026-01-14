@@ -22,7 +22,7 @@
 			// message 세팅
 			if (typeof message === "string") {
 				const $msg = $backdrop.find("[data-modal-message]").first();
-				if ($msg.length) $msg.text(message);
+				if ($msg.length) $msg.html(message);
 			}
 
 			// options 처리 (액션 모달용)
@@ -36,8 +36,15 @@
 			// slot 내용 삽입 (select 등)
 			const $slot = $backdrop.find("[data-modal-slot]").first();
 			if ($slot.length) {
-				if (opts.slotHtml != null) $slot.html(opts.slotHtml);
-				if (opts.clearSlot) $slot.empty();
+				const slotHtml = (opts.slotHtml ?? '').trim();
+
+					if (slotHtml === '') {
+						// slot 안 쓰는 모달 → 공간 자체 제거
+						$slot.empty().hide();
+					} else {
+						// slot 사용하는 모달 → 표시
+						$slot.html(slotHtml).show();
+					}
 			}
 
 			// 열기

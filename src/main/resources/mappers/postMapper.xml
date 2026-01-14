@@ -4,7 +4,129 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.duck.petcareproject.mapper.CommunityPostMapper">
+		
+		<!-- 검색/정렬 포함 게시글 목록 (페이징) -->
+		<select id="selectPostsPagingSearch" resultType="CommunityPost">
+			SELECT
+				p.post_seq,
+				p.user_seq,
+				m.user_name AS userName,
+				p.category,
+				p.title,
+				p.content,
+				p.view_count,
+				p.created_at,
+				p.updated_at,
+				(
+					SELECT COUNT(*)
+					FROM communication_comment c
+					WHERE c.post_seq = p.post_seq
+				) AS commentCount
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+		
+			<where>
+				<if test="category != null and category != ''">
+					p.category = #{category}
+				</if>
+		
+				<if test="keyword != null and keyword != ''">
+					AND (
+						p.title LIKE CONCAT('%', #{keyword}, '%')
+						OR p.content LIKE CONCAT('%', #{keyword}, '%')
+						OR m.user_name LIKE CONCAT('%', #{keyword}, '%')
+					)
+				</if>
+			</where>
+		
+			<choose>
+				<when test="sort == 'old'">
+					ORDER BY p.post_seq ASC
+				</when>
+				<otherwise>
+					ORDER BY p.post_seq DESC
+				</otherwise>
+			</choose>
+		
+			LIMIT #{limit} OFFSET #{offset}
+		</select>
+		
+		<!-- 검색 포함 게시글 수 -->
+		<select id="countPostsSearch" resultType="int">
+			SELECT COUNT(*)
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+			<where>
+				<if test="category != null and category != ''">
+					p.category = #{category}
+				</if>
+		
+				<if test="keyword != null and keyword != ''">
+					AND (
+						p.title LIKE CONCAT('%', #{keyword}, '%')
+						OR p.content LIKE CONCAT('%', #{keyword}, '%')
+						OR m.user_name LIKE CONCAT('%', #{keyword}, '%')
+					)
+				</if>
+			</where>
+		</select>
 
+		<!-- 게시글 상세 조회 (작성자 이름 + 댓글 수 포함) -->
+		<select id="selectPostById" resultType="CommunityPost">
+			SELECT
+				p.post_seq,
+				p.user_seq,
+				m.user_name AS userName,
+				p.category,
+				p.title,
+				p.content,
+				p.view_count,
+				p.created_at,
+				p.updated_at,
+				(
+					SELECT COUNT(*)
+					FROM communication_comment c
+					WHERE c.post_seq = p.post_seq
+				) AS commentCount
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+			WHERE p.post_seq = #{postSeq}
+		</select>
+
+		
+		<!-- 조회수 증가 -->
+		<update id="incrementViewCount">
+			UPDATE communication_post
+			SET view_count = view_count + 1
+			WHERE post_seq = #{postSeq}
+		</update>
+		
+		<!-- 내 게시글 조회 (권한 체크) -->
+		<select id="selectPostByIdAndUser" resultType="CommunityPost">
+			SELECT *
+			FROM communication_post
+			WHERE post_seq = #{postSeq}
+				AND user_seq = #{userSeq}
+		</select>
+		
+		<!-- 게시글 수정 (내 글만) -->
+		<update id="updatePostByIdAndUser" parameterType="CommunityPost">
+			UPDATE communication_post
+			SET
+				category = #{category},
+				title = #{title},
+				content = #{content}
+			WHERE post_seq = #{postSeq}
+				AND user_seq = #{userSeq}
+		</update>
+		
+		<!-- 게시글 삭제 (내 글만) -->
+		<delete id="deletePostByIdAndUser">
+			DELETE FROM communication_post
+			WHERE post_seq = #{postSeq}
+				AND user_seq = #{userSeq}
+		</delete>
+		
 		<!-- 게시글 등록 -->
 		<insert id="insertPost" parameterType="CommunityPost" useGeneratedKeys="true" keyProperty="postSeq">
 			INSERT INTO communication_post (user_seq, category, title, content)
@@ -13,35 +135,34 @@
 		
 		<!-- 전체 게시글 목록 (카테고리 선택 시 필터) -->
 		<select id="selectPostsPaging" resultType="CommunityPost">
-			<![CDATA[
-				SELECT
-					p.post_seq,
-					p.user_seq,
-					m.user_name AS userName,
-					p.category,
-					p.title,
-					p.content,
-					p.view_count,
-					p.created_at,
-					p.updated_at,
-					(
-						SELECT COUNT(*)
-						FROM communication_comment c
-						WHERE c.post_seq = p.post_seq
-					) AS commentCount
-				FROM communication_post p
-				JOIN member m ON m.user_seq = p.user_seq
-			]]>
+			SELECT
+				p.post_seq,
+				p.user_seq,
+				m.user_name AS userName,
+				p.category,
+				p.title,
+				p.content,
+				p.view_count,
+				p.created_at,
+				p.updated_at,
+				(
+					SELECT COUNT(*)
+					FROM communication_comment c
+					WHERE c.post_seq = p.post_seq
+				) AS commentCount
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+		
 			<where>
 				<if test="category != null and category != ''">
 					p.category = #{category}
 				</if>
 			</where>
-			<![CDATA[
-				ORDER BY p.post_seq DESC
-				LIMIT #{limit} OFFSET #{offset}
-			]]>
+		
+			ORDER BY p.post_seq DESC
+			LIMIT #{limit} OFFSET #{offset}
 		</select>
+
 		
 		<!-- 전체 게시글 전체 수 (페이징용 count) -->
 		<select id="countPosts" resultType="int">
@@ -56,30 +177,28 @@
 		
 		<!-- userSeq 기준 오늘의 게시글 페이지 목록 (페이징) - 대시보드용 -->
 		<select id="selectTodayPostsByUserPaging" resultType="CommunityPost">
-			<![CDATA[
-				SELECT
-					p.post_seq,
-					p.user_seq,
-					m.user_name AS userName,
-					p.category,
-					p.title,
-					p.content,
-					p.view_count,
-					p.created_at,
-					p.updated_at,
-					(
-						SELECT COUNT(*)
-						FROM communication_comment c
-						WHERE c.post_seq = p.post_seq
-					) AS commentCount
-				FROM communication_post p
-				JOIN member m ON m.user_seq = p.user_seq
-				WHERE p.user_seq = #{userSeq}
-					AND p.created_at >= CURDATE()
-					AND p.created_at < CURDATE() + INTERVAL 1 DAY
-				ORDER BY p.created_at DESC
-				LIMIT #{limit} OFFSET #{offset}
-			]]>
+			SELECT
+				p.post_seq,
+				p.user_seq,
+				m.user_name AS userName,
+				p.category,
+				p.title,
+				p.content,
+				p.view_count,
+				p.created_at,
+				p.updated_at,
+				(
+					SELECT COUNT(*)
+					FROM communication_comment c
+					WHERE c.post_seq = p.post_seq
+				) AS commentCount
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+			WHERE p.user_seq = #{userSeq}
+				AND p.created_at >= CURDATE()
+				AND p.created_at &lt; CURDATE() + INTERVAL 1 DAY
+			ORDER BY p.created_at DESC
+			LIMIT #{limit} OFFSET #{offset}
 		</select>
 		
 		<!-- userSeq 기준 오늘의 게시글 전체 수 -->

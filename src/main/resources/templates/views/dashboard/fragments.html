@@ -3,23 +3,21 @@
 	<div class="post-card">
 		<th:block th:if="${!#lists.isEmpty(todayPosts)}">
 			<th:block th:each="post : ${todayPosts}">
-				<a class="post-row" th:href="@{/community/{id}(id=${post.postSeq})}">
+				<a class="post-row" th:href="@{/detailPost/{id}(id=${post.postSeq})}">
 					<div class="post-left">
-						<div class="avatar" th:text="${post.userName != null ? #strings.substring(post.userName,0,1) : '🙂'}">🙂</div>
-						<div class="post-title" th:text="${post.title != null ? post.title : '(제목 없음)'}">
-							고양이가 사료를 잘 안먹을 때 어떻게 할까요?
-						</div>
+						<div class="avatar" th:text="${post.userName != null ? #strings.substring(post.userName,0,1) : '🙂'}">프로필</div>
+						<div class="post-title" th:text="${post.title != null ? post.title : '(제목 없음)'}">게시글 제목</div>
 					</div> <!-- 'post-left' END -->
 					
 					<div class="post-right">
 						<div class="meta">
 							<span>작성자</span>
-							<b th:text="${post.userName != null ? post.userName : '익명'}">홍길동</b>
+							<b th:text="${post.userName != null ? post.userName : '익명'}">이름</b>
 						</div> 
 						
 						  <div class="meta">
 							<span class="bubble">💬</span>
-							<b th:text="${post.commentCount != null ? post.commentCount : 0}">23</b>
+							<b th:text="${post.commentCount != null ? post.commentCount : 0}">댓글수</b>
 						</div>
 					</div> <!-- 'post-right' END -->
 				</a> <!-- 'post-row' END -->
@@ -28,7 +26,7 @@
 		<th:block th:if="${#lists.isEmpty(todayPosts)}">
 			<a class="post-row" th:href="@{/addPostForm}">
 				<span class="play"></span>
-				<div class="post-title"> 오늘 작성하신 게시글이 없습니다.<br>게시글을 등록해 보세요.</div>
+				<div class="post-title"> 오늘 작성하신 게시글이 없습니다.&nbsp;게시글을 등록해 보세요 ✍️</div>
 				<div class="row-right">›</div>
 			</a>
 		</th:block>
@@ -49,9 +47,9 @@
 	<div class="list-card">
 		<th:block th:if="${!#lists.isEmpty(schedules)}">
 			<th:block th:each="s : ${schedules}">
-				<a class="list-row" th:href="@{/schedule/{id}(id=${s.scheduleSeq})}">
+				<a class="list-row" th:href="@{/detailSchedule/{id}(id=${s.scheduleSeq})}">
 					<div class="row-left">
-						<span class="icon play">▶</span>
+						<span class="icon status-dot" th:attr="data-status=${s.status}"></span>
 						<span class="row-text">
 							<b th:text="${#temporals.format(s.scheduleTime, 'M/d')}">날짜</b>
 							<span class="sep">|</span>
@@ -69,15 +67,16 @@
 		</th:block>
 		<!-- 일정이 없을 경우 -->
 		<th:block th:if="${#lists.isEmpty(schedules)}">
-			<div class="list-row empty-row">
+			<a class="list-row empty-row empty-link js-add-schedule">
 				<div class="row-left">
 					<img class="icon icon-img" th:src="@{/images/schedule.png}" alt="PetCare">
 					<span class="row-text">
-						<span>등록된 일정이 없습니다.</span>
+						<span>등록된 일정이 없습니다.</span> <span class="empty-sub">&nbsp;일정을 등록해보세요 😊</span>
 					</span>
 				</div>
+				
 				<div class="row-right">›</div>
-			</div>
+			</a>
 		</th:block>
 	</div> <!-- 'list-card' END -->
 	
@@ -97,7 +96,7 @@
 	<div class="list-card">
 		<th:block th:if="${!#lists.isEmpty(pets)}">
 			<th:block th:each="pet : ${pets}">
-				<a class="list-row" th:href="@{/pets/{id}(id=${pet.petSeq})}">
+				<a class="list-row" th:href="@{/detailPet/{id}(id=${pet.petSeq})}">
 					<div class="row-left">
 						<img class="icon icon-img" th:src="@{/images/hand_heart.png}" alt="PetCare">
 						<span class="row-text">
@@ -113,15 +112,17 @@
 		
 		<!-- 반려동물이 없을 경우 -->
 		<th:block th:if="${#lists.isEmpty(pets)}">
-			<div class="list-row empty-row">
+			<a class="list-row empty-row empty-link" th:href="@{/addPetForm}">
+
 				<div class="row-left">
-					<img class="icon icon-img" th:src="@{/images/hand_heart.png}" alt="PetCare">
+					<img class="icon icon-img" th:src="@{/images/schedule.png}" alt="PetCare">
 					<span class="row-text">
-						<span>등록된 반려동물이 없습니다.</span>
+						<span>등록된 반려동물이 없습니다.</span>&nbsp;<span class="empty-sub">반려동물을 등록해보세요 🥰</span>
 					</span>
 				</div>
+
 				<div class="row-right">›</div>
-			</div>
+			</a>
 		</th:block>
 	</div> <!-- ' list-card ' END -->
 	

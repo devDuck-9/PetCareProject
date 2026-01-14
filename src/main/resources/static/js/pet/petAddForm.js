@@ -225,4 +225,33 @@ $(function () {
 			return;
 		}
 	});
+	
+	// 수정폼일 경우 기존 birthDate 세팅
+	const birthDateInput = document.getElementById('birthDate');
+	if (birthDateInput && birthDateInput.dataset.value) {
+		const [y, m, d] = birthDateInput.dataset.value.split('-');
+		document.getElementById('birthYear').value = y;
+		document.getElementById('birthMonth').value = m;
+		document.getElementById('birthDay').value = d;
+		birthDateInput.value = birthDateInput.dataset.value;
+	}
+	
+	// 수정 취소 버튼 → 모달 확인
+	$('#btnCancle').on('click', function (e) {
+		e.preventDefault();
+		
+		const href = $(this).attr('href');
+		
+		Modal.open('#petCancleModal', '정말 취소하시겠습니까?<br><span style="opacity:.8">작성했던 정보가 사라집니다.</span>', {
+			primaryText: '돌아가기',
+			secondaryText: '취소'
+		});
+		// actionModal의 primary 버튼
+		$('#petCancleModal [data-modal-primary]').off('click.petCancel').on('click.petCancel', function () {
+			window.location.href = href;
+		});
+		
+	});
+	
+
 });

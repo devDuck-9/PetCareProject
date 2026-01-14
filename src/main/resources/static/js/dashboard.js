@@ -30,7 +30,7 @@ $(function () {
 	}
 
 	function openNoPetModal() {
-		Modal.open(MODAL_ID, '반려동물이 없습니다.\n반려동물을 등록하시겠습니까?', {
+		Modal.open(MODAL_ID, '반려동물이 없습니다.<br>반려동물을 등록하시겠습니까?', {
 			primaryText: '등록하기',
 			secondaryText: '취소',
 			clearSlot: true,
@@ -39,35 +39,43 @@ $(function () {
 			}
 		});
 	}
-
+	
 	if ($btn.length) {
-		$btn.on('click', async function (e) {
-			e.preventDefault();
-
-			try {
-				const res = await fetch('/api/pets/mine', {
-					headers: { 'Accept': 'application/json' }
-				});
-
-				if (!res.ok) {
-					Modal.open(MODAL_ID, '펫 정보를 불러오지 못했습니다.');
-					return;
-				}
-
-				const pets = await res.json();
-
-				if (!Array.isArray(pets) || pets.length === 0) {
-					openNoPetModal();
-				} else {
-					openPickModal(pets);
-				}
-			} catch (err) {
-				console.error(err);
-				Modal.open(MODAL_ID, '네트워크 오류가 발생했어요.');
-			}
-		});
+		$btn.on('click', handleAddScheduleClick);
 	}
+	
+	// 대쉬보드의 일정 fragment 의 아이디의  클래스명이 js-add-schedule 인 요소 클릭시 함수
+	$('#schedulePanelWrap').on('click', '.js-add-schedule', function (e) {
+		handleAddScheduleClick(e);
+	});
+	
+	// 일정 등록 시 반려동물없으면 반려동물등록으로 이동
+	async function handleAddScheduleClick(e) {
+		e.preventDefault();
 
+		try {
+			const res = await fetch('/api/pet/mine', {
+				headers: { 'Accept': 'application/json' }
+			});
+
+			if (!res.ok) {
+				Modal.open(MODAL_ID, '펫 정보를 불러오지 못했습니다.');
+				return;
+			}
+
+			const pets = await res.json();
+
+			if (!Array.isArray(pets) || pets.length === 0) {
+				openNoPetModal();
+			} else {
+				openPickModal(pets);
+			}
+		} catch (err) {
+			console.error(err);
+			Modal.open(MODAL_ID, '네트워크 오류가 발생했어요.');
+		}
+	}
+	
 	// ==========================================
 	// 대시보드 패널 페이징 : fragment 비동기 교체
 	// ==========================================
@@ -128,7 +136,7 @@ $(function () {
 		} catch (err) {
 			console.error(err);
 			// 사용자에게 너무 시끄럽지 않게 안내
-			Modal.open(MODAL_ID, '내용을 불러오지 못했습니다.\n잠시 후 다시 시도해주세요.');
+			Modal.open(MODAL_ID, '내용을 불러오지 못했습니다.<br>잠시 후 다시 시도해주세요.');
 		} finally {
 			setLoading(key, false);
 		}

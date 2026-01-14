@@ -50,7 +50,7 @@ public class ApiController {
 	}
 
 	// 내 펫 목록
-	@GetMapping("/api/pets/mine")
+	@GetMapping("/api/pet/mine")
 	public ResponseEntity<?> myPets(Authentication authentication) {
 
 		// 로그인 안 됐으면 401

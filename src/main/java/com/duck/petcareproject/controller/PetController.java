@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.duck.petcareproject.domain.Gender;
 import com.duck.petcareproject.domain.Member;
 import com.duck.petcareproject.domain.Pet;
 import com.duck.petcareproject.service.MemberService;
@@ -31,8 +32,116 @@ public class PetController {
 	private final MemberService memberService;
 	private final FileStorageService fileStorageService;
 	
+	// 펫 삭제
+	@PostMapping("/deletePet/{id}")
+	public String deletePet(@PathVariable("id") Integer petSeq, Authentication authentication, RedirectAttributes ra) {
+
+		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			return "redirect:/loginForm";
+		}
+
+		String userId = authentication.getName();
+		Member loginMember = memberService.getMember(userId);
+		if (loginMember == null) return "redirect:/loginForm";
+		int userSeq = loginMember.getUserSeq();
+
+		// 내 펫인지 체크 & 삭제
+		boolean ok = petService.deletePet(petSeq, userSeq);
+		if (!ok) {
+			ra.addFlashAttribute("errorMsg", "삭제할 수 없습니다.");
+			return "redirect:/";
+		}
+
+		ra.addFlashAttribute("successMsg", "반려동물이 삭제되었습니다.");
+		return "redirect:/";
+	}
+	
+	// 펫 수정
+	@PostMapping("/updatePet/{id}")
+	public String updatePet(@PathVariable("id") Integer petSeq,
+									Authentication authentication,
+									RedirectAttributes ra,
+									@RequestParam("petName") String petName,
+									@RequestParam("petType") String petType,
+									@RequestParam("gender") String gender,
+									@RequestParam("birthDate") String birthDate,
+									@RequestParam(value="memo", required=false) String memo,
+									@RequestParam(value="photo", required=false) MultipartFile photo ) throws Exception {
+
+		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			return "redirect:/loginForm";
+		}
+
+		String userId = authentication.getName();
+		Member loginMember = memberService.getMember(userId);
+		if (loginMember == null) return "redirect:/loginForm";
+		int userSeq = loginMember.getUserSeq();
+
+		// 내 펫인지 먼저 조회
+		Pet origin = petService.getPetBySeq(petSeq, userSeq);
+		if (origin == null) {
+			ra.addFlashAttribute("errorMsg", "잘못된 접근입니다.");
+			return "redirect:/";
+		}
+
+		// 이미지 처리 : 새 사진이 없으면 기존 유지
+		String petImagePath = origin.getPetImage();
+		if (photo != null && !photo.isEmpty()) {
+			petImagePath = fileStorageService.savePetImage(photo);
+		}
+
+		// 나이 계산
+		Integer petAge = null;
+		LocalDate parsedBirth = null;
+		if (birthDate != null && !birthDate.isBlank()) {
+			parsedBirth = LocalDate.parse(birthDate);
+			petAge = Period.between(parsedBirth, LocalDate.now()).getYears();
+		}
+
+		// 업데이트 객체 구성
+		Pet pet = new Pet();
+		pet.setPetSeq(petSeq);
+		pet.setUserSeq(userSeq);
+		pet.setPetName(petName.trim());
+		pet.setPetType(petType.trim());
+		pet.setGender(gender != null ? Gender.valueOf(gender) : Gender.U);
+		pet.setBirthDate(parsedBirth);
+		pet.setPetAge(petAge);
+		pet.setMemo(memo);
+		pet.setPetImage(petImagePath);
+
+		petService.updatePet(pet);
+
+		ra.addFlashAttribute("successMsg", "반려동물 정보가 수정되었습니다.");
+		return "redirect:/detailPet/" + petSeq;
+	}
+	
+	// 펫 수정 폼
+	@GetMapping("/updatePet/{id}")
+	public String updatePetForm(@PathVariable("id") Integer petSeq, Authentication authentication, Model model, RedirectAttributes ra) {
+
+		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			return "redirect:/loginForm";
+		}
+
+		String userId = authentication.getName();
+		Member loginMember = memberService.getMember(userId);
+		if (loginMember == null) return "redirect:/loginForm";
+
+		Pet pet = petService.getPetBySeq(petSeq, loginMember.getUserSeq());
+		if (pet == null) {
+			ra.addFlashAttribute("errorMsg", "잘못된 정보입니다.");
+			return "redirect:/";
+		}
+
+		// 수정폼에서 기존 값 바인딩
+		model.addAttribute("pet", pet);
+
+		return "pets/petEditForm";
+	}
+	
 	// 펫 상세
-	@GetMapping("/pets/{id}")
+	@GetMapping("/detailPet/{id}")
 	public String petDetail(@PathVariable("id") Integer petSeq, Authentication authentication, Model model, RedirectAttributes ra) {
 
 		// 로그인 체크
@@ -60,19 +169,9 @@ public class PetController {
 			return "redirect:/";
 		}
 		
-		// 성별
-		if(pet.getGender().equals("M")) {
-			pet.setGender("남아");
-		}else if(pet.getGender().equals("F")) {
-			pet.setGender("여아");
-		}else {
-			pet.setGender("선택없음");
-		}
-		
-		// 뷰로 전달
 		model.addAttribute("pet", pet);
-
-		return "pets/perDetail";
+		
+		return "pets/petDetail";
 	}
 	
 	// 펫 등록
@@ -121,7 +220,7 @@ public class PetController {
 		pet.setPetImage(petImagePath);
 		pet.setCreatedAt(LocalDateTime.now());
 		pet.setUpdatedAt(LocalDateTime.now());
-		pet.setGender(gender);
+		pet.setGender(gender != null ? Gender.valueOf(gender) : Gender.U);
 		pet.setBirthDate(birthDate != null && !birthDate.isBlank() ? LocalDate.parse(birthDate) : null);
 		pet.setMemo(memo);
 

@@ -13,7 +13,7 @@ public class Pet {
 	private int userSeq;
 	private String petName;
 	private String petType;
-	private String gender;	// M/F/U
+	private Gender gender;	// M/F/U
 	private LocalDate birthDate;
 	private Integer petAge;
 	private String petImage;

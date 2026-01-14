@@ -5,7 +5,7 @@
 
 <th:block layout:fragment="content">
 
-	<link rel="stylesheet" th:href="@{/css/schedule.css}">
+	<link rel="stylesheet" th:href="@{/css/schedule/schedule.css}">
 	<link rel="stylesheet" th:href="@{/css/components/modal.css}">
 
 	<main class="page">
@@ -13,8 +13,12 @@
 			<div class="sch-card">
 				<div class="sch-panel">
 
+					<!-- 헤더 -->
 					<div class="sch-head">
-						<h1 class="sch-title">선택한 반려동물 : <span th:text="${petName}">이름</span></h1>
+						<span class="sch-title sch-title-font">
+							일정 등록 &nbsp; <span class="head-icon">🐾</span>
+						</span>
+						<span class="sch-title sch-name" th:text="${petName}">선택한 반려동물</span>
 					</div>
 
 					<div class="sch-body">
@@ -56,19 +60,17 @@
 								<div class="sch-label">알림</div>
 								<div class="sch-radios">
 									<label class="sch-radio">
-										<input type="radio" name="alarm" value="Y">
-										동의
+										<input type="radio" name="notifyYn" value="Y" checked>동의
 									</label>
 									<label class="sch-radio">
-										<input type="radio" name="alarm" value="N" checked>
-										미동의
+										<input type="radio" name="notifyYn" value="N">미동의
 									</label>
 								</div>
 							</div>
 							
 							<div class="form-actions">
 								<button type="submit" class="btn-pill-orange">등록</button>
-								<button type="button" class="btn-pill" onclick="confirmCancelWithModal('#confirmModal','게시글 등록을 취소할까요?')">취소</button>
+								<button type="button" class="btn-pill" onclick="confirmCancelWithModal('#confirmModal','일정 등록을 취소할까요?<br>작성중인 내용이 사라집니다.')">취소</button>
 							</div>
 
 						</form>
@@ -91,7 +93,7 @@
 		Modal.bind('#confirmModal');
 	</script>
 
-	<script th:src="@{/js/schedule.js}"></script>
+	<script th:src="@{/js/schedule/schedule.js}"></script>
 	<script th:src="@{/js/common.js}"></script>
 </th:block>
 </html>

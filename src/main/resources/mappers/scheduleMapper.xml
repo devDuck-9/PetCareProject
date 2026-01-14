@@ -4,16 +4,59 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.duck.petcareproject.mapper.ScheduleMapper">
-
+	
+	<!-- 선택한 일정 수정 -->
+	<update id="updateScheduleBySeqAndUser" parameterType="Schedule">
+		UPDATE schedule s
+		JOIN pet p ON s.pet_seq = p.pet_seq
+		SET
+			s.title = #{title},
+			s.schedule_time = #{scheduleTime},
+			s.memo = #{memo},
+			s.status = #{status},
+			s.notify_enabled = #{notifyEnabled}
+		WHERE s.schedule_seq = #{scheduleSeq}
+			AND p.user_seq = #{userSeq}
+	</update>
+	
+	<!-- 선택한 일정 삭제 -->
+	<delete id="deleteScheduleBySeqAndUser">
+		DELETE s
+		FROM schedule s
+		JOIN pet p ON s.pet_seq = p.pet_seq
+		WHERE s.schedule_seq = #{scheduleSeq}
+			AND p.user_seq = #{userSeq}
+	</delete>
+	
+	<!-- 선택한 일정 조회 -->
+	<select id="selectScheduleByIdAndUser" resultType="Schedule">
+		SELECT s.*
+		FROM schedule s
+		JOIN pet p ON s.pet_seq = p.pet_seq
+		WHERE s.schedule_seq = #{scheduleSeq}
+			AND p.user_seq = #{userSeq}
+	</select>
+	
 	<!-- 일정 등록 -->
-	<insert id="insertSchedule" parameterType="Schedule" useGeneratedKeys="true" keyProperty="scheduleSeq">
-		INSERT INTO schedule
-		(pet_seq, title, schedule_time, memo)
-		VALUES
-		(#{petSeq}, #{title}, #{scheduleTime}, #{memo})
+	<insert id="insertSchedule" parameterType="Schedule">
+		INSERT INTO schedule (
+			pet_seq,
+			title,
+			schedule_time,
+			memo,
+			status,
+			notify_enabled
+		)
+		VALUES (
+			#{petSeq},
+			#{title},
+			#{scheduleTime},
+			#{memo},
+			'PLANNED',
+			#{notifyEnabled}
+		)
 	</insert>
-
-
+	
 	<!-- userSeq 의 일정 페이지 목록 (페이징) -->
 	<select id="selectScheduleByUserPaging" resultType="Schedule">
 		SELECT
@@ -31,8 +74,7 @@
 		ORDER BY s.schedule_time ASC
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
-
-
+	
 	<!-- userSeq 의 일정 전체수 -->
 	<select id="countSchedulesByUser" resultType="int">
 		SELECT COUNT(*)
@@ -40,5 +82,5 @@
 		JOIN pet p ON p.pet_seq = s.pet_seq
 		WHERE p.user_seq = #{userSeq}
 	</select>
-
+	
 </mapper>

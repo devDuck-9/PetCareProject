@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/community/post_edit.css}"/>
+	<link rel="stylesheet" th:href="@{/css/community/post_form.css}"/>
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}"/>
+
+	<main class="comm-page">
+		<section class="comm-shell">
+
+			<!-- 왼쪽 사이드바 -->
+			<div th:replace="~{fragments/community_sidebar :: communitySidebar(${post != null ? post.category : 'ALL'})}"></div>
+
+			<!-- 오른쪽 : 글수정 카드 -->
+			<div class="comm-main">
+				<div class="comm-card">
+
+					<div class="comm-card-head">
+						<div class="comm-card-title">
+							<span class="comm-paw">🐾</span> 글 수정
+						</div>
+					</div>
+
+					<div class="comm-card-body">
+						<form id="postEditForm" th:action="@{/updatePost/{id}(id=${post.postSeq})}" method="post">
+							<input type="hidden" name="postSeq" th:value="${post != null ? post.postSeq : 0}">
+
+							<!-- 카테고리 -->
+							<div class="cf-row">
+								<div class="cf-label">카테고리</div>
+
+								<select class="cf-select" name="category" id="categorySelect">
+									<option value="FREE" th:selected="${post != null && post.category == 'FREE'}">자유 게시판</option>
+									<option value="INFO" th:selected="${post != null && post.category == 'INFO'}">정보 공유</option>
+									<option value="BOAST" th:selected="${post != null && post.category == 'BOAST'}">자랑 하기</option>
+									<option value="QNA"	th:selected="${post != null && post.category == 'QNA'}">질문 &amp; 답변</option>
+								</select>
+							</div>
+
+							<!-- 제목 -->
+							<div class="cf-row">
+								<div class="cf-label">제목</div>
+								<input class="cf-input" type="text" name="title" id="title" th:value="${post != null ? post.title : ''}" placeholder="제목을 입력해주세요.">
+							</div>
+
+							<!-- 본문 -->
+							<div class="cf-row">
+								<div class="cf-label">본문</div>
+								<textarea class="cf-textarea" name="content" id="content" placeholder="내용을 입력해주세요." th:text="${post != null ? post.content : ''}"></textarea>
+							</div>
+							
+							<!-- 버튼 -->
+							<div class="cf-actions">
+								<button type="submit" class="btn-pill-orange">저장</button>
+								<button type="button" class="btn-pill" onclick="confirmCancelWithModal('#confirmModal','수정을 취소할까요?<br>변경사항이 저장되지 않습니다.')">취소</button>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+
+		</section>
+	</main>
+
+	<!-- 알림 모달 -->
+	<div th:replace="~{fragments/modal :: modal('postModal', '알림')}"></div>
+	<!-- 취소 확인 모달 -->
+	<div th:replace="~{fragments/modal :: actionModal('confirmModal', '알림')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+			Modal.bind('#postModal');
+			Modal.bind('#confirmModal');
+	</script>
+
+	<script th:src="@{/js/community/post_edit.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+</th:block>
+</html>
