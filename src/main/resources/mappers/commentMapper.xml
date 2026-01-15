@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duck.petcareproject.mapper.CommunityCommentMapper">
+		
+		<!-- 댓글 목록 (작성자명 + isOwner 계산) -->
+		<select id="selectCommentsByPost" resultType="CommunityComment">
+			SELECT
+				c.comment_seq AS commentSeq,
+				c.post_seq AS postSeq,
+				c.user_seq AS userSeq,
+				c.content AS content,
+				c.created_at AS createdAt,
+				c.updated_at AS updatedAt,
+				m.user_name AS userName,
+				CASE WHEN c.user_seq = #{loginUserSeq} THEN TRUE ELSE FALSE END AS isOwner
+			FROM communication_comment c
+			JOIN member m ON m.user_seq = c.user_seq
+			WHERE c.post_seq = #{postSeq}
+			ORDER BY c.comment_seq DESC
+		</select>
+		
+		<!-- 내 댓글 단건(수정/삭제 권한 체크) -->
+		<select id="selectCommentByIdAndUser" resultType="CommunityComment">
+			SELECT
+				c.comment_seq AS commentSeq,
+				c.post_seq AS postSeq,
+				c.user_seq AS userSeq,
+				c.content AS content,
+				c.created_at	AS createdAt,
+				c.updated_at	AS updatedAt
+			FROM communication_comment c
+			WHERE c.comment_seq = #{commentSeq}
+				AND c.user_seq = #{userSeq}
+		</select>
+		
+		<!-- 댓글 단건(postSeq 확인용) -->
+		<select id="selectCommentById" resultType="CommunityComment">
+			SELECT
+				c.comment_seq AS commentSeq,
+				c.post_seq AS postSeq,
+				c.user_seq AS userSeq,
+				c.content AS content,
+				c.created_at	AS createdAt,
+				c.updated_at	AS updatedAt
+			FROM communication_comment c
+			WHERE c.comment_seq = #{commentSeq}
+		</select>
+		
+		<!-- 댓글 등록 -->
+		<insert id="insertComment" parameterType="CommunityComment">
+			INSERT INTO communication_comment (post_seq, user_seq, content, created_at, updated_at)
+			VALUES (#{postSeq}, #{userSeq}, #{content}, NOW(), NOW())
+		</insert>
+		
+		<!-- 댓글 수정(내 댓글만) -->
+		<update id="updateCommentByIdAndUser" parameterType="CommunityComment">
+			UPDATE communication_comment
+			SET content = #{content},
+				updated_at = NOW()
+			WHERE comment_seq = #{commentSeq}
+				AND user_seq = #{userSeq}
+		</update>
+		
+		<!-- 댓글 삭제(내 댓글만) -->
+		<delete id="deleteCommentByIdAndUser">
+			DELETE FROM communication_comment
+			WHERE comment_seq = #{commentSeq}
+				AND user_seq = #{userSeq}
+		</delete>
+		
+</mapper>

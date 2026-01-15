@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.duck.petcareproject.domain.Category;
 import com.duck.petcareproject.domain.CommunityPost;
 import com.duck.petcareproject.domain.Member;
+import com.duck.petcareproject.service.CommunityCommentService;
 import com.duck.petcareproject.service.CommunityPostService;
 import com.duck.petcareproject.service.MemberService;
 
@@ -25,6 +26,7 @@ public class CommunityPostController {
 	
 	private final CommunityPostService communityPostService;
 	private final MemberService memberService;
+	private final CommunityCommentService communityCommentService;
 	
 	// 커뮤니티 목록 (카테고리별)
 	@GetMapping({"/community", "/community/{slug}"})
@@ -118,6 +120,8 @@ public class CommunityPostController {
 				}
 		}
 		model.addAttribute("returnUrl", returnUrl);
+		
+		model.addAttribute("comments", communityCommentService.getCommentsByPost(postSeq, member.getUserSeq()));
 		
 		return "community/postDetail";
 	}

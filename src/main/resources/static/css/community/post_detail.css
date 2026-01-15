@@ -123,6 +123,7 @@
 		white-space: normal;
 		word-break: break-word;
 		box-shadow: 0 12px 20px rgba(32,42,87,.05);
+		white-space: pre-line;
 }
 
 .pd-mini-actions{
@@ -189,7 +190,7 @@
 		font-weight: 800;
 		color: var(--ink);
 		background: transparent;
-		min-height: 84px;
+		min-height: 50px;
 }
 
 .pc-input-foot{

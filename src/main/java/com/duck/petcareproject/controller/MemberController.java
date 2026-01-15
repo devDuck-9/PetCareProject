@@ -1,10 +1,12 @@
 package com.duck.petcareproject.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.duck.petcareproject.domain.Gender;
@@ -20,7 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	
 	private final MemberService memberService;
-
+	
+//	// 내정보
+//	@GetMapping("/mypage")
+//	public String myPage(Authentication auth, Model model) {
+//		
+//	}
+	
 	// 로그인 폼
 	@GetMapping("/loginForm")
 	public String loginForm(Model model, HttpSession session) {

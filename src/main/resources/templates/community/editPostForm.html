@@ -13,7 +13,7 @@
 		<section class="comm-shell">
 
 			<!-- 왼쪽 사이드바 -->
-			<div th:replace="~{fragments/community_sidebar :: communitySidebar(${post != null ? post.category : 'ALL'})}"></div>
+			<div th:replace="~{fragments/community_sidebar :: communitySidebar(${post != null ? post.category.name() : 'ALL'})}"></div>
 
 			<!-- 오른쪽 : 글수정 카드 -->
 			<div class="comm-main">
@@ -44,13 +44,21 @@
 							<!-- 제목 -->
 							<div class="cf-row">
 								<div class="cf-label">제목</div>
-								<input class="cf-input" type="text" name="title" id="title" th:value="${post != null ? post.title : ''}" placeholder="제목을 입력해주세요.">
+
+								<div class="cf-field has-counter is-input">
+									<input class="cf-input" type="text" name="title" id="title" maxlength="100" th:value="${post != null ? post.title : ''}" placeholder="제목을 입력해주세요.">
+									<span class="inline-counter" id="titleCounter">0/100</span>
+								</div>
 							</div>
 
 							<!-- 본문 -->
 							<div class="cf-row">
 								<div class="cf-label">본문</div>
-								<textarea class="cf-textarea" name="content" id="content" placeholder="내용을 입력해주세요." th:text="${post != null ? post.content : ''}"></textarea>
+
+								<div class="cf-field has-counter is-textarea">
+									<textarea class="cf-textarea" name="content" id="content" maxlength="10000" placeholder="내용을 입력해주세요." th:text="${post != null ? post.content : ''}"></textarea>
+									<span class="inline-counter" id="contentCounter">0/10000</span>
+								</div>
 							</div>
 							
 							<!-- 버튼 -->

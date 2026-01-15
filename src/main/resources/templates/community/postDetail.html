@@ -13,7 +13,7 @@
 		<section class="comm-shell">
 
 			<!-- 왼쪽 사이드바 -->
-			<div th:replace="~{fragments/community_sidebar :: communitySidebar(${post != null ? post.category : 'ALL'})}"></div>
+			<div th:replace="~{fragments/community_sidebar :: communitySidebar(${post != null ? post.category.name() : 'ALL'})}"></div>
 
 			<!-- 오른쪽 : 상세 카드 -->
 			<div class="comm-main">
@@ -27,10 +27,10 @@
 								</div>
 
 								<div class="pd-actions">
-									<a class="btn-pill" th:href="@{/community}" title="목록">목록</a>
+									<a class="btn-pill" th:href="@{${returnUrl}}" title="목록">목록</a>
 									
 									<!-- 내 글일 때만 노출 isOwner -->
-									<a class="btn-pill" th:if="${isOwner}" th:href="@{/updatePost/{id}(id=${post.postSeq})}">수정</a>
+									<a class="btn-pill-orange" th:if="${isOwner}" th:href="@{/updatePost/{id}(id=${post.postSeq})}">수정</a>
 									<button type="button" class="btn-pill pd-btn-danger" th:if="${isOwner}" th:data-post-seq="${post.postSeq}" id="btnDeletePost">삭제</button>
 									<input type="hidden" id="returnUrl" name="returnUrl" th:value="${returnUrl}">
 								</div>
@@ -62,14 +62,7 @@
 
 					<!-- 본문 -->
 					<section class="pd-body">
-						<!-- 줄바꿈 유지 -->
-						<div class="pd-content" th:utext="${post != null ? #strings.replace(#strings.escapeXml(post.content), '\n', '<br/>') : ''}"></div>
-
-						<div class="pd-mini-actions">
-							<button type="button" class="btn-pill" id="btnScrollComment">
-								<i class="bi bi-chat"></i> 댓글로
-							</button>
-						</div>
+						<div class="pd-content" th:text="${post.content}"></div>
 					</section>
 
 					<!-- 댓글 -->
@@ -77,15 +70,20 @@
 						<div class="pd-comments-head">
 							<div class="pd-comments-title">
 								<span class="comm-paw">🐾</span> 댓글
-								<span class="pd-comments-count" th:text="${post != null && post.commentCount != null ? post.commentCount : 0}">0</span>
+								<span class="pd-comments-count" th:text="${post != null && post.commentCount != null ? post.commentCount : 0}">댓글수</span>
 							</div>
 						</div>
 
+						<!-- 댓글이 없을 때 -->
+						<div class="pc-empty" th:if="${comments == null || #lists.isEmpty(comments)}">
+							아직 댓글이 없어요. 첫 댓글의 주인공이 되어주세요 🐶
+						</div><br>
+						
 						<!-- 댓글 작성 -->
 						<form class="pc-form" th:action="@{/insertComment}" method="post" id="commentForm">
 							<input type="hidden" name="postSeq" th:value="${post != null ? post.postSeq : 0}">
 							<div class="pc-input-wrap">
-								<textarea class="pc-textarea" name="content" id="commentContent" rows="3" placeholder="따뜻한 한마디를 남겨주세요 😊"></textarea>
+								<textarea class="pc-textarea" name="content" id="commentContent" rows="2" placeholder="따뜻한 한마디를 남겨주세요 😊"></textarea>
 								<div class="pc-input-foot">
 									<span class="pc-counter" id="commentCounter">0/300</span>
 									<button type="submit" class="btn-pill-orange">등록</button>
@@ -95,10 +93,6 @@
 
 							<!-- 댓글 리스트 -->
 							<div class="pc-list">
-								<!--
-										컨트롤러에서 comments(List<CommunityCommentDTO>) 같은 걸 넘긴다고 가정.
-										지금은 UI만 만들어두고, 나중에 th:each만 살리면 됨.
-								-->
 								<div class="pc-item" th:each="c : ${comments}">
 									<div class="pc-item-head">
 										<div class="pc-item-writer">
@@ -107,18 +101,13 @@
 										</div>
 										<div class="pc-item-date" th:text="${c.createdAt != null ? #temporals.format(c.createdAt,'yyyy.MM.dd HH:mm') : ''}"></div>
 									</div>
-									<div class="pc-item-body" th:text="${c.content}">댓글 내용</div>
+									<div class="pc-item-body" th:text="${c.content}" data-comment-body>댓글 내용</div>
 
 									<!-- 내 댓글일 때만 노출 -->
-									<div class="pc-item-actions" th:if="${c.isOwner}">
-										<a class="pc-link" th:href="@{/updateCommentForm(commentSeq=${c.commentSeq})}">수정</a>
-										<button type="button" class="pc-link pc-link--danger" data-comment-delete th:attr="data-comment-seq=${c.commentSeq}">삭제</button>
+									<div class="pc-item-actions pc-actions-view" th:if="${c.isOwner}">
+										<button type="button" class="btn-pill" data-comment-edit th:attr="data-comment-seq=${c.commentSeq}"> 수정 </button>
+										<button type="button" class="btn-pill sd-btn-danger delete-btn" data-comment-delete th:attr="data-comment-seq=${c.commentSeq}">삭제</button>
 									</div>
-								</div>
-
-								<!-- 댓글이 없을 때 -->
-								<div class="pc-empty" th:if="${comments == null || #lists.isEmpty(comments)}">
-									아직 댓글이 없어요. 첫 댓글의 주인공이 되어주세요 🐶
 								</div>
 							</div>
 					</section>

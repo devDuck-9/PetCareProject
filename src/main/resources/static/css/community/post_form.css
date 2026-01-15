@@ -116,6 +116,54 @@
 	margin-top: 18px;
 }
 
+/* ===== 글자수 카운터: 박스 안에 표시 ===== */
+.cf-field.has-counter {
+	position: relative;
+	width: 100%;
+}
+
+.cf-field.has-counter .inline-counter {
+	position: absolute;
+	font-size: 12px;
+	opacity: 0.75;
+	pointer-events: none;
+}
+
+/* 제목(input): 오른쪽 가운데 */
+.cf-field.has-counter.is-input .inline-counter {
+	right: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+}
+
+/* 제목 입력 글자와 겹치지 않게 */
+.cf-field.has-counter.is-input .cf-input {
+	padding-right: 72px;
+}
+
+/* 본문(textarea): 왼쪽 아래 (댓글 느낌) */
+.cf-field.has-counter.is-textarea .inline-counter {
+	right: 14px;
+	bottom: 20px;
+	font-family: 'Cafe24Dangdanghae', sans-serif;
+}
+
+/* textarea 내용이 카운터랑 겹치지 않게 */
+.cf-field.has-counter.is-textarea .cf-textarea {
+	padding-bottom: 34px;
+}
+
+/* 삭제 버튼 */
+.sd-btn-danger.delete-btn{
+	background: #e5533d; /* 빨강 계열 */
+}
+
+/* hover 대비 */
+.sd-btn-danger.delete-btn:hover{
+	filter: brightness(.95);
+}
+
 /* 반응형 */
 @media (max-width: 900px){
 	.comm-shell{ grid-template-columns: 1fr; }
