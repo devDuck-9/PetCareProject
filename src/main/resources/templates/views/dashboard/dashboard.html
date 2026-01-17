@@ -76,80 +76,71 @@
 				</div>
 			</div> <!-- 'dash-hero' END -->
 			
-			<!-- 관리자가 아닐 경우-->
-			<th:block sec:authorize="!hasRole('ADMIN')">
-				<!-- 1열: 내 반려동물 / 다가오는 일정 -->
-				<div class="dash-grid-2">
-					<!-- 내 반려동물 -->
-					<div class="panel">
-						<div class="panel-head space">
-							<div class="panel-title">내 반려동물</div>
-							<a class="btn-pill" th:href="@{/addPetForm}"><span class="plus">＋</span> 반려동물 등록</a>
-						</div>
-						
-						<div class="panel-body">
-							
-							<div class="pc-loading" data-loading="pets">
-								<div class="pc-spinner"></div>
-							</div>
-							
-							<div id="petPanelWrap">
-								<div th:replace="~{views/dashboard/fragments :: petPanel}"></div>
-							</div>
-							
-						</div>
-						
-					</div> <!-- 'panel (내 반려동물)' END -->
-					
-					<!-- 다가오는 일정 -->
-					<div class="panel">
-						<div class="panel-head space">
-							<div class="panel-title">다가오는 일정</div>
-							<a id="btnAddSchedule" class="btn-pill" th:href="@{/addScheduleForm}"><span class="plus">＋</span> 일정 추가</a>
-						</div> 
-						<div class="panel-body">
-							
-							<div class="pc-loading" data-loading="schedules">
-								<div class="pc-spinner"></div>
-							</div>
-							
-							<div id="schedulePanelWrap">
-								<div th:replace="~{views/dashboard/fragments :: schedulePanel}"></div>
-							</div>
-							
-						</div> <!-- 'panel-body' END -->
-					</div> <!-- 'panel (다가오는 일정)' END -->
-						
-				</div> <!-- 'dash-grid-2' END -->
-				
-				<!-- 2열: 오늘의 게시물 -->
-				<div class="panel mt-18">
+			<!-- 1열: 내 반려동물 / 다가오는 일정 -->
+			<div class="dash-grid-2">
+				<!-- 내 반려동물 -->
+				<div class="panel">
 					<div class="panel-head space">
-						<div class="panel-title">내가 작성한 오늘의 게시물</div>
-						 <a class="btn-pill" th:href="@{/addPostForm}">
-							<span class="plus">＋</span> 글쓰기
-						</a>
+						<div class="panel-title">내 반려동물</div>
+						<a class="btn-pill" th:href="@{/addPetForm}"><span class="plus">＋</span> 반려동물 등록</a>
 					</div>
 					
 					<div class="panel-body">
 						
-						<div class="pc-loading" data-loading="posts">
+						<div class="pc-loading" data-loading="pets">
 							<div class="pc-spinner"></div>
 						</div>
 						
-						<div id="postPanelWrap">
-							<div th:replace="~{views/dashboard/fragments :: postPanel}"></div>
+						<div id="petPanelWrap">
+							<div th:replace="~{views/dashboard/fragments :: petPanel}"></div>
+						</div>
+						
+					</div>
+					
+				</div> <!-- 'panel (내 반려동물)' END -->
+				
+				<!-- 다가오는 일정 -->
+				<div class="panel">
+					<div class="panel-head space">
+						<div class="panel-title">다가오는 일정</div>
+						<a id="btnAddSchedule" class="btn-pill" th:href="@{/addScheduleForm}"><span class="plus">＋</span> 일정 추가</a>
+					</div> 
+					<div class="panel-body">
+						
+						<div class="pc-loading" data-loading="schedules">
+							<div class="pc-spinner"></div>
+						</div>
+						
+						<div id="schedulePanelWrap">
+							<div th:replace="~{views/dashboard/fragments :: schedulePanel}"></div>
 						</div>
 						
 					</div> <!-- 'panel-body' END -->
-				</div> <!-- 'panel mt-18' END -->
-			</th:block><!-- 관리자가 아닐 경우-END -->
+				</div> <!-- 'panel (다가오는 일정)' END -->
+					
+			</div> <!-- 'dash-grid-2' END -->
 			
-			<!-- 관리자 일 경우 -->
-			<th:block sec:authorize="hasRole('ADMIN')">
-				*수정 필요
-			</th:block>
-			<!-- 관리자 일 경우 END -->
+			<!-- 2열: 오늘의 게시물 -->
+			<div class="panel mt-18">
+				<div class="panel-head space">
+					<div class="panel-title">내가 작성한 오늘의 게시물</div>
+					 <a class="btn-pill" th:href="@{/addPostForm}">
+						<span class="plus">＋</span> 글쓰기
+					</a>
+				</div>
+				
+				<div class="panel-body">
+					
+					<div class="pc-loading" data-loading="posts">
+						<div class="pc-spinner"></div>
+					</div>
+					
+					<div id="postPanelWrap">
+						<div th:replace="~{views/dashboard/fragments :: postPanel}"></div>
+					</div>
+					
+				</div> <!-- 'panel-body' END -->
+			</div> <!-- 'panel mt-18' END -->
 			
 		</section> <!-- 'dash-wrap' END -->
 	</th:block> <!-- loginUser != null END -->

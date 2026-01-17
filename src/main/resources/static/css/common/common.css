@@ -160,6 +160,16 @@ button, input, textarea, select{
 	box-shadow: 0 0 0 4px rgba(224, 123, 45, .22), 0 16px 26px rgba(224, 123, 45, .30);
 }
 
+/* 삭제 버튼 */
+.sd-btn-danger.delete-btn{
+	background: #e5533d; /* 빨강 계열 */
+}
+
+/* hover 대비 */
+.sd-btn-danger.delete-btn:hover{
+	filter: brightness(.95);
+}
+
 /* 작은 사이즈(사진 업로드 같은) */
 .btn-pill-orange.is-sm{
 	padding: 8px 14px;

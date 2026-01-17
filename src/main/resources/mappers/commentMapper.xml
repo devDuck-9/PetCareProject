@@ -71,4 +71,33 @@
 				AND user_seq = #{userSeq}
 		</delete>
 		
+		<!-- 댓글 삭제(관리자용) -->
+		<delete id="deleteCommentById">
+			DELETE FROM communication_comment
+			WHERE comment_seq = #{commentSeq}
+		</delete>
+		
+		<!-- 댓글 조회(관리자용) -->
+		<select id="selectCommentsByPostAdmin" resultType="CommunityComment">
+			SELECT
+				c.comment_seq,
+				c.post_seq,
+				c.user_seq,
+				m.user_name AS userName,
+				c.content,
+				c.created_at,
+				c.updated_at
+			FROM communication_comment c
+			JOIN member m ON m.user_seq = c.user_seq
+			WHERE c.post_seq = #{postSeq}
+			<choose>
+				<when test="sort == 'old'">
+					ORDER BY c.comment_seq ASC
+				</when>
+				<otherwise>
+					ORDER BY c.comment_seq DESC
+				</otherwise>
+			</choose>
+		</select>
+		
 </mapper>

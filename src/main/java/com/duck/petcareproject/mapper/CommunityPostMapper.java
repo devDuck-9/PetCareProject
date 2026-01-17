@@ -10,6 +10,9 @@ import com.duck.petcareproject.domain.CommunityPost;
 @Mapper
 public interface CommunityPostMapper {
 	
+	// 관리자 삭제(작성자 조건 없이)
+	int deletePostById(@Param("postSeq") int postSeq);
+	
 	// 게시글 상세 조회 (작성자 이름 포함)
 	CommunityPost selectPostById(@Param("postSeq") int postSeq);
 	
@@ -35,7 +38,11 @@ public interface CommunityPostMapper {
 	int countPosts(@Param("category") String category);
 	
 	// 검색/정렬 포함 게시글 목록(페이징)
-	List<CommunityPost> selectPostsPagingSearch(@Param("category") String category, @Param("keyword") String keyword, @Param("sort") String sort, @Param("limit") int limit, @Param("offset") int offset);
+	List<CommunityPost> selectPostsPagingSearch(@Param("category") String category,
+												@Param("keyword") String keyword,
+												@Param("sort") String sort,
+												@Param("limit") int limit,
+												@Param("offset") int offset);
 
 	// 검색 포함 게시글 수
 	int countPostsSearch(@Param("category") String category, @Param("keyword") String keyword);
@@ -46,4 +53,15 @@ public interface CommunityPostMapper {
 
 	// userSeq 기준 오늘의 게시글 전체 수 - 대시보드용
 	int countTodayPostsByUser(@Param("userSeq") int userSeq);
+	
+	// 관리자 대시보드
+	List<CommunityPost> selectPostsAdminPaging(@Param("category") String category,
+												@Param("type") String type,
+												@Param("keyword") String keyword,
+												@Param("sort") String sort,
+												@Param("limit") int limit,
+												@Param("offset") int offset);
+
+	int countPostsAdmin(@Param("category") String category, @Param("type") String type, @Param("keyword") String keyword);
+	
 }

@@ -34,10 +34,10 @@
 								<div class="cf-label">카테고리</div>
 
 								<select class="cf-select" name="category" id="categorySelect">
-									<option value="FREE" th:selected="${post != null && post.category == 'FREE'}">자유 게시판</option>
-									<option value="INFO" th:selected="${post != null && post.category == 'INFO'}">정보 공유</option>
-									<option value="BOAST" th:selected="${post != null && post.category == 'BOAST'}">자랑 하기</option>
-									<option value="QNA"	th:selected="${post != null && post.category == 'QNA'}">질문 &amp; 답변</option>
+									<option value="FREE" th:selected="${post != null && post.category.name() == 'FREE'}">자유 게시판</option>
+									<option value="INFO" th:selected="${post != null && post.category.name() == 'INFO'}">정보 공유</option>
+									<option value="BOAST" th:selected="${post != null && post.category.name() == 'BOAST'}">자랑 하기</option>
+									<option value="QNA"	th:selected="${post != null && post.category.name() == 'QNA'}">질문 &amp; 답변</option>
 								</select>
 							</div>
 

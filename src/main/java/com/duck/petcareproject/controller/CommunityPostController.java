@@ -43,7 +43,10 @@ public class CommunityPostController {
 		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
 			return "redirect:/loginForm";
 		}
-
+		
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+		model.addAttribute("isAdmin", isAdmin);
+		
 		Category category = resolveCategoryBySlug(slug); // null이면 전체
 		String categoryCode = (category == null ? "" : category.name());
 
@@ -106,6 +109,12 @@ public class CommunityPostController {
 		model.addAttribute("post", post);
 		model.addAttribute("isOwner", isOwner);
 		
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+		model.addAttribute("isAdmin", isAdmin);
+
+		boolean canManage = isOwner || isAdmin;
+		model.addAttribute("canManage", canManage);
+		
 		String referer = request.getHeader("Referer");
 		String returnUrl;
 
@@ -150,7 +159,43 @@ public class CommunityPostController {
 		
 		return "community/editPostForm";
 	}
+	
+	// 게시글 등록 폼
+	@GetMapping("/addPostForm")
+	public String addPostForm(Authentication auth, Model model, @RequestParam(value = "category", required = false) String categoryRaw) {
 
+		// header 메뉴 활성화
+		model.addAttribute("activeMenu", "community");
+
+		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
+			return "redirect:/loginForm";
+		}
+		
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+		model.addAttribute("isAdmin", isAdmin);
+		
+		// 넘어온 category 처리
+		String c = (categoryRaw == null ? "" : categoryRaw.trim().toUpperCase());
+		
+		// 전체글에서 왔거나 비어있으면 FREE로
+		if (c.isBlank() || c.equals("ALL")) c = "FREE";
+
+		// GUIDE는 관리자만
+		if ("GUIDE".equals(c) && !isAdmin) {
+			return "redirect:/community/guide";
+		}
+
+		// 유효한 카테고리가 아니면 FREE
+		try {
+			Category.valueOf(c);
+		} catch (Exception e) {
+			c = "FREE";
+		}
+
+		model.addAttribute("selectedCategory", c);
+		return "community/addPostForm";
+	}
+	
 	// 게시글 수정
 	@PostMapping("/updatePost/{id}")
 	public String updatePost(@PathVariable("id") int postSeq, Authentication auth, RedirectAttributes ra, Model model,
@@ -204,6 +249,8 @@ public class CommunityPostController {
 		Member member = memberService.getMember(auth.getName());
 		if (member == null) return "redirect:/loginForm";
 		
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+		
 		// 삭제 전에 글을 한번 조회(조회수증가 없는 메서드) : category 확보
 		CommunityPost post = communityPostService.getPost(postSeq);
 		
@@ -212,7 +259,12 @@ public class CommunityPostController {
 			return "redirect:/community";
 		}
 		
-		boolean ok = communityPostService.deletePost(postSeq, member.getUserSeq());
+		boolean ok;
+		if (isAdmin) {
+			ok = communityPostService.deletePostAdmin(postSeq);
+		} else {
+			ok = communityPostService.deletePost(postSeq, member.getUserSeq());
+		}
 		
 		if (!ok) {
 			ra.addFlashAttribute("errorMsg", "삭제할 수 없습니다.");
@@ -255,6 +307,13 @@ public class CommunityPostController {
 		if (category == null) {
 			ra.addFlashAttribute("errorMsg", "카테고리가 올바르지 않습니다.");
 			return "redirect:/community";
+		}
+		
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+
+		if (category == Category.GUIDE && !isAdmin) {
+			ra.addFlashAttribute("errorMsg", "공지사항은 관리자만 작성할 수 있습니다.");
+			return "redirect:/community/guide";
 		}
 		
 		CommunityPost post = new CommunityPost();

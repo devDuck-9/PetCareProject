@@ -44,7 +44,7 @@
 			NULLIF(#{mobile}, ''),
 			NULLIF(#{zipcode}, ''),
 			NULLIF(#{address1}, ''),
-			#{address2},
+			NULLIF(#{address2}, ''),
 			'USER', 'ACTIVE'
 		)
 	</insert>
@@ -54,6 +54,13 @@
 			SELECT COUNT(*)
 			FROM member
 			WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 이름 중복확인 -->
+	<select id="existsByUserName" resultType="int">
+		SELECT COUNT(*)
+		FROM member
+		WHERE user_name = #{userName}
 	</select>
 	
 </mapper>

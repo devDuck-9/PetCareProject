@@ -42,6 +42,10 @@ public class SecurityConfig {
 										"/joinResult","/loginResult",
 										"/api/**","/error",
 										"/css/**", "/js/**", "/images/**", "/bootstrap/**", "/fonts/**", "/files/**").permitAll()
+								
+								// 관리자 페이지는 관리자만
+								.requestMatchers("/admin/**").hasRole("ADMIN") // hasRole("ADMIN") 은 내부적으로 ROLE_ADMIN과 매칭
+								
 								.anyRequest().authenticated()
 						)
 	

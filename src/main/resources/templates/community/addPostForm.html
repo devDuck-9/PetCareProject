@@ -32,11 +32,11 @@
 								<div class="cf-label">카테고리</div>
 
 								<select class="cf-select" name="category" id="categorySelect">
-									<!-- PET_NEWS(펫케어 소식) 제외 -->
-									<option value="FREE" selected>자유 게시판</option>
-									<option value="INFO">정보 공유</option>
-									<option value="BOAST">자랑 하기</option>
-									<option value="QNA">질문 &amp; 답변</option>
+									<option value="GUIDE" th:if="${isAdmin}" th:selected="${selectedCategory == 'GUIDE'}">공지사항</option>
+									<option value="FREE"	th:selected="${selectedCategory == 'FREE'}">자유 게시판</option>
+									<option value="INFO"	th:selected="${selectedCategory == 'INFO'}">정보 공유</option>
+									<option value="BOAST" th:selected="${selectedCategory == 'BOAST'}">자랑 하기</option>
+									<option value="QNA"	 th:selected="${selectedCategory == 'QNA'}">질문 &amp; 답변</option>
 								</select>
 							</div>
 

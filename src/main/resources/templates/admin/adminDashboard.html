@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/community/post_form.css}"/>
+	<link rel="stylesheet" th:href="@{/css/community/post_detail.css}"/>
+	<link rel="stylesheet" th:href="@{/css/admin_dashboard.css}"/>
+	<link rel="stylesheet" th:href="@{/css/components/modal.css}"/>
+
+	<main class="comm-page">
+		<section class="comm-shell comm-shell--admin">
+
+			<div class="comm-main">
+				<div class="comm-card">
+
+					<div class="comm-card-head ad-head">
+						<div class="comm-card-title"><span class="comm-paw">🐾</span> 게시물 관리 대시보드</div>
+
+						<div class="ad-head-actions">
+							<a class="btn-pill-orange" th:href="@{/addPostForm(category=${'GUIDE'})}">글쓰기</a>
+						</div>
+					</div>
+
+					<div class="comm-card-body">
+
+						<!-- 검색/필터 -->
+						<form id="adFilterForm" method="get" action="/admin/dashboard" class="ad-filter">
+							<select class="cf-select" name="category">
+								<option value="ALL" th:selected="${category == 'ALL'}">전체글</option>
+								<option value="GUIDE" th:selected="${category == 'GUIDE'}">공지사항</option>
+								<option value="FREE" th:selected="${category == 'FREE'}">자유게시판</option>
+								<option value="INFO" th:selected="${category == 'INFO'}">정보공유</option>
+								<option value="BOAST" th:selected="${category == 'BOAST'}">자랑하기</option>
+								<option value="QNA" th:selected="${category == 'QNA'}">질문&답변</option>
+							</select>
+
+							<select class="cf-select" name="type">
+								<option value="all" th:selected="${type == 'all'}">전체</option>
+								<option value="name" th:selected="${type == 'name'}">이름</option>
+								<option value="id" th:selected="${type == 'id'}">아이디</option>
+								<option value="title" th:selected="${type == 'title'}">제목</option>
+								<option value="content" th:selected="${type == 'content'}">본문내용</option>
+							</select>
+
+							<input class="cf-input" type="text" name="keyword" th:value="${keyword}" placeholder="검색어 입력"/>
+							
+							<div class="ad-btn-group">
+								<button type="button" class="btn-pill ad-btn-search" id="btnSearch">검색</button>
+								<button type="button" class="btn-pill ad-btn-reset" id="btnReset">초기화</button>
+							</div>
+
+							<select class="cf-select" name="sort">
+								<option value="latest" th:selected="${sort == 'latest'}">최신순</option>
+								<option value="old" th:selected="${sort == 'old'}">오래된 순</option>
+							</select>
+
+							<input type="hidden" name="page" value="1">
+						</form>
+
+						<!-- 목록 -->
+						<div id="adminListArea">
+							<div th:replace="admin/adminFragments :: dashboardListArea"></div>
+						</div>
+						
+						<!-- 상세(Ajax) -->
+						<div id="adminPostDetailArea" class="ad-detail-area"></div>
+
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</main>
+
+	<!-- 모달 -->
+	<div th:replace="~{fragments/modal :: modal('postModal', '알림')}"></div>
+	<div th:replace="~{fragments/modal :: actionModal('confirmModal', '알림')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+		Modal.bind('#postModal');
+		Modal.bind('#confirmModal');
+	</script>
+
+	<script th:src="@{/js/admin/admin_dashboard.js}"></script>
+	
+</th:block>
+</html>

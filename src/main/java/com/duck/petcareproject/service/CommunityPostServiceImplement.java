@@ -61,6 +61,11 @@ public class CommunityPostServiceImplement implements CommunityPostService {
 		return communityPostMapper.deletePostByIdAndUser(postSeq, userSeq) > 0;
 	}
 	
+	// 게시글 삭제 (관리자)
+	public boolean deletePostAdmin(int postSeq) {
+		return communityPostMapper.deletePostById(postSeq) > 0;
+	}
+	
 	// 게시글 등록
 	public void insertPost(CommunityPost post) {
 		communityPostMapper.insertPost(post);
@@ -78,6 +83,17 @@ public class CommunityPostServiceImplement implements CommunityPostService {
 	// 전체 게시글 수
 	public int countPosts(String category) {
 		return communityPostMapper.countPosts(category);
+	}
+	
+	// 관리자 대시보드
+	public int countPostsAdmin(String category, String type, String keyword) {
+		return communityPostMapper.countPostsAdmin(category, type, keyword);
+	}
+	public List<CommunityPost> getPostsAdminPaging(
+			String category, String type, String keyword, String sort, int page, int size) {
+
+		int offset = (page - 1) * size;
+		return communityPostMapper.selectPostsAdminPaging(category, type, keyword, sort, size, offset);
 	}
 
 }

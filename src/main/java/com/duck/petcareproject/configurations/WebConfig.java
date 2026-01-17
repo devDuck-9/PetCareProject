@@ -15,9 +15,6 @@ public class WebConfig implements WebMvcConfigurer{
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		
-		// 게시글 등록 폼
-		registry.addViewController("/addPostForm").setViewName("community/addPostForm");
-		
 		// 반려동물 등록 폼
 		registry.addViewController("/addPetForm").setViewName("pets/addPetForm");
 		

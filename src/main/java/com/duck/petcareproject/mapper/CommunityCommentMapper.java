@@ -27,4 +27,11 @@ public interface CommunityCommentMapper {
 		
 		// 댓글 삭제(내 댓글만)
 		int deleteCommentByIdAndUser(@Param("commentSeq") int commentSeq, @Param("userSeq") int userSeq);
+		
+		// 댓글 삭제(관리자용)
+		int deleteCommentById(@Param("commentSeq") int commentSeq);
+		
+		// 댓글 조회(관리자용)
+		List<CommunityComment> selectCommentsByPostAdmin(@Param("postSeq") int postSeq, @Param("sort") String sort);
+		
 }

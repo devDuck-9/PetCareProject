@@ -17,6 +17,9 @@ public interface MemberMapper {
 	// 아이디 중복확인
 	public int existsByUserId(@Param("userId") String userId);
 	
+	// 이름 중복확인
+	int existsByUserName(@Param("userName") String userName);
+	
 	// 회원가입
 	public void insetMember(Member member);
 	

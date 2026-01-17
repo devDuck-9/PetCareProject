@@ -9,6 +9,9 @@ public interface MemberService {
 	
 	// 아이디 중복확인
 	public boolean existsByUserId(String userId);
+	
+	// 이름 중복확인
+	boolean existsByUserName(String userName);
 
     // 회원가입
 	public void addMember(Member member);

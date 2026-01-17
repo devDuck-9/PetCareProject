@@ -1,0 +1,105 @@
+<th:block th:fragment="dashboardListArea">
+	<!-- 목록 -->
+	<div class="ad-list">
+		<div class="ad-row" th:each="p : ${posts}" th:attr="data-post-seq=${p.postSeq}">
+			<div class="ad-col-left">
+				<span class="ad-cat" th:text="${p.category != null ? p.category.label : ''}">카테고리</span>
+				<span class="ad-title" th:text="${p.title}">제목</span>
+			</div>
+
+			<div class="ad-col-mid">
+				<span class="ad-writer" th:text="${p.userName}">작성자</span>
+				<span class="ad-date" th:text="${p.createdAt != null ? #temporals.format(p.createdAt,'yyyy.MM.dd HH:mm') : ''}"></span>
+			</div>
+
+			<div class="ad-col-right">
+				<span class="ad-cmt">💬 <span th:text="${p.commentCount}">0</span></span>
+			</div>
+		</div>
+
+		<div class="pc-empty" th:if="${posts == null || #lists.isEmpty(posts)}">게시글이 없습니다.</div>
+	</div>
+
+	<!-- 페이징 -->
+	<div class="pl-paging" th:if="${totalPage != null && totalPage > 1}">
+		
+		<span class="pl-page is-disabled" th:if="${page <= 1}"><i class="bi bi-caret-left-fill"></i></span>
+		<a class="pl-page" th:if="${page > 1}"
+			th:href="@{/admin/dashboard(category=${category}, type=${type}, keyword=${keyword}, sort=${sort}, page=${page-1})}"
+			th:attr="data-page=${page-1}"><i class="bi bi-caret-left-fill"></i>
+		</a>
+
+		<a class="pl-page" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+			th:href="@{/admin/dashboard(category=${category}, type=${type}, keyword=${keyword}, sort=${sort}, page=${i})}"
+			th:classappend="${i == page} ? ' is-active' : ''" th:attr="data-page=${i}" th:text="${i}">1
+		</a>
+
+		<span class="pl-page is-disabled" th:if="${page >= totalPage}"><i class="bi bi-caret-right-fill"></i></span>
+		<a class="pl-page" th:if="${page < totalPage}"
+			th:href="@{/admin/dashboard(category=${category}, type=${type}, keyword=${keyword}, sort=${sort}, page=${page+1})}"
+			th:attr="data-page=${page+1}"><i class="bi bi-caret-right-fill"></i>
+		</a>
+
+	</div>
+	
+</th:block>
+
+<th:block th:fragment="postDetailPanel">
+	<div class="comm-card" style="margin-top:18px;">
+		<div class="comm-card-head">
+			<div class="comm-card-title" th:text="${post.title}"><span class="comm-paw">🐾</span> 게시글 상세 : 제목</div>
+			<button type="button" class="btn-pill pd-btn-danger" th:attr="data-admin-post-delete=${post.postSeq}">삭제</button>
+		</div>
+
+		<div class="comm-card-body" th:if="${post != null}">
+			<div class="pd-meta">
+				<div class="pd-meta-row">
+					<span th:text="${post.category != null ? post.category.label : ''}">카테고리</span>
+					· 조회수 <span th:text="${post.viewCount}">0</span>
+					· 댓글 <span th:text="${post.commentCount}">0</span>
+					· 작성자 <span th:text="${post.userName}">작성자</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${post.createdAt != null ? #temporals.format(post.createdAt,'yyyy.MM.dd HH:mm') : ''}">날짜</span>
+				</div>
+			</div>
+			
+			<div class="pd-content" th:text="${post.content}">본문내용</div>
+
+			<!-- 댓글 (관리자 조회/삭제) -->
+			<hr style="margin:14px 0;">
+			<div class="pd-comments-head" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+				<div style="display:flex; align-items:center; gap:8px; font-weight:900;">
+					<span class="comm-paw">🐾</span> 댓글
+					<span class="pd-comments-count" th:text="${post != null && post.commentCount != null ? post.commentCount : 0}">0</span>
+				</div>
+			</div>
+
+			<!-- 댓글이 없을 때 -->
+			<div class="pc-empty" style="margin-top:10px;" th:if="${comments == null || #lists.isEmpty(comments)}">
+				댓글이 없습니다.
+			</div>
+
+			<!-- 댓글 리스트 -->
+			<div class="pc-list" style="margin-top:10px;" th:if="${comments != null && !#lists.isEmpty(comments)}">
+				<div class="pc-item" th:each="c : ${comments}" th:attr="data-comment-seq=${c.commentSeq}">
+					<div class="pc-item-head" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+						<div class="pc-item-writer" style="display:flex; align-items:center; gap:6px;">
+							<i class="bi bi-person-circle"></i>
+							<span th:text="${c.userName}">작성자</span>
+						</div>
+						<div style="display:flex; align-items:center; gap:10px;">
+							<div class="pc-item-date" th:text="${c.createdAt != null ? #temporals.format(c.createdAt,'yyyy.MM.dd HH:mm') : ''}"></div>
+							<button type="button" class="btn-pill sd-btn-danger delete-btn" data-admin-comment-delete th:attr="data-comment-seq=${c.commentSeq}">삭제</button>
+						</div>
+					</div>
+					<div class="pc-item-body" th:text="${c.content}" style="white-space: pre-line;"></div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="comm-card-body" th:if="${post == null}">게시글을 찾을 수 없습니다.</div>
+	</div>
+	
+	<hr style="margin:14px 0;">
+	
+</th:block>

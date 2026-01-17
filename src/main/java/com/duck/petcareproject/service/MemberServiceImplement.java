@@ -26,6 +26,11 @@ public class MemberServiceImplement implements MemberService {
 		return memberMapper.existsByUserId(userId) > 0;
 	}
 	
+	// 이름 중복확인
+	public boolean existsByUserName(String userName) {
+		return memberMapper.existsByUserName(userName) > 0;
+	}
+	
 	// 회원가입
 	public void addMember(Member member) {
 		// 비밀번호 암호화

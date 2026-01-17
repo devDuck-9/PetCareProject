@@ -29,6 +29,9 @@ public interface CommunityPostService {
 	// 게시글 삭제
 	boolean deletePost(int postSeq, int userSeq);
 	
+	// 게시글 삭제 (관지자용)
+	boolean deletePostAdmin(int postSeq);
+	
 	// 게시글 등록
 	public void insertPost(CommunityPost post);
 	
@@ -37,5 +40,9 @@ public interface CommunityPostService {
 	
 	// 전체 게시글 수
 	int countPosts(String category);
+	
+	// 관리자 대시보드
+	int countPostsAdmin(String category, String type, String keyword);
+	List<CommunityPost> getPostsAdminPaging(String category, String type, String keyword, String sort, int page, int size);
 
 }

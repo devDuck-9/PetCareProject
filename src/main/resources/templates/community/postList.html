@@ -43,7 +43,10 @@
 								<button type="submit" class="btn-pill" id="btnSearch" title="검색">검색</button>
 							</form>
 
-							<a class="btn-pill-orange" th:href="@{/addPostForm}">글쓰기 <i class="bi bi-pencil-square"></i></a>
+							<a class="btn-pill-orange" th:if="${activeCategory != 'GUIDE' || isAdmin}"
+								th:href="@{/addPostForm(category=${activeCategory == 'ALL' ? 'FREE' : activeCategory})}">글쓰기 <i class="bi bi-pencil-square"></i>
+							</a>
+
 						</div>
 					</div>
 					
@@ -53,7 +56,7 @@
 							<div class="pl-empty__title">게시글이 없어요 🐶</div>
 							<div class="pl-empty__sub">첫 글을 작성해보세요!</div>
 						</div>
-
+						
 						<div class="pl-list" th:if="${posts != null && !#lists.isEmpty(posts)}">
 							<a class="pl-item" th:each="p : ${posts}" th:href="@{/detailPost/{id}(id=${p.postSeq})}">
 								<div class="pl-item__left">

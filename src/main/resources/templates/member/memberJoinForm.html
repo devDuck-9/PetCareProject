@@ -62,14 +62,18 @@
 						<p class="error-text" id="pwError" style="display:none;">비밀번호를 다시 입력해주세요.</p>
 						
 						<!-- 닉네임 -->
-						<div class="field">
-							<span class="icon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" fill="none">
-									<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
-									<path d="M4 20c0-3.2 3.58-5 8-5s8 1.8 8 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-								</svg>
-							</span>
-							<input class="input" type="text" th:field="*{userName}" minlength="2" maxlength="50" placeholder="이름(닉네임)" required>
+						<div class="field-row">
+							<div class="field">
+								<span class="icon" aria-hidden="true">
+									<svg viewBox="0 0 24 24" fill="none">
+										<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
+										<path d="M4 20c0-3.2 3.58-5 8-5s8 1.8 8 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+									</svg>
+								</span>
+								<input class="input" type="text" th:field="*{userName}" minlength="2" maxlength="50" placeholder="이름(닉네임)" required>
+							</div>
+
+							<button class="btn btn-ghost" type="button" id="btnCheckName">중복확인</button>
 						</div>
 						<p class="error-text" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
 												
@@ -98,10 +102,92 @@
 							<input class="input phone-last" type="text" id="mobile3" maxlength="4" inputmode="numeric" placeholder="5678" required>
 
 							<input type="hidden" th:field="*{mobile}" id="mobileFinal">
+							
 						</div>
 
 						<p class="error-text" id="mobileError" style="display:none;">휴대폰 번호를 정확히 입력해주세요.</p>
 						<p class="error-text" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></p>
+						
+						<!-- 휴대폰 인증 -->
+						<div class="field-row sms-row">
+							<div class="field sms-field">
+								<input class="input" type="text" id="smsCode" placeholder="인증번호 6자리" maxlength="6" inputmode="numeric">
+							</div>
+							<button class="btn btn-ghost btn-sms" type="button" id="btnSendCode">인증번호 발송</button>
+							<button class="btn btn-ghost btn-sms btn-confirm" type="button" id="btnVerifyCode">확인</button>
+						</div>
+						<p class="error-text" id="smsMsg" style="display:none;"></p>
+						<input type="hidden" id="mobileVerified" value="false">
+						
+						<!-- 주소 -->
+						<div class="addr-group">
+							<!-- 우편번호 + 주소찾기 -->
+							<div class="field-row">
+								<div class="field">
+									<span class="icon" aria-hidden="true">
+										<svg viewBox="0 0 24 24" fill="none">
+											<path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-width="2"/>
+											<path d="M5 9.5V21h14V9.5" stroke="currentColor" stroke-width="2"/>
+											<path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2"/>
+										</svg>
+									</span>
+									
+									<input class="input" type="text" id="zipcode" name="zipcode" placeholder="우편번호" readonly>
+								</div>
+								<button type="button" id="btnSearchAddress" class="btn btn-ghost">주소찾기</button>
+							</div>
+
+							<!-- 기본주소 -->
+							<div class="field">
+								<input class="input" type="text" id="address1" name="address1" placeholder="기본주소" readonly>
+							</div>
+
+							<!-- 상세주소 -->
+							<div class="field">
+								<input class="input" type="text" id="address2" name="address2" placeholder="상세주소를 입력해주세요">
+							</div>
+						</div>
+						
+						<!-- 이메일 -->
+						<div class="field email-field">
+							<span class="icon" aria-hidden="true">
+								<svg viewBox="0 0 24 24" fill="none">
+									<path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="2"/>
+									<path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</span>
+
+							<input class="input email-left" type="text" th:field="*{emailId}" placeholder="이메일" required>
+							<span class="at">@</span>
+
+							<!--	직접입력용 도메인 input (기본 숨김) -->
+							<input class="input email-domain-input"type="text" name="emailDomainInput" placeholder="도메인 직접입력">
+							
+							<!--	도메인 select -->
+							<select class="select email-right" name="emailDomainSelect" required>
+								<option value="manual" selected>직접입력 ▼</option>
+								<option value="gmail.com">gmail.com</option>
+								<option value="naver.com">naver.com</option>
+								<option value="daum.net">daum.net</option>
+							</select>
+
+							<!--	서버로 보낼 최종 도메인(숨김) -->
+							<input type="hidden" th:field="*{emailDomain}" id="emailDomainFinal">
+						</div>
+
+						<!-- 이메일 인증 -->
+						<div class="email-verify-row">
+							<div class="field">
+								<input class="input" type="text" id="emailCode" placeholder="이메일 인증번호" maxlength="6" inputmode="numeric">
+							</div>
+							<button class="btn btn-ghost btn-sms" type="button" id="btnSendEmailCode">인증번호 발송</button>
+							<button class="btn btn-ghost btn-sms btn-confirm" type="button" id="btnVerifyEmailCode">확인</button>
+						</div>
+
+						<p class="error-text" id="emailMsg" style="display:none;"></p>
+						<input type="hidden" id="emailVerified" value="false">
+						<p class="error-text" th:if="${#fields.hasErrors('emailId')}" th:errors="*{emailId}"></p>
+						<p class="error-text" th:if="${#fields.hasErrors('emailDomain')}" th:errors="*{emailDomain}"></p>
 						
 						<!-- 성별 -->
 						<div class="field email-field">
@@ -131,33 +217,7 @@
 							</div>
 						</div>
 						
-						<!-- 이메일 -->
-						<div class="field email-field">
-							<span class="icon" aria-hidden="true">
-								<svg viewBox="0 0 24 24" fill="none">
-									<path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="2"/>
-									<path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
-							</span>
-
-							<input class="input email-left" type="text" name="emailId" placeholder="이메일" required>
-							<span class="at">@</span>
-
-							<!--	직접입력용 도메인 input (기본 숨김) -->
-							<input class="input email-domain-input"type="text" name="emailDomainInput" placeholder="도메인 직접입력">
-							
-							<!--	도메인 select -->
-							<select class="select email-right" name="emailDomainSelect" required>
-								<option value="manual" selected>직접입력 ▼</option>
-								<option value="gmail.com">gmail.com</option>
-								<option value="naver.com">naver.com</option>
-								<option value="daum.net">daum.net</option>
-							</select>
-
-							<!--	서버로 보낼 최종 도메인(숨김) -->
-							<input type="hidden" name="emailDomain" id="emailDomainFinal">
-						</div>
-						
+						<!-- 가입버튼 -->
 						<button class="btn btn-primary" type="submit">가입하기</button>
 
 						<p class="login-hint">이미 계정이 있으신가요?<a href="/login" class="login-link">로그인하기</a>
@@ -169,11 +229,16 @@
 	</main>
 
 	<div th:replace="~{fragments/modal :: modal('idCheckModal', '아이디 중복확인')}"></div>
+	<div th:replace="~{fragments/modal :: modal('nameCheckModal', '이름(닉네임) 중복확인')}"></div>
 	<div th:replace="~{fragments/modal :: modal('emailCheckModal', '이메일 확인')}"></div>
 	<script th:src="@{/js/components/modal.js}"></script>
-	<script>Modal.bind('#idCheckModal');</script>
-	<script>Modal.bind('#emailCheckModal');</script>
-
+	<script>
+		Modal.bind('#idCheckModal');
+		Modal.bind('#emailCheckModal');
+		Modal.bind('#nameCheckModal');
+	</script>
+	
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script src="/js/member/join.js"></script>
 
 	</th:block>

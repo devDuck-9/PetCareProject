@@ -35,7 +35,13 @@ public class DashBoardController {
 		}
 		
 		// 로그인 후
-		String userId = authentication.getName(); // 로그인 ID 로 Spring Security 의 userName
+		boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+		if (isAdmin) {
+			return "redirect:/admin/dashboard";
+		}
+		
+		// 로그인 ID (Spring Security 의 userName)
+		String userId = authentication.getName();
 		
 		 // 대시보드 데이터 한 번에 조립해서 받기
 		DashboardDTO dto = dashboardService.getDashboard(userId, petPage, schPage, postPage);

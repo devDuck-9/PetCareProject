@@ -93,7 +93,15 @@ public class CommunityCommentController {
 		Member member = memberService.getMember(auth.getName());
 		if (member == null) return "redirect:/loginForm";
 		
-		boolean ok = communityCommentService.deleteComment(commentSeq, member.getUserSeq());
+		boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+
+		boolean ok;
+		if (isAdmin) {
+			ok = communityCommentService.deleteCommentAdmin(commentSeq);
+		} else {
+			ok = communityCommentService.deleteComment(commentSeq, member.getUserSeq());
+		}
+		
 		if (!ok) {
 			ra.addFlashAttribute("errorMsg", "삭제할 수 없습니다.");
 		} else {

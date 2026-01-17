@@ -127,6 +127,12 @@
 				AND user_seq = #{userSeq}
 		</delete>
 		
+		<!-- 게시글 삭제 (관리자: 작성자 조건 없음) -->
+		<delete id="deletePostById">
+			DELETE FROM communication_post
+			WHERE post_seq = #{postSeq}
+		</delete>
+		
 		<!-- 게시글 등록 -->
 		<insert id="insertPost" parameterType="CommunityPost" useGeneratedKeys="true" keyProperty="postSeq">
 			INSERT INTO communication_post (user_seq, category, title, content)
@@ -210,6 +216,110 @@
 					AND p.created_at >= CURDATE()
 					AND p.created_at < CURDATE() + INTERVAL 1 DAY
 			]]>
+		</select>
+		
+		<!-- ========================= -->
+		<!-- 관리자 대시보드: 목록(검색/정렬/페이징) -->
+		<!-- ========================= -->
+		<select id="selectPostsAdminPaging" resultType="CommunityPost">
+			SELECT
+				p.post_seq,
+				p.user_seq,
+				m.user_name AS userName,
+				p.category,
+				p.title,
+				p.content,
+				p.view_count,
+				p.created_at,
+				p.updated_at,
+				(
+					SELECT COUNT(*)
+					FROM communication_comment c
+					WHERE c.post_seq = p.post_seq
+				) AS commentCount
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+		
+			<where>
+				<if test="category != null and category != ''">
+					p.category = #{category}
+				</if>
+		
+				<if test="keyword != null and keyword != ''">
+					AND
+					<choose>
+						<when test="type == 'name'">
+							m.user_name LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'id'">
+							m.user_id LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'title'">
+							p.title LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'content'">
+							p.content LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<otherwise>
+							(
+								p.title LIKE CONCAT('%', #{keyword}, '%')
+								OR p.content LIKE CONCAT('%', #{keyword}, '%')
+								OR m.user_name LIKE CONCAT('%', #{keyword}, '%')
+								OR m.user_id LIKE CONCAT('%', #{keyword}, '%')
+							)
+						</otherwise>
+					</choose>
+				</if>
+			</where>
+		
+			<choose>
+				<when test="sort == 'old'">
+					ORDER BY p.post_seq ASC
+				</when>
+				<otherwise>
+					ORDER BY p.post_seq DESC
+				</otherwise>
+			</choose>
+		
+			LIMIT #{limit} OFFSET #{offset}
+		</select>
+		
+		<select id="countPostsAdmin" resultType="int">
+			SELECT COUNT(*)
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+		
+			<where>
+				<if test="category != null and category != ''">
+					p.category = #{category}
+				</if>
+		
+				<if test="keyword != null and keyword != ''">
+					AND
+					<choose>
+						<when test="type == 'name'">
+							m.user_name LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'id'">
+							m.user_id LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'title'">
+							p.title LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<when test="type == 'content'">
+							p.content LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<otherwise>
+							(
+								p.title LIKE CONCAT('%', #{keyword}, '%')
+								OR p.content LIKE CONCAT('%', #{keyword}, '%')
+								OR m.user_name LIKE CONCAT('%', #{keyword}, '%')
+								OR m.user_id LIKE CONCAT('%', #{keyword}, '%')
+							)
+						</otherwise>
+					</choose>
+				</if>
+			</where>
 		</select>
 
 </mapper>

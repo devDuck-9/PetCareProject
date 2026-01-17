@@ -44,5 +44,15 @@ public class CommunityCommentServiceImplement implements CommunityCommentService
 	public boolean deleteComment(int commentSeq, int userSeq) {
 		return communityCommentMapper.deleteCommentByIdAndUser(commentSeq, userSeq) > 0;
 	}
+	
+	// 댓글 삭제(관리자용)
+	public boolean deleteCommentAdmin(int commentSeq) {
+		return communityCommentMapper.deleteCommentById(commentSeq) > 0;
+	}
+	
+	// 댓글 조회(관리자용)
+	public List<CommunityComment> getCommentsByPostAdmin(int postSeq, String sort) {
+		 return communityCommentMapper.selectCommentsByPostAdmin(postSeq, sort);
+	}
 
 }

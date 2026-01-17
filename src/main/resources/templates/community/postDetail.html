@@ -29,9 +29,9 @@
 								<div class="pd-actions">
 									<a class="btn-pill" th:href="@{${returnUrl}}" title="목록">목록</a>
 									
-									<!-- 내 글일 때만 노출 isOwner -->
+									<!-- 내 글일 때만 노출 isOwner | 관리자는 유저글이여도 삭제 노출 canManage -->
 									<a class="btn-pill-orange" th:if="${isOwner}" th:href="@{/updatePost/{id}(id=${post.postSeq})}">수정</a>
-									<button type="button" class="btn-pill pd-btn-danger" th:if="${isOwner}" th:data-post-seq="${post.postSeq}" id="btnDeletePost">삭제</button>
+									<button type="button" class="btn-pill pd-btn-danger" th:if="${canManage}" th:data-post-seq="${post.postSeq}" id="btnDeletePost">삭제</button>
 									<input type="hidden" id="returnUrl" name="returnUrl" th:value="${returnUrl}">
 								</div>
 							</div>
@@ -104,9 +104,9 @@
 									<div class="pc-item-body" th:text="${c.content}" data-comment-body>댓글 내용</div>
 
 									<!-- 내 댓글일 때만 노출 -->
-									<div class="pc-item-actions pc-actions-view" th:if="${c.isOwner}">
-										<button type="button" class="btn-pill" data-comment-edit th:attr="data-comment-seq=${c.commentSeq}"> 수정 </button>
-										<button type="button" class="btn-pill sd-btn-danger delete-btn" data-comment-delete th:attr="data-comment-seq=${c.commentSeq}">삭제</button>
+									<div class="pc-item-actions pc-actions-view">
+										<button type="button" th:if="${c.isOwner}" class="btn-pill" data-comment-edit th:attr="data-comment-seq=${c.commentSeq}"> 수정 </button>
+										<button type="button" th:if="${c.isOwner or isAdmin}" class="btn-pill sd-btn-danger delete-btn" data-comment-delete th:attr="data-comment-seq=${c.commentSeq}">삭제</button>
 									</div>
 								</div>
 							</div>
