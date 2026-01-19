@@ -1,11 +1,13 @@
 package com.duck.petcareproject.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.duck.petcareproject.domain.Gender;
 import com.duck.petcareproject.domain.Member;
@@ -21,11 +23,68 @@ public class MemberController {
 	
 	private final MemberService memberService;
 	
-//	// 내정보
-//	@GetMapping("/mypage")
-//	public String myPage(Authentication auth, Model model) {
-//		
-//	}
+	
+	// 내정보 수정
+	@PostMapping("/mypage/update")
+	public String myPageUpdate(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Authentication authentication, Model model) {
+		
+		// 검증 실패 시 그대로 반환
+		if (bindingResult.hasErrors()) {
+			return "member/mypage";
+		}
+		
+		// 성별 빈값 방지
+		if (member.getGender() == null) member.setGender(Gender.U);
+		
+		// 이메일 합치기 (emailId + emailDomain)
+		if (member.getEmailId() != null && member.getEmailDomain() != null) {
+			String email = member.getEmailId().trim() + "@" + member.getEmailDomain().trim();
+			member.setEmail(email);
+		}
+		
+		// 로그인 사용자로 강제 고정
+		String userId = authentication.getName();
+		 member.setUserId(userId);
+		
+		// 수정
+		try {
+			memberService.editMember(member);
+		} catch(RuntimeException e) {
+			model.addAttribute("errorMessage", e.getMessage());
+			return "member/mypage";
+		}
+		
+		return "redirect:/mypage";
+	}
+	
+	// 내정보
+	@GetMapping("/mypage")
+	public String myPage(Authentication auth, Model model,
+						@RequestParam(value = "saved", required = false) String saved,
+						@RequestParam(value = "msg", required = false) String msg) {
+		Member member = (auth == null) ? null : memberService.getMember(auth.getName());
+		if (member == null) {
+			return "redirect:/loginForm";
+		}
+
+		// 이메일 분리
+		String email = member.getEmail();
+		if (email != null && email.contains("@")) {
+			String[] parts = email.split("@", 2);
+			member.setEmailId(parts[0]);
+			member.setEmailDomain(parts[1]);
+		} else {
+			member.setEmailId("");
+			member.setEmailDomain("");
+		}
+
+		model.addAttribute("member", member);
+		model.addAttribute("activeMenu", "mypage");
+		model.addAttribute("activeProfile", "info");
+		model.addAttribute("saved", saved);
+		model.addAttribute("msg", msg);
+		return "member/mypage";
+	}
 	
 	// 로그인 폼
 	@GetMapping("/loginForm")
@@ -104,22 +163,28 @@ public class MemberController {
 		
 		
 		// 저장
-		memberService.addMember(member);
+		try {
+			memberService.addMember(member);
+			
+			// 재사용 방지
+			session.removeAttribute("SMS_VERIFIED");
+			session.removeAttribute("SMS_MOBILE");
+			session.removeAttribute("SMS_LAST_SENT");
+			session.removeAttribute("SMS_CODE");
+			session.removeAttribute("SMS_EXPIRES");
+			session.removeAttribute("SMS_TRIES");
+			
+			session.removeAttribute("EMAIL_VERIFIED");
+			session.removeAttribute("EMAIL_ADDR");
+			session.removeAttribute("EMAIL_LAST_SENT");
+			
+			return "redirect:/loginForm";
+		} catch (RuntimeException e) {
+			model.addAttribute("errorMessage", e.getMessage());
+			return "member/memberJoinForm";
+		}
 		
 		
-		// 재사용 방지
-		session.removeAttribute("SMS_VERIFIED");
-		session.removeAttribute("SMS_MOBILE");
-		session.removeAttribute("SMS_LAST_SENT");
-		session.removeAttribute("SMS_CODE");
-		session.removeAttribute("SMS_EXPIRES");
-		session.removeAttribute("SMS_TRIES");
-		
-		session.removeAttribute("EMAIL_VERIFIED");
-		session.removeAttribute("EMAIL_ADDR");
-		session.removeAttribute("EMAIL_LAST_SENT");
-		
-		return "redirect:/loginForm";
 	}
 
 }

@@ -50,6 +50,9 @@ public class AdminDashboardController {
 			// 상세는 조회수 증가 없이 단순 조회
 			CommunityPost post = communityPostService.getPost(postSeq);
 			
+			// 이미지 조회
+			model.addAttribute("images", communityPostService.getPostImages(postSeq));
+			
 			// 댓글 조회
 			List<CommunityComment> comments = communityCommentService.getCommentsByPostAdmin(postSeq, "latest");
 
@@ -66,7 +69,8 @@ public class AdminDashboardController {
 
 			Map<String, Object> res = new HashMap<>();
 
-			boolean ok = communityPostService.deletePostAdmin(postSeq);
+//			boolean ok = communityPostService.deletePostAdmin(postSeq);
+			boolean ok = communityPostService.deletePostWithImagesAdmin(postSeq);
 			if (!ok) {
 					res.put("ok", false);
 					res.put("msg", "삭제에 실패했습니다.");

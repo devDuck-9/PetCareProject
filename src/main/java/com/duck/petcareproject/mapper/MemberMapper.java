@@ -21,7 +21,10 @@ public interface MemberMapper {
 	int existsByUserName(@Param("userName") String userName);
 	
 	// 회원가입
-	public void insetMember(Member member);
+	public int insetMember(Member member);
+	
+	// 회원 정보 수정
+	public int updateMember(Member member);
 	
 	
 }

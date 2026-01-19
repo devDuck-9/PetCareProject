@@ -2,6 +2,31 @@
 	 관리자 대시보드 전용
 ================================ */
 
+.pd-images {
+	display: flex;
+	gap: 12px;
+	overflow-x: auto;
+	padding-bottom: 4px;
+	margin: 30px;
+}
+
+.pd-images::-webkit-scrollbar {
+	height: 6px;
+}
+
+.pd-images::-webkit-scrollbar-thumb {
+	background: rgba(0,0,0,.2);
+	border-radius: 10px;
+}
+
+.pd-images img {
+	width: 120px;
+	height: 120px;
+	object-fit: cover;
+	border-radius: 12px;
+	border: 1px solid rgba(0,0,0,.15);
+}
+
 /* 사이드바 없는 단일 레이아웃 */
 .comm-shell--admin{
 	grid-template-columns: 1fr !important;

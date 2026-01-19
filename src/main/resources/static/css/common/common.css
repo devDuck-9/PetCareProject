@@ -40,8 +40,12 @@ html, body{
 	color: var(--text);
 }
 
-button, input, textarea, select{
-	font-family: 'SejongGeulggot', sans-serif !important;
+button, textarea, select{
+	font-family: 'KyoboHandwriting2024psw', sans-serif !important;
+}
+
+input{
+	font-family: 'SOYOMapleBold', sans-serif !important;
 }
 
 /* =========================

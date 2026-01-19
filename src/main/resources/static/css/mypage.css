@@ -1,0 +1,438 @@
+/* =========================================================
+	 mypage.css
+========================================================= */
+
+:root{
+	--bg: #d7ddf2;
+	--panel: #f6f7ff;
+	--line: rgba(85,95,145,.25);
+	--ink: #1f254a;
+	--muted: #6b7392;
+
+	--r-lg: 26px;
+	--r-md: 18px;
+	--r-sm: 14px;
+
+	/* 좌측/우측 */
+	--left-w: 280px;
+
+	/* 폼 폭 */
+	--label-w: 96px;
+
+	--nick-w: 280px;			/* 닉네임 입력 길이 */
+	--dup-w: 120px;			 /* 중복확인 버튼 길이 */
+
+	--phone-main-w: 360px;/* 핸드폰 메인 박스 */
+	--send-w: 140px;			/* 인증번호 발송 버튼 길이 */
+	--code-w: 240px;			/* 인증번호 입력칸 길이 */
+	--ok-w: 82px;				 /* 확인 버튼 길이 */
+
+	--zip-w: 210px;			 /* 우편번호 입력 길이 */
+	--addrbtn-w: 120px;	 /* 주소찾기 버튼 길이 */
+	--addr-w: 520px;			/* 기본주소/상세주소 길이 */
+	--email-main-w: 520px;/* 이메일 메인 박스 */
+
+	--phone-part-w: 72px; /* 010 / 1234 / 5678 각각 길이 */
+}
+
+/* reset-ish */
+.mp2-page *{ box-sizing: border-box; }
+
+/* =========================================================
+	 OUTER
+========================================================= */
+.mp2-shell{
+	background: var(--bg);
+	border-radius: var(--r-lg);
+	padding: 22px;
+}
+
+.mp2-grid{
+	display: grid;
+	grid-template-columns: var(--left-w) 1fr;
+	gap: 18px;
+	align-items: start;
+}
+
+/* =========================================================
+	 LEFT
+========================================================= */
+.mp2-left{
+	background: #dbe1f6;
+	border: 2px solid var(--line);
+	border-radius: var(--r-lg);
+	padding: 18px;
+}
+
+.mp2-profileBox{
+	position: relative;
+	border: 2px solid var(--line);
+	border-radius: var(--r-md);
+	background: rgba(255,255,255,.55);
+	padding: 16px;
+	display: grid;
+	place-items: center;
+}
+
+.mp2-avatar{
+	width: 150px;
+	height: 150px;
+	border-radius: var(--r-md);
+	border: 2px solid rgba(255,255,255,.9);
+	background: rgba(255,255,255,.7);
+	overflow: hidden;
+	display: grid;
+	place-items: center;
+}
+.mp2-avatar img{ width: 100%; height: 100%; object-fit: cover; }
+
+.mp2-gear{
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	width: 34px;
+	height: 34px;
+	border-radius: 12px;
+	border: 2px solid var(--line);
+	background: #fff;
+	cursor: pointer;
+}
+
+.mp2-userPill{
+	margin: 14px 0 14px;
+	background: rgba(255,255,255,.75);
+	border: 2px solid var(--line);
+	border-radius: 999px;
+	text-align: center;
+	padding: 10px 12px;
+	font-weight: 900;
+	color: var(--ink);
+}
+
+.mp2-menu{
+	background: rgba(34,43,92,.78);
+	border-radius: var(--r-md);
+	padding: 14px;
+}
+
+.mp2-menuItem{
+	display: block;
+	padding: 14px 14px;
+	border-radius: var(--r-sm);
+	color: #fff;
+	text-decoration: none;
+	font-weight: 900;
+	font-family: 'SOYOMapleBold', sans-serif;
+}
+.mp2-menuItem + .mp2-menuItem{ margin-top: 10px; }
+.mp2-menuItem.is-active{
+	background: rgba(255,255,255,.22);
+	box-shadow: inset 0 0 0 2px rgba(255,255,255,.12);
+}
+.mp2-menuItem.danger{ color: #ffd7d7; }
+
+/* =========================================================
+	 RIGHT
+========================================================= */
+.mp2-right{
+	background: #f2f4ff;
+	border: 2px solid var(--line);
+	border-radius: var(--r-lg);
+	overflow: hidden;
+}
+
+.mp2-head{
+	padding: 18px 20px 12px;
+	background: #fff;
+	border-bottom: 2px solid rgba(85,95,145,.18);
+}
+.mp2-title{
+	margin: 0 0 4px;
+	font-size: 28px;
+	font-weight: 900;
+	color: var(--ink);
+}
+.mp2-sub{
+	margin: 0;
+	color: var(--muted);
+	font-weight: 800;
+}
+
+.mp2-body{
+	padding: 18px 18px 22px;
+}
+
+/* ID line */
+.mp2-idLine{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-weight: 900;
+	color: var(--ink);
+	margin-bottom: 14px;
+}
+.mp2-idLabel{
+	padding-right: 12px;
+	border-right: 3px solid rgba(85,95,145,.25);
+}
+.mp2-idValue{
+	font-size: 24px;
+}
+
+/* =========================================================
+	 FORM
+========================================================= */
+.mp2-form{
+	display: grid;
+	gap: 12px;
+}
+
+/* row layout */
+.mp2-row{
+	display: grid;
+	grid-template-columns: var(--label-w) 1fr;
+	gap: 12px;
+	align-items: start;
+}
+
+/* small label boxes */
+.mp2-rowLabel{
+	background: #fff;
+	border: 2px solid var(--line);
+	border-radius: var(--r-sm);
+	padding: 11px 12px;
+	font-weight: 900;
+	color: var(--ink);
+	text-align: center;
+}
+
+/* right area */
+.mp2-rowRight{
+	display: grid;
+	gap: 10px;
+	justify-items: start;
+}
+
+/* ===== field base ===== */
+.mp2-field{
+	position: relative;
+	background: #dfe3f6;
+	border: 2px solid var(--line);
+	border-radius: var(--r-sm);
+	padding: 10px 12px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.mp2-ico{
+	color: rgba(20,25,60,.7);
+	font-size: 18px;
+}
+.mp2-input, .mp2-select{
+	border: none;
+	outline: none;
+	background: transparent;
+	font-weight: 900;
+	color: var(--ink);
+	min-width: 0;
+}
+.mp2-input::placeholder{ color: rgba(90,100,150,.65); font-weight: 900; }
+
+.mp2-dash{ font-weight: 900; opacity: .6; }
+.mp2-at{ font-weight: 900; opacity: .7; }
+
+/* buttons */
+.mp2-btn{
+	border: 2px solid var(--line);
+	background: #cfd5f1;
+	border-radius: var(--r-sm);
+	padding: 10px 14px;
+	font-weight: 900;
+	color: var(--ink);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+/* =========================================================
+	 닉네임 (폭 고정)
+========================================================= */
+.mp2-rightLine{
+	display: grid;
+	grid-template-columns: var(--nick-w) var(--dup-w);
+	gap: 12px;
+	align-items: center;
+}
+.mp2-fieldNick{ width: var(--nick-w); }
+.mp2-btnDup{ width: var(--dup-w); }
+
+/* =========================================================
+	 핸드폰 / 이메일
+========================================================= */
+.mp2-line{
+	display: grid;
+	gap: 12px;
+	align-items: center;
+	justify-content: start;
+}
+
+.mp2-twoLine{ width: 100%; }
+.mp2-line1{display: grid; grid-template-columns: 1fr var(--send-w);}
+.mp2-line2{display: grid; grid-template-columns: 1fr var(--ok-w);}
+/* email field는 100%로 */
+.mp2-line1 .mp2-fieldEmail{ width: 100%; }
+
+
+/* phone main field */
+.mp2-fieldPhone{
+	width: var(--phone-main-w);
+	display: flex;
+	align-items: center;
+}
+.mp2-phonePart{
+	width: var(--phone-part-w);
+	text-align: center;
+	font-weight: 900;
+}
+
+/* send/ok buttons */
+.mp2-btnSend{ width: var(--send-w); }
+.mp2-btnOk{
+	width: var(--ok-w);
+	background: #aeb6e6;
+}
+
+/* code field */
+.mp2-fieldCode{ width: var(--code-w); }
+.mp2-fieldCode .mp2-input{ width: 100%; }
+
+#mobileMsg {
+	display: none;
+	margin-top: 6px;
+	font-size: 13px;
+	color: #e74c3c; /* 빨간 안내 */
+}
+
+/* =========================================================
+	 주소 
+========================================================= */
+.mp2-addrTop{
+	grid-template-columns: var(--zip-w) var(--addrbtn-w);
+}
+.mp2-fieldZip{ width: var(--zip-w); }
+.mp2-btnAddr{ width: var(--addrbtn-w); }
+
+.mp2-fieldAddrLong{
+	width: var(--addr-w);
+}
+.mp2-fieldAddrLong .mp2-input{ width: 100%; }
+
+/* =========================================================
+	 이메일 메인 박스 폭 
+========================================================= */
+.mp2-line1 .mp2-fieldEmail{
+	width: var(--email-main-w);
+	display: grid;
+	grid-template-columns: 20px 1fr 18px 1fr 150px;
+	align-items: center;
+	column-gap: 10px;
+}
+.mp2-line1 .mp2-fieldEmail .mp2-ico{ justify-self: start; }
+.mp2-emailId{ width: 100%; }
+.mp2-emailDomain{ width: 100%; }
+.mp2-emailSelect{
+	width: 150px;
+	text-align: left;
+	cursor: pointer;
+}
+
+/* twoLine 전체 폭: email은 메인 폭이 다르니 따로 */
+.mp2-row:nth-of-type(4) .mp2-twoLine{
+	width: calc(var(--email-main-w) + var(--send-w) + 12px);
+}
+
+.mp2-rowEmail .mp2-twoLine{
+	width: calc(var(--email-main-w) + var(--send-w) + 12px);
+}
+
+/* message */
+.mp2-msg{
+	margin: 0;
+	color: var(--muted);
+	font-weight: 800;
+}
+
+/* =========================================================
+	 성별
+========================================================= */
+.mp2-fieldGender{
+	width: 360px;
+	gap: 14px;
+}
+.mp2-radio{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 900;
+	color: var(--ink);
+}
+.mp2-radio input{ accent-color: #5866ff; }
+
+/* bottom buttons */
+.mp2-actions{
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 8px;
+}
+
+/* =========================================================
+	 작은 화면에서만 최소한 안 깨지게
+========================================================= */
+@media (max-width: 980px){
+	.mp2-grid{ grid-template-columns: 1fr; }
+	.mp2-twoLine{ width: 100%; }
+	.mp2-line1{ grid-template-columns: 1fr var(--send-w); }
+	.mp2-line2{ grid-template-columns: 1fr var(--ok-w); }
+	.mp2-fieldPhone, .mp2-fieldEmail, .mp2-fieldAddrLong, .mp2-fieldGender{ width: 100%; }
+	.mp2-rightLine{ grid-template-columns: 1fr var(--dup-w); }
+}
+
+/* 중복확인 버튼 */
+.btn-ghost{
+	height: 46px;
+	background-color: #cfd6ea;
+	color: #2a3b66;
+	border: 1px solid var(--stroke);
+	box-shadow: 0 8px 18px rgba(31,42,68,.08);
+
+	-webkit-appearance: none;
+	appearance: none;
+	-webkit-tap-highlight-color: transparent;
+
+	transition: background-color .15s ease,
+		box-shadow .15s ease,
+		transform .1s ease,
+		border-color .15s ease;
+}
+
+/* hover */
+.btn-ghost:hover{
+	background-color: #bcc6e6;
+	border-color: #b2bddf;
+	box-shadow: 0 12px 24px rgba(31,42,68,.12);
+	transform: translateY(-1px);
+}
+
+/* active */
+.btn-ghost:active{
+	background-color: #aeb9dc !important;
+	border-color: #a2aed6;
+	box-shadow: 0 6px 14px rgba(31,42,68,.14);
+	transform: translateY(0);
+}
+
+/* focus */
+.btn-ghost:focus,
+.btn-ghost:focus-visible{
+	outline: none;
+}

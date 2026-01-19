@@ -62,6 +62,13 @@
 
 					<!-- 본문 -->
 					<section class="pd-body">
+						<!-- 이미지들 -->
+						<div class="pd-images" th:if="${images != null and !#lists.isEmpty(images)}">
+							<div class="pd-image" th:each="img : ${images}">
+								<img th:src="@{${img.imagePath}}" alt="post image">
+							</div>
+						</div>
+						
 						<div class="pd-content" th:text="${post.content}"></div>
 					</section>
 

@@ -15,5 +15,8 @@ public interface MemberService {
 
     // 회원가입
 	public void addMember(Member member);
+	
+	// 회원 정보 수정
+	public void editMember(Member member);
 
 }

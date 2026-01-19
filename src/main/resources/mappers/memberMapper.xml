@@ -5,6 +5,21 @@
 
 <mapper namespace="com.duck.petcareproject.mapper.MemberMapper">
 	
+	<!-- 회원정보 수정 -->
+	<update id="updateMember" parameterType="Member">
+		UPDATE member
+		SET
+			user_name = #{userName},
+			email     = NULLIF(#{email}, ''),
+			gender    = #{gender},
+			mobile    = NULLIF(#{mobile}, ''),
+			zipcode   = NULLIF(#{zipcode}, ''),
+			address1  = NULLIF(#{address1}, ''),
+			address2  = NULLIF(#{address2}, ''),
+			updated_at = NOW()
+		WHERE user_id = #{userId}
+	</update>
+	
 	<!-- userId 의 회원 정보 조회 -->
 	<select id="selectMember" resultType="Member">
 		SELECT

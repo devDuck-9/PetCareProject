@@ -25,8 +25,8 @@
 					</div>
 
 					<div class="comm-card-body">
-						<form id="postForm" th:action="@{/insertPost}" method="post">
-
+						<form id="postForm" th:action="@{/insertPost}" method="post" enctype="multipart/form-data">
+							
 							<!-- 카테고리 -->
 							<div class="cf-row">
 								<div class="cf-label">카테고리</div>
@@ -39,13 +39,24 @@
 									<option value="QNA"	 th:selected="${selectedCategory == 'QNA'}">질문 &amp; 답변</option>
 								</select>
 							</div>
-
+							
 							<!-- 제목 -->
 							<div class="cf-row">
 								<div class="cf-label">제목</div>
 								<div class="cf-field has-counter is-input">
 									<input class="cf-input" type="text" name="title" id="title" maxlength="100" placeholder="제목을 입력해주세요.">
 									<span class="inline-counter" id="titleCounter">0/100</span>
+								</div>
+							</div>
+							
+							<!-- 사진 첨부 -->
+							<div class="cf-row">
+								<div class="cf-label">사진</div>
+								<div class="cf-field">
+									<input type="file" name="images" id="images" accept="image/*" multiple>
+									<p id="fileLabel" style="margin:6px 0 0; font-size:13px; color:#666;"></p>
+									
+									<div id="imagePreview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
 								</div>
 							</div>
 							

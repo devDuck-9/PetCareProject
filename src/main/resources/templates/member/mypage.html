@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/mypage.css}">
+
+	<main class="mp2-page">
+		<section class="mp2-shell">
+
+			<div class="mp2-grid">
+				<!-- ============ LEFT ============ -->
+				<aside class="mp2-left">
+					<div class="mp2-profileBox">
+						<div class="mp2-avatar">
+							<img th:src="@{/images/logo.png}" alt="프로필">
+						</div>
+						<button type="button" class="mp2-gear" aria-label="설정" title="설정">
+							<i class="bi bi-gear-fill"></i>
+						</button>
+					</div>
+
+					<div class="mp2-userPill"
+							 th:text="${member != null && member.userName != null ? member.userName : '닉네임 설정이 필요합니다'}">이름</div>
+
+					<nav class="mp2-menu" aria-label="마이페이지 메뉴">
+						<a class="mp2-menuItem is-active" th:href="@{/mypage}">내정보</a>
+						<a class="mp2-menuItem" th:href="@{/community/myPosts}">내가 쓴 게시글</a>
+						<a class="mp2-menuItem danger" th:href="@{/member/withdraw}">회원탈퇴</a>
+					</nav>
+				</aside>
+
+				<!-- ============ RIGHT ============ -->
+				<section class="mp2-right">
+					<header class="mp2-head">
+						<h1 class="mp2-title">내정보 관리</h1>
+						<p class="mp2-sub">회원님의 정보를 수정하고 관리할 수 있어요.</p>
+					</header>
+
+					<div class="mp2-body">
+						<!-- ID line -->
+						<div class="mp2-idLine">
+							<span class="mp2-idLabel">ID</span>
+							<span class="mp2-idValue" th:text="${member != null ? member.userId : 'user_1'}">아이디</span>
+						</div>
+
+						<form class="mp2-form" th:action="@{/mypage/update}" th:object="${member}" method="post" autocomplete="off">
+
+							<!-- 닉네임 -->
+							<div class="mp2-row">
+								<div class="mp2-rowLabel">닉네임</div>
+								<div class="mp2-rowRight mp2-rightLine">
+									<div class="mp2-field mp2-fieldNick">
+										<i class="bi bi-person-fill mp2-ico"></i>
+										<input class="mp2-input" type="text" th:field="*{userName}" placeholder="닉네임" minlength="2" maxlength="50" required>
+									</div>
+									<button class="mp2-btn mp2-btnDup btn-ghost" type="button" id="btnCheckName">중복확인</button>
+								</div>
+							</div>
+
+							<!-- 핸드폰 -->
+							<div class="mp2-row">
+								<div class="mp2-rowLabel">핸드폰</div>
+								
+								<div class="mp2-rowRight mp2-twoLine">
+									<!-- line1: phone + send -->
+									<div class="mp2-line mp2-line1">
+										<div class="mp2-field mp2-fieldPhone">
+											<i class="bi bi-telephone-fill mp2-ico"></i>
+											
+											<select class="mp2-select mp2-phonePart" id="mobile1">
+												<option value="010" selected>010</option>
+												<option value="011">011</option>
+												<option value="016">016</option>
+												<option value="017">017</option>
+												<option value="018">018</option>
+												<option value="019">019</option>
+											</select>
+											
+											<span class="mp2-dash">-</span>
+											<input class="mp2-input mp2-phonePart" type="text" id="mobile2" maxlength="4" inputmode="numeric" placeholder="1234" required>
+											<span class="mp2-dash">-</span>
+											<input class="mp2-input mp2-phonePart" type="text" id="mobile3" maxlength="4" inputmode="numeric" placeholder="5678" required>
+											
+											<input type="hidden" th:field="*{mobile}" id="mobileFinal">
+										</div>
+										<button class="mp2-btn mp2-btnSend btn-ghost" type="button" id="btnSendCode">인증번호 발송</button>
+									</div>
+									<p class="mp2-msg" id="mobileMsg" style="display:none;"></p>
+									
+									<!-- line2: code + confirm -->
+									<div class="mp2-line mp2-line2">
+										<div class="mp2-field mp2-fieldCode">
+											<input class="mp2-input" type="text" id="smsCode" placeholder="인증번호 6자리" maxlength="6" inputmode="numeric">
+										</div>
+										<button class="mp2-btn mp2-btnOk btn-ghost" type="button" id="btnVerifyCode">확인</button>
+									</div>
+									
+									<p class="mp2-msg" id="smsMsg" style="display:none;"></p>
+									<input type="hidden" id="mobileVerified" value="false">
+								</div>
+							</div>
+							
+							<!-- 주소 -->
+							<div class="mp2-row">
+								<div class="mp2-rowLabel">주소</div>
+								
+								<div class="mp2-rowRight mp2-addrWrap">
+									<div class="mp2-line mp2-addrTop">
+										<div class="mp2-field mp2-fieldZip">
+											<i class="bi bi-house-door-fill mp2-ico"></i>
+											<input class="mp2-input" type="text" id="zipcode" th:field="*{zipcode}"  placeholder="우편번호" readonly>
+										</div>
+										<button class="mp2-btn mp2-btnAddr btn-ghost" type="button" id="btnSearchAddress">주소찾기</button>
+									</div>
+									
+									<div class="mp2-field mp2-fieldAddrLong">
+										<input class="mp2-input" type="text" id="address1" th:field="*{address1}" placeholder="기본주소" readonly>
+									</div>
+									
+									<div class="mp2-field mp2-fieldAddrLong">
+										<input class="mp2-input" type="text" id="address2" th:field="*{address2}" placeholder="상세주소를 입력해주세요">
+									</div>
+								</div>
+							</div>
+							
+							<!-- 이메일 -->
+							<div class="mp2-row mp2-rowEmail">
+								<div class="mp2-rowLabel">이메일</div>
+								
+								<div class="mp2-rowRight mp2-twoLine">
+									<!-- line1: email + send -->
+									<div class="mp2-line mp2-line1">
+										<div class="mp2-field mp2-fieldEmail">
+											<i class="bi bi-envelope-fill mp2-ico"></i>
+											
+											<input class="mp2-input mp2-emailId" type="text" th:field="*{emailId}" placeholder="이메일 입력" required>
+											
+											<span class="mp2-at">@</span>
+											
+											<input class="mp2-input mp2-emailDomain" type="text" name="emailDomainInput" placeholder="naver.com">
+											
+											<select class="mp2-select mp2-emailSelect" name="emailDomainSelect" required>
+												<option value="manual" selected>직접입력 ▼</option>
+												<option value="gmail.com">gmail.com</option>
+												<option value="naver.com">naver.com</option>
+												<option value="daum.net">daum.net</option>
+											</select>
+
+											<input type="hidden" th:field="*{emailDomain}" id="emailDomainFinal">
+										</div>
+
+										<button class="mp2-btn mp2-btnSend btn-ghost" type="button" id="btnSendEmailCode">인증번호 발송</button>
+									</div>
+
+									<!-- line2: email code + confirm -->
+									<div class="mp2-line mp2-line2">
+										<div class="mp2-field mp2-fieldCode">
+											<input class="mp2-input" type="text" id="emailCode" placeholder="이메일 인증번호" maxlength="6" inputmode="numeric">
+										</div>
+										<button class="mp2-btn mp2-btnOk btn-ghost" type="button" id="btnVerifyEmailCode">확인</button>
+									</div>
+
+									<p class="mp2-msg" id="emailMsg" style="display:none;"></p>
+									<input type="hidden" id="emailVerified" value="false">
+								</div>
+							</div>
+
+							<!-- 성별 -->
+							<div class="mp2-row">
+								<div class="mp2-rowLabel">성별</div>
+
+								<div class="mp2-rowRight">
+									<div class="mp2-field mp2-fieldGender">
+										<i class="bi bi-person-badge-fill mp2-ico"></i>
+
+										<label class="mp2-radio">
+											<input type="radio" th:field="*{gender}" value="M">
+											<span>남성</span>
+										</label>
+
+										<label class="mp2-radio">
+											<input type="radio" th:field="*{gender}" value="F">
+											<span>여성</span>
+										</label>
+
+										<label class="mp2-radio">
+											<input type="radio" th:field="*{gender}" value="U">
+											<span>선택안함</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<!-- bottom buttons -->
+							<div class="mp2-actions">
+								<button class="btn-pill-orange" type="submit" id="btnSave">저장하기</button>
+								<a class="btn-pill" th:href="@{/mypage/password}" role="button">비밀번호 변경</a>
+							</div>
+
+						</form>
+					</div>
+				</section>
+			</div>
+		</section>
+	</main>
+
+	<!-- 공통 모달 -->
+	<div th:replace="~{fragments/modal :: modal('nameCheckModal', '이름(닉네임) 중복확인')}"></div>
+	<div th:replace="~{fragments/modal :: modal('emailCheckModal', '이메일 확인')}"></div>
+	<div th:replace="~{fragments/modal :: modal('smsCheckModal', '휴대폰 확인')}"></div>
+	<div th:replace="~{fragments/modal :: modal('saveModal', '저장')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+		Modal.bind('#nameCheckModal');
+		Modal.bind('#emailCheckModal');
+		Modal.bind('#smsCheckModal');
+		Modal.bind('#saveModal');
+	</script>
+	
+	<!-- 카카오맵 -->
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	
+	<script th:src="@{/js/member/mypage.js}"></script>
+
+</th:block>
+</html>

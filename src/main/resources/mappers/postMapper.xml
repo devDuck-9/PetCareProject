@@ -139,6 +139,13 @@
 			VALUES (#{userSeq}, #{category}, #{title}, #{content})
 		</insert>
 		
+		<!-- 게시글 대표 이미지 수정 -->
+		<update id="updatePostThumbnail">
+			UPDATE communication_post
+			SET post_image = #{postImage}
+			WHERE post_seq = #{postSeq}
+		</update>
+		
 		<!-- 전체 게시글 목록 (카테고리 선택 시 필터) -->
 		<select id="selectPostsPaging" resultType="CommunityPost">
 			SELECT

@@ -24,3 +24,34 @@
 	font-family: 'Griun_Cocochoitoon';
 	src: url('/fonts/Griun_Cocochoitoon-Rg.ttf') format('opentype');
 }
+
+@font-face {
+	font-family: 'YPairingFont-Regular';
+	src: url('/fonts/YPairingFont-Regular.otf') format('opentype');
+}
+
+@font-face {
+	font-family: 'BMJUA_ttf';
+	src: url('/fonts/BMJUA_ttf.ttf') format('opentype');
+}
+
+@font-face {
+	font-family: 'SOYOMapleBold';
+	src
+	: url('/fonts/SOYOMapleBold.ttf') format('opentype');
+}
+
+@font-face {
+	font-family: 'nunnLight';
+	src: url('/fonts/nunnLight.ttf') format('opentype');
+}
+
+@font-face {
+	font-family: 'nunnSeum';
+	src: url('/fonts/nunnSeum.ttf') format('opentype');
+}
+
+@font-face {
+	font-family: 'KyoboHandwriting2024psw';
+	src: url('/fonts/KyoboHandwriting2024psw.ttf') format('opentype');
+}

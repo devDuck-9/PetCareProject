@@ -26,7 +26,7 @@
 					</div>
 
 					<div class="comm-card-body">
-						<form id="postEditForm" th:action="@{/updatePost/{id}(id=${post.postSeq})}" method="post">
+						<form id="postEditForm" th:action="@{/updatePost/{id}(id=${post.postSeq})}" method="post" enctype="multipart/form-data">
 							<input type="hidden" name="postSeq" th:value="${post != null ? post.postSeq : 0}">
 
 							<!-- 카테고리 -->
@@ -50,7 +50,21 @@
 									<span class="inline-counter" id="titleCounter">0/100</span>
 								</div>
 							</div>
-
+							
+							<!--	기존 이미지 삭제 목록(서버로 보낼 hidden) -->
+							<div id="removeOldInputs"></div>
+			
+							<!--	사진 (등록폼과 동일 UI) -->
+							<div class="cf-row">
+								<div class="cf-label">사진</div>
+								<div class="cf-field">
+									<input type="file" name="images" id="images" accept="image/*" multiple style="display:none;">
+									<button type="button" class="btn-pill" id="btnPickImages">파일 선택</button>
+									<span id="fileLabel" style="margin-left:10px; font-size:13px; color:#666;">선택된 파일 없음</span>
+									<div id="imagePreview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
+								</div>
+							</div>
+						
 							<!-- 본문 -->
 							<div class="cf-row">
 								<div class="cf-label">본문</div>
@@ -85,6 +99,12 @@
 			Modal.bind('#postModal');
 			Modal.bind('#confirmModal');
 	</script>
+	
+	<!--	서버에서 내려준 기존 이미지 목록을 JS로 넘기기 -->
+	<script th:inline="javascript">
+		window.__OLD_IMAGES__ = /*[[${images}]]*/ [];
+	</script>
+
 
 	<script th:src="@{/js/community/post_edit.js}"></script>
 	<script th:src="@{/js/common.js}"></script>

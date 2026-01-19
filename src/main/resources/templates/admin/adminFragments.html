@@ -50,7 +50,16 @@
 			<div class="comm-card-title" th:text="${post.title}"><span class="comm-paw">🐾</span> 게시글 상세 : 제목</div>
 			<button type="button" class="btn-pill pd-btn-danger" th:attr="data-admin-post-delete=${post.postSeq}">삭제</button>
 		</div>
+		
+		<!-- 이미지 -->
+		<div class="pd-images" th:if="${images != null && !#lists.isEmpty(images)}">
+			<img th:each="img : ${images}" th:src="${img.imagePath}" alt="post image"/>
+		</div>
 
+		<div class="pc-empty" th:if="${images == null || #lists.isEmpty(images)}" style="margin:10px 0; color:#777;">
+			첨부된 이미지가 없습니다.
+		</div>
+		
 		<div class="comm-card-body" th:if="${post != null}">
 			<div class="pd-meta">
 				<div class="pd-meta-row">

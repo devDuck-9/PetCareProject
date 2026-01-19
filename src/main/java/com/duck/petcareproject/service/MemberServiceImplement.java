@@ -35,7 +35,22 @@ public class MemberServiceImplement implements MemberService {
 	public void addMember(Member member) {
 		// 비밀번호 암호화
 		member.setPassword(passwordEncoder.encode(member.getPassword()));
-		memberMapper.insetMember(member);
+		int result = memberMapper.insetMember(member);
+		
+		if (result != 1) {
+			throw new RuntimeException("회원가입에 실패했습니다.");
+		}
+		
+	}
+	
+	// 회원 정보수정
+	public void editMember(Member member) {
+		int result = memberMapper.updateMember(member);
+		
+		if (result != 1) {
+			throw new RuntimeException("정보수정에 실패했습니다.");
+		}
+		
 	}
 	
 }

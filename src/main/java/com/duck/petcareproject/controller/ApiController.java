@@ -305,6 +305,10 @@ public class ApiController {
 			mailSender.send(msg);
 			System.out.println("[EMAIL] send success to=" + e);
 			
+			System.out.println("# ============================================== #");
+			System.out.println("[EMAIL] send code=" + code);
+			System.out.println("# ============================================== #");
+			
 		} catch (Exception ex) {
 			
 			System.out.println("[EMAIL] send FAILED: " + ex.getClass().getName() + " / " + ex.getMessage());

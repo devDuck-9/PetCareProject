@@ -1,5 +1,7 @@
 package com.duck.petcareproject.controller;
 
+import java.util.List;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.duck.petcareproject.domain.Category;
@@ -16,6 +19,7 @@ import com.duck.petcareproject.domain.Member;
 import com.duck.petcareproject.service.CommunityCommentService;
 import com.duck.petcareproject.service.CommunityPostService;
 import com.duck.petcareproject.service.MemberService;
+import com.duck.petcareproject.service.storage.FileStorageService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ public class CommunityPostController {
 	private final CommunityPostService communityPostService;
 	private final MemberService memberService;
 	private final CommunityCommentService communityCommentService;
+	private final FileStorageService fileStorageService;
 	
 	// 커뮤니티 목록 (카테고리별)
 	@GetMapping({"/community", "/community/{slug}"})
@@ -129,7 +134,7 @@ public class CommunityPostController {
 				}
 		}
 		model.addAttribute("returnUrl", returnUrl);
-		
+		model.addAttribute("images", communityPostService.getPostImages(postSeq));
 		model.addAttribute("comments", communityCommentService.getCommentsByPost(postSeq, member.getUserSeq()));
 		
 		return "community/postDetail";
@@ -156,6 +161,7 @@ public class CommunityPostController {
 		}
 		
 		model.addAttribute("post", post);
+		model.addAttribute("images", communityPostService.getPostImages(postSeq));
 		
 		return "community/editPostForm";
 	}
@@ -201,7 +207,9 @@ public class CommunityPostController {
 	public String updatePost(@PathVariable("id") int postSeq, Authentication auth, RedirectAttributes ra, Model model,
 							@RequestParam("category") String categoryRaw,
 							@RequestParam("title") String title,
-							@RequestParam("content") String content) {
+							@RequestParam("content") String content,
+							@RequestParam(value="images", required=false) MultipartFile[] images,
+							@RequestParam(value="removeImageSeqs", required=false) List<Integer> removeImageSeqs) throws Exception {
 
 		// header 메뉴 활성화
 		model.addAttribute("activeMenu", "community");
@@ -226,7 +234,7 @@ public class CommunityPostController {
 		post.setTitle(title != null ? title.trim() : "");
 		post.setContent(content != null ? content.trim() : "");
 
-		boolean ok = communityPostService.updatePost(post);
+		boolean ok = communityPostService.updatePostWithImages(post, images, removeImageSeqs);
 		
 		if (!ok) {
 			ra.addFlashAttribute("errorMsg", "수정할 수 없습니다.");
@@ -260,11 +268,7 @@ public class CommunityPostController {
 		}
 		
 		boolean ok;
-		if (isAdmin) {
-			ok = communityPostService.deletePostAdmin(postSeq);
-		} else {
-			ok = communityPostService.deletePost(postSeq, member.getUserSeq());
-		}
+		ok = communityPostService.deletePostWithImages(postSeq, member.getUserSeq(), isAdmin);
 		
 		if (!ok) {
 			ra.addFlashAttribute("errorMsg", "삭제할 수 없습니다.");
@@ -293,7 +297,8 @@ public class CommunityPostController {
 	public String insertPost( Authentication auth, RedirectAttributes ra,
 								@RequestParam("category") String categoryRaw,
 								@RequestParam("title") String title,
-								@RequestParam("content") String content) {
+								@RequestParam("content") String content,
+								@RequestParam(value = "images", required = false) MultipartFile[] images) throws Exception {
 		
 		// 로그인 체크(안전)
 		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
@@ -316,15 +321,28 @@ public class CommunityPostController {
 			return "redirect:/community/guide";
 		}
 		
+		int MAX_IMAGES = 5;
+		if (images != null) {
+			int count = 0;
+			for (MultipartFile f : images) {
+				if (f != null && !f.isEmpty()) count++;
+			}
+			if (count > MAX_IMAGES) {
+				ra.addFlashAttribute("errorMsg", "사진은 최대 " + MAX_IMAGES + "장까지 첨부할 수 있습니다.");
+				return "redirect:/addPostForm";
+			}
+		}
+		
 		CommunityPost post = new CommunityPost();
 		post.setUserSeq(member.getUserSeq());
 		post.setCategory(category);
 		post.setTitle(title != null ? title.trim() : "");
 		post.setContent(content != null ? content.trim() : "");
 
-		communityPostService.insertPost(post);
+		communityPostService.insertPostWithImages(post, images);
 		
 		ra.addFlashAttribute("successMsg", "게시글이 등록되었습니다.");
+		
 		// 등록한 카테고리 목록으로 이동
 		return "redirect:" + buildRedirectToCategory(category);
 	}

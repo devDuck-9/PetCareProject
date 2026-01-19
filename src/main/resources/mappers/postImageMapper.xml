@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duck.petcareproject.mapper.CommunityPostImageMapper">
+	
+	<!-- 게시글 이미지 저장 (1장씩 insert) -->
+	<insert id="insertPostImage" parameterType="CommunityPostImage">
+		INSERT INTO communication_post_image (post_seq, image_path, sort_order, created_at)
+		VALUES (#{postSeq}, #{imagePath}, #{sortOrder}, NOW())
+	</insert>
+	
+	<!-- 게시글 이미지 목록조회 (상세/수정화면) -->
+	<select id="selectImagesByPostSeq" resultType="CommunityPostImage">
+		SELECT image_seq, post_seq, image_path, sort_order, created_at
+		FROM communication_post_image
+		WHERE post_seq = #{postSeq}
+		ORDER BY sort_order ASC, image_seq ASC
+	</select>
+	
+	<!-- 게시글 이미지 전체삭제 -->
+	<delete id="deleteImagesByPostSeq">
+		DELETE FROM communication_post_image
+		WHERE post_seq = #{postSeq}
+	</delete>
+	
+	<!-- 해당 게시글 이미지 경로만 조회 (삭제 시 파일 삭제용) -->
+	<select id="selectImagePathsByPostSeq" resultType="string">
+		SELECT image_path
+		FROM communication_post_image
+		WHERE post_seq = #{postSeq}
+		ORDER BY sort_order ASC, image_seq ASC
+	</select>
+
+	<!-- image_seq 목록으로 경로 조회 (수정 시 개별 삭제용) -->
+	<select id="selectImagePathsBySeqs" resultType="string">
+		SELECT image_path
+		FROM communication_post_image
+		WHERE post_seq = #{postSeq}
+			AND image_seq IN
+			<foreach collection="imageSeqs" item="seq" open="(" separator="," close=")">
+				#{seq}
+			</foreach>
+	</select>
+	
+	<!-- image_seq 목록으로 삭제 (postSeq로 한번 더 안전장치) (수정 시 개별 삭제용) -->
+	<delete id="deleteImagesBySeqs">
+		DELETE FROM communication_post_image
+		WHERE post_seq = #{postSeq}
+			AND image_seq IN
+			<foreach collection="imageSeqs" item="seq" open="(" separator="," close=")">
+				#{seq}
+			</foreach>
+	</delete>
+
+	<!-- 현재 남아있는 "첫번째 이미지" 1장 조회 (대표이미지 갱신용) -->
+	<select id="selectFirstImagePathByPostSeq" resultType="string">
+		SELECT image_path
+		FROM communication_post_image
+		WHERE post_seq = #{postSeq}
+		ORDER BY sort_order ASC, image_seq ASC
+		LIMIT 1
+	</select>
+	
+</mapper>

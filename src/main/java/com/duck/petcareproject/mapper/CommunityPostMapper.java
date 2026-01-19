@@ -31,6 +31,9 @@ public interface CommunityPostMapper {
 	// 게시글 등록
 	int insertPost(CommunityPost post);
 	
+	// 게시글 대표이미지 등록
+	int updatePostThumbnail(@Param("postSeq") int postSeq,  @Param("postImage") String postImage);
+	
 	// 전체 게시글 목록(페이징) - category 없으면 전체
 	List<CommunityPost> selectPostsPaging(@Param("category") String category, @Param("limit") int limit, @Param("offset") int offset);
 	
