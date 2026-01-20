@@ -59,6 +59,19 @@ $(function () {
 		const d = $day.val();
 		$hidden.val(y && m && d ? `${y}-${m}-${d}` : '');
 	}
+	
+	function enforceFutureDateIfNeeded(focusEl) {
+		const y = parseInt($year.val(), 10);
+		const m = parseInt($month.val(), 10);
+		const d = parseInt($day.val(), 10);
+
+		if (!isSelectableDate(y, m, d)) {
+			openError('과거 날짜는 선택할 수 없습니다.', focusEl || $day);
+			forceDefaultTomorrow();
+			return false;
+		}
+		return true;
+	}
 
 	// 선택 가능한 첫 날짜(=내일)를 강제로 맞춰줌 (안전장치)
 	function forceDefaultTomorrow() {
@@ -160,25 +173,19 @@ $(function () {
 		fillMonths();
 		fillDays();
 		syncHidden();
+		enforceFutureDateIfNeeded($year);
 	});
 
 	$month.on('change', function () {
 		fillDays();
 		syncHidden();
+		enforceFutureDateIfNeeded($month);
 	});
 
 	$day.on('change', function () {
-		const y = parseInt($year.val(), 10);
-		const m = parseInt($month.val(), 10);
-		const d = parseInt($day.val(), 10);
-
-		if (!isSelectableDate(y, m, d)) {
-			openError('과거 날짜는 선택할 수 없습니다.', $day);
-			forceDefaultTomorrow();
-			return;
+		if (enforceFutureDateIfNeeded($day)) {
+			syncHidden();
 		}
-
-		syncHidden();
 	});
 
 	// ===== submit 검증 =====
@@ -201,7 +208,7 @@ $(function () {
 			return;
 		}
 
-		// disabled로 막아놨지만 혹시나 조작 방지용 마지막 검증
+		// 조작 방지용 검증
 		const y = parseInt($year.val(), 10);
 		const m = parseInt($month.val(), 10);
 		const d = parseInt($day.val(), 10);

@@ -40,11 +40,11 @@ html, body{
 	color: var(--text);
 }
 
-button, textarea, select{
+button, textarea{
 	font-family: 'KyoboHandwriting2024psw', sans-serif !important;
 }
 
-input{
+input, select{
 	font-family: 'SOYOMapleBold', sans-serif !important;
 }
 

@@ -13,7 +13,7 @@ $(function () {
 	const $images = document.getElementById('images');
 	const $preview = document.getElementById('imagePreview');
 	const MAX_IMAGES = 5;
-
+	
 	let items = [];	// [{ id, file }]
 	let uid = 0;		// 고유번호 발급용
 
@@ -74,7 +74,6 @@ $(function () {
 			wrap.appendChild(btn);
 			$preview.appendChild(wrap);
 		});
-		updateFileLabel()
 	}
 
 	if ($images) {
@@ -100,22 +99,8 @@ $(function () {
 			rebuildInputFiles();
 			renderPreview();
 
-			// 같은 파일 다시 선택 가능
-			$images.value = '';
 		});
-		updateFileLabel();
 	}
-	
-	const $fileLabel = document.getElementById('fileLabel');
-
-	function updateFileLabel() {
-	  if (!$fileLabel) return;
-	  const n = items.length;
-	  if (n === 0) $fileLabel.textContent = '선택된 파일 없음';
-	  else if (n === 1) $fileLabel.textContent = items[0].file.name;
-	  else $fileLabel.textContent = `파일 ${n}개 선택됨`;
-	}
-	
 	
 	// 글자수 제한
 	const MAX_TITLE = 100;

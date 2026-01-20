@@ -20,6 +20,7 @@ import com.duck.petcareproject.domain.CommunityComment;
 import com.duck.petcareproject.domain.Member;
 import com.duck.petcareproject.domain.Pet;
 import com.duck.petcareproject.service.CommunityCommentService;
+import com.duck.petcareproject.service.KakaoLocalService;
 import com.duck.petcareproject.service.MemberService;
 import com.duck.petcareproject.service.PetService;
 
@@ -35,6 +36,7 @@ public class ApiController {
 	private final PetService petService;
 	private final CommunityCommentService communityCommentService;
 	private final JavaMailSender mailSender;
+	private final KakaoLocalService kakaoLocalService;
 	
 	@Value("${app.sms.mock:false}")
 	private boolean smsMock;
@@ -42,6 +44,27 @@ public class ApiController {
 	@PostConstruct
 	public void check() {
 		System.out.println("SMS MOCK MODE = " + smsMock);
+	}
+	
+	// 병원정보
+	@GetMapping("/api/hospitals")
+	public ResponseEntity<String> list(@RequestParam("lat") double lat,
+										@RequestParam("lng") double lng,
+										@RequestParam(value = "q", required = false) String q,
+										@RequestParam(value = "page", defaultValue = "1") int page,
+										@RequestParam(value = "size", defaultValue = "5") int size) {
+		try {
+			if (page < 1) page = 1;
+			if (size < 1) size = 5;
+			if (size > 15) size = 15;
+
+			String json = kakaoLocalService.searchHospitals(lat, lng, q, page, size);
+			return ResponseEntity.ok(json);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(500).body("{\"error\":\"kakao api failed\"}");
+		}
 	}
 	
 	// 아이디 중복 확인
