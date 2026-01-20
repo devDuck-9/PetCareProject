@@ -560,5 +560,13 @@ $(function () {
 				return;
 			}
 		});
+		
 	}
+	
+	// 저장 모달
+	const pageMsg = ($("#pageMsg").val() || "").trim();
+	if (pageMsg) {
+		Modal.open("#saveModal", pageMsg);
+	}
+	
 });

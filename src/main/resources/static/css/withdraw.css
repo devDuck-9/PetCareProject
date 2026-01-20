@@ -1,0 +1,161 @@
+/* =================
+	회원탈퇴
+=================== */
+
+
+/* 카드(첫번째 사진 느낌) */
+.wd-card{
+	background:#fff;
+	border-radius:18px;
+	padding:34px 36px;
+	box-shadow: 0 6px 24px rgba(0,0,0,.06);
+	border:1px solid rgba(20,20,20,.06);
+}
+
+.wd-text{
+	color:#2f3b5a;
+	line-height:1.7;
+	font-weight:600;
+	margin-bottom:18px;
+}
+
+.wd-bullets{
+	margin: 6px 0 22px;
+	padding-left: 18px;
+	color:#2f3b5a;
+	font-weight:600;
+	line-height:1.9;
+}
+
+.wd-check{
+	display:flex;
+	align-items:center;
+	gap:12px;
+	margin: 18px 0 18px;
+	user-select:none;
+}
+
+.wd-check input{
+	width:20px;
+	height:20px;
+	accent-color:#d36a1f;
+}
+
+.wd-checkText{
+	color:#c93a3a;
+	font-weight:800;
+	font-size: 20px;
+}
+
+.wd-thanks{
+	margin-top: 18px;
+	color:#2f3b5a;
+	font-weight:700;
+}
+
+.wd-actions{
+	margin-top: 22px;
+	display:flex;
+	justify-content:center;
+}
+
+/* 버튼 비활성 */
+#btnWithdraw:disabled{
+	opacity:.55;
+	cursor:not-allowed;
+}
+
+/* ===== 비밀번호 모달(두번째 사진 느낌) ===== */
+.wdp-backdrop{
+	position:fixed;
+	inset:0;
+	display:none;
+	align-items:center;
+	justify-content:center;
+	background: rgba(0,0,0,.35);
+	z-index: 9999;
+}
+
+.wdp-backdrop.is-open{ display:flex; }
+
+.wdp-modal{
+	width:min(560px, 92vw);
+	background:#fff;
+	border-radius:22px;
+	padding:28px 28px 22px;
+	box-shadow: 0 18px 60px rgba(0,0,0,.25);
+}
+
+.wdp-title{
+	margin: 0 0 10px;
+	font-size:20px;
+	font-weight:900;
+	color:#2f3b5a;
+	text-align:center;
+}
+
+.wdp-warn{
+	margin: 0 0 18px;
+	color:#e05a5a;
+	font-weight:800;
+	text-align:center;
+}
+
+.wdp-inputWrap{
+	display:flex;
+	align-items:center;
+	gap:10px;
+	background:#eef1ff;
+	border-radius:12px;
+	padding: 10px 12px;
+}
+
+.wdp-ico{
+	font-size:18px;
+	color:#2f3b5a;
+	opacity:.85;
+}
+
+.wdp-input{
+	flex:1;
+	border:none;
+	outline:none;
+	background:transparent;
+	font-size:15px;
+	font-weight:700;
+	color:#2f3b5a;
+}
+
+.wdp-eye{
+	border:none;
+	background:transparent;
+	cursor:pointer;
+	font-size:18px;
+	color:#2f3b5a;
+	opacity:.85;
+}
+
+.wdp-error{
+	margin: 10px 0 0;
+	color:#d04646;
+	font-weight:800;
+	text-align:center;
+}
+
+.wdp-actions{
+	margin-top:18px;
+	display:flex;
+	gap:12px;
+	justify-content:center;
+}
+
+.wdp-modal.is-shake{
+	animation: wdpShake .25s linear 0s 2;
+}
+@keyframes wdpShake{
+	0%{ transform: translateX(0); }
+	25%{ transform: translateX(-6px); }
+	50%{ transform: translateX(6px); }
+	75%{ transform: translateX(-4px); }
+	100%{ transform: translateX(0); }
+}

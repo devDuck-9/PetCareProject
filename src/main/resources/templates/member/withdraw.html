@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/mypage.css}">
+	<link rel="stylesheet" th:href="@{/css/withdraw.css}">
+	
+	<main class="mp2-page">
+		<section class="mp2-shell">
+			<div class="mp2-grid">
+
+				<!-- LEFT -->
+				<aside class="mp2-left">
+					
+					<!-- 프로필 이미지 -->
+					<div class="mp2-profileBox">
+						<div class="mp2-avatar">
+							<img id="profileImg" th:src="${member != null && member.profileImg != null ? member.profileImg : '/images/profile.png'}" alt="프로필">
+						</div>
+
+						<button type="button" class="mp2-gear" id="btnProfilePhoto" aria-label="프로필 사진 변경" title="프로필 사진 변경">
+							<i class="bi bi-gear-fill"></i>
+						</button>
+
+						<input type="file" id="profileFile" accept="image/*" style="display:none;">
+					</div>
+
+					<div class="mp2-userPill"
+							 th:text="${member != null && member.userName != null ? member.userName : '닉네임 설정이 필요합니다'}">이름</div>
+
+					<nav class="mp2-menu" aria-label="마이페이지 메뉴">
+						<a class="mp2-menuItem" th:href="@{/mypage}">내정보</a>
+						<a class="mp2-menuItem" th:href="@{/community/myPosts}">내가 쓴 게시글</a>
+						<a class="mp2-menuItem danger is-active" th:href="@{/member/withdraw}">회원탈퇴</a>
+					</nav>
+				</aside>
+
+				<!-- RIGHT -->
+				<section class="mp2-right">
+					<header class="mp2-head">
+						<h1 class="mp2-title">회원 탈퇴</h1>
+						<p class="mp2-sub">[PetCare] 회원 탈퇴 안내</p>
+					</header>
+
+					<div class="mp2-body">
+						<div class="wd-card">
+
+							<p class="wd-text">
+								회원 탈퇴 시 [PetCare] 이용 기록 및 계정 정보는 즉시 삭제됩니다.<br>
+								다만, 전자상거래법 등 관련 법령에 따라 계약 또는 청약철회 기록,<br>
+								대금결제 기록 등 일부 정보는 법정 보존 기간(5년 등) 동안 보관 후 파기됩니다.
+							</p>
+
+							<ul class="wd-bullets">
+								<li>탈퇴 전 확인사항: 보유 적립금 및 쿠폰은 소멸됩니다.</li>
+								<li>탈퇴 후 재가입 시: 기존 활동 기록은 복구되지 않습니다.</li>
+							</ul>
+
+							<label class="wd-check">
+								<input type="checkbox" id="agreeDelete">
+								<span class="wd-checkText">탈퇴 시 모든 데이터가 삭제됨을 확인했습니다.</span>
+							</label>
+
+							<p class="wd-thanks">[PetCare]을 이용해 주셔서 감사합니다. 탈퇴하시겠습니까?</p>
+
+							<div class="wd-actions">
+								<button type="button" class="btn-pill-orange" id="btnWithdraw" disabled>탈퇴하기</button>
+							</div>
+
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</section>
+	</main>
+
+	<!-- 공통 모달 -->
+	<div th:replace="~{fragments/modal :: modal('saveModal', '안내')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+		Modal.bind('#saveModal');
+	</script>
+
+	<!-- 비밀번호 입력 모달 (두번째 사진 느낌) -->
+	<div class="wdp-backdrop" id="pwdBackdrop" aria-hidden="true">
+		<div class="wdp-modal" role="dialog" aria-modal="true" aria-labelledby="wdpTitle">
+			<h3 class="wdp-title" id="wdpTitle">회원 탈퇴를 위해 비밀번호를 입력해주세요.</h3>
+			<p class="wdp-warn">삭제하실 경우 복구가 불가능 합니다.</p>
+
+			<div class="wdp-inputWrap">
+				<i class="bi bi-key-fill wdp-ico"></i>
+				<input type="password" id="withdrawPassword" class="wdp-input"
+							 placeholder="비밀번호를 입력해주세요." autocomplete="current-password">
+				<button type="button" class="wdp-eye" id="togglePwd" aria-label="비밀번호 표시">
+					<i class="bi bi-eye"></i>
+				</button>
+			</div>
+
+			<p class="wdp-error" id="pwdError" style="display:none;"></p>
+
+			<div class="wdp-actions">
+				<button type="button" class="btn-pill-orange" id="btnConfirmDelete">삭제하기</button>
+				<button type="button" class="btn-pill" id="btnCancelDelete">취소</button>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/withdraw.js}"></script>
+	<script th:src="@{/js/member/uploadProfile.js}"></script>
+</th:block>
+</html>

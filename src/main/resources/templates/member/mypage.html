@@ -12,17 +12,21 @@
 			<div class="mp2-grid">
 				<!-- ============ LEFT ============ -->
 				<aside class="mp2-left">
+					
+					<!-- 프로필 이미지 -->
 					<div class="mp2-profileBox">
 						<div class="mp2-avatar">
-							<img th:src="@{/images/logo.png}" alt="프로필">
+							<img id="profileImg" th:src="${profileMember != null && profileMember.profileImg != null ? profileMember.profileImg : '/images/profile.png'}" alt="프로필">
 						</div>
-						<button type="button" class="mp2-gear" aria-label="설정" title="설정">
+
+						<button type="button" class="mp2-gear" id="btnProfilePhoto" aria-label="프로필 사진 변경" title="프로필 사진 변경">
 							<i class="bi bi-gear-fill"></i>
 						</button>
+
+						<input type="file" id="profileFile" accept="image/*" style="display:none;">
 					</div>
 
-					<div class="mp2-userPill"
-							 th:text="${member != null && member.userName != null ? member.userName : '닉네임 설정이 필요합니다'}">이름</div>
+					<div class="mp2-userPill"th:text="${profileMember != null && profileMember.userName != null ? profileMember.userName : '닉네임 설정이 필요합니다'}">이름</div>
 
 					<nav class="mp2-menu" aria-label="마이페이지 메뉴">
 						<a class="mp2-menuItem is-active" th:href="@{/mypage}">내정보</a>
@@ -200,6 +204,7 @@
 							</div>
 
 						</form>
+						<input type="hidden" id="pageMsg" th:value="${msg}">
 					</div>
 				</section>
 			</div>
@@ -224,6 +229,7 @@
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	
 	<script th:src="@{/js/member/mypage.js}"></script>
+	<script th:src="@{/js/member/uploadProfile.js}"></script>
 
 </th:block>
 </html>

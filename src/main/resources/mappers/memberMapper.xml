@@ -5,8 +5,64 @@
 
 <mapper namespace="com.duck.petcareproject.mapper.MemberMapper">
 	
+	<!-- userId의 비밀번호 조회 -->
+	<select id="selectPassword" resultType="string">
+		SELECT password FROM member WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword">
+		UPDATE member
+		SET password = #{password}, updated_at = NOW()
+		WHERE user_id = #{userId}
+	</update>
+
+	<!-- 회원 조회 -->
+	<select id="findByUserId" parameterType="string" resultType="Member">
+		SELECT
+			user_seq AS userSeq,
+			user_id AS userId,
+			password,
+			user_name,
+			profile_img,
+			email,
+			gender,
+			mobile,
+			zipcode,
+			address1,
+			address2,
+			role,
+			status,
+			created_at,
+			updated_at
+		FROM member
+		WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 회원 이미지 수정 -->
+	<update id="updateProfileImg">
+		UPDATE member
+		SET profile_img = #{profileImg}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<!-- 회원탈퇴 -->
+	<update id="withdrawSoft">
+		UPDATE member
+		SET status		= 'WITHDRAWN',
+				user_name = #{maskedName},
+				email		 = #{maskedEmail},
+				mobile		= #{maskedMobile},
+				zipcode	 = #{maskedZip},
+				address1	= #{maskedAddr1},
+				address2	= #{maskedAddr2}
+				<!-- 아이디 재사용 허용 -->
+				<!-- , user_id = #{maskedUserId} -->
+		WHERE user_seq = #{userSeq}
+	</update>
+	
 	<!-- 회원정보 수정 -->
-	<update id="updateMember" parameterType="Member">
+	<update id="updateMember" parameterType="com.duck.petcareproject.domain.MemberUpdateForm">
 		UPDATE member
 		SET
 			user_name = #{userName},
@@ -27,6 +83,7 @@
 			user_id,
 			user_name,
 			password,
+			profile_img,
 			email,
 			gender,
 			mobile,

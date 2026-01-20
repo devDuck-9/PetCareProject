@@ -17,6 +17,11 @@ public class FileStorageService {
 
 	private static final Set<String> ALLOWED_EXT = Set.of("jpg", "jpeg", "png", "webp", "gif");
 	
+	// 프로필 이미지 profile 폴더
+	public String saveProfileImage(MultipartFile file) throws Exception {
+		return saveImage(file, "profile");
+	}
+	
 	// 반려동물 프로필 pet 폴더
 	public String savePetImage(MultipartFile file) throws Exception {
 		return saveImage(file, "pet");
@@ -46,7 +51,7 @@ public class FileStorageService {
 		File target = new File(dir, savedName);
 		file.transferTo(target);
 
-		// folder에 따라 분리
+		// folder 에 따라 분리
 		return "/resources/files/" + folder + "/" + savedName;
 	}
 	
