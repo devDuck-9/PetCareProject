@@ -41,9 +41,13 @@ public class ApiController {
 	
 	@Value("${app.sms.mock:false}")
 	private boolean smsMock;
+	@Value("${app.email.mock:false}")
+	private boolean emailMock;
 	
+	// 설정 적용 확인 (서버 뜰때 한번실행)
 	@PostConstruct
 	public void check() {
+		System.out.println("EMAIL MOCK MODE = " + emailMock);
 		System.out.println("SMS MOCK MODE = " + smsMock);
 	}
 	
@@ -196,11 +200,11 @@ public class ApiController {
 			return ResponseEntity.badRequest().body(res);
 		}
 
-		// 재발송 제한(60초)
+		// 재발송 제한(5초)
 		Long lastSent = (Long) session.getAttribute("SMS_LAST_SENT");
 		long now = System.currentTimeMillis();
-		if (lastSent != null && (now - lastSent) < 60_000) {
-			res.put("message", "재발송은 60초 후 가능합니다. 잠시 후 다시 시도해주세요.");
+		if (lastSent != null && (now - lastSent) < 5_000) {
+			res.put("message", "재발송은 5초 후 가능합니다. 잠시 후 다시 시도해주세요.");
 			return ResponseEntity.status(429).body(res);
 		}
 
@@ -295,11 +299,11 @@ public class ApiController {
 			return ResponseEntity.badRequest().body(res);
 		}
 
-		// 재발송 제한(60초)
+		// 재발송 제한(5초)
 		Long lastSent = (Long) session.getAttribute("EMAIL_LAST_SENT");
 		long now = System.currentTimeMillis();
-		if (lastSent != null && (now - lastSent) < 60_000) {
-			res.put("message", "재발송은 60초 후 가능합니다. 잠시 후 다시 시도해주세요.");
+		if (lastSent != null && (now - lastSent) < 5_000) {
+			res.put("message", "재발송은 5초 후 가능합니다. 잠시 후 다시 시도해주세요.");
 			return ResponseEntity.status(429).body(res);
 		}
 		
@@ -326,7 +330,7 @@ public class ApiController {
 			System.out.println("[EMAIL] send success to=" + e);
 			
 			System.out.println("# ============================================== #");
-			System.out.println("[EMAIL] send code=" + code);
+			System.out.println("[DEV EMAIL] email=" + e + ", code=" + code + ", expiresAt=" + expiresAt);
 			System.out.println("# ============================================== #");
 			
 		} catch (Exception ex) {
@@ -341,8 +345,11 @@ public class ApiController {
 
 		res.put("message", "인증번호를 이메일로 발송했어요.");
 		
+		if (emailMock) {
+			res.put("devCode", code);
+		}
+		
 		System.out.println("verify sessionId=" + session.getId());
-		session.setAttribute("EMAIL_VERIFIED", true);
 		session.setAttribute("EMAIL_ADDR", email);
 		System.out.println("set EMAIL_VERIFIED/EMAIL_ADDR=" + email);
 		

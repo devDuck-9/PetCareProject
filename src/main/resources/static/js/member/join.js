@@ -234,7 +234,12 @@ $emailSendBtn.on('click', async function () {
 		});
 
 		const data = await res.json().catch(() => ({}));
-
+		
+		// 콘솔로 이메일 인증코드 찍어주기
+		if (data.devCode) {
+			console.log("[DEV EMAIL CODE]", data.devCode);
+		}
+		
 		if (!res.ok) {
 			showEmailMsg(data.message || '이메일 발송 실패');
 			// 실패면 버튼 원복
@@ -245,8 +250,8 @@ $emailSendBtn.on('click', async function () {
 		resetEmailVerify();
 		showEmailMsg(data.message || '인증번호를 이메일로 발송했어요.');
 
-		// 성공하면 재발송 카운트다운 시작 (60초)
-		setSendEmaildown(60);
+		// 성공하면 재발송 카운트다운 시작 (5초)
+		setSendEmaildown(5);
 		
 	} catch (e) {
 		showEmailMsg('네트워크 오류');
@@ -406,7 +411,7 @@ if ($sendBtn.length) {
 
 			resetSmsVerification();
 			showSmsMsg(data.message || '인증번호를 발송했어요.');
-			setSendCooldown(60);
+			setSendCooldown(5);
 		} catch (e) {
 			showSmsMsg('네트워크 오류가 발생했어요.');
 		}

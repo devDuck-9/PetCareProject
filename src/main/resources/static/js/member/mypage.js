@@ -160,7 +160,12 @@ $(function () {
 				});
 
 				const data = await res.json().catch(() => ({}));
-
+				
+				// 콘솔로 SMS 인증코드 찍어주기
+				if (data.devCode) {
+					console.log('[DEV SMS CODE] =', data.devCode);
+				}
+				
 				if (!res.ok) {
 					showSmsMsg(data.message || "인증번호 발송 실패");
 					$(this).prop("disabled", false).text("인증번호 발송");
@@ -367,7 +372,12 @@ $(function () {
 				});
 
 				const data = await res.json().catch(() => ({}));
-
+				
+				// 콘솔로 이메일 인증코드 찍어주기
+				if (data.devCode) {
+					console.log("[DEV EMAIL CODE]", data.devCode);
+				}
+				
 				if (!res.ok) {
 					showEmailMsg(data.message || "이메일 발송 실패");
 					$(this).prop("disabled", false).text("인증번호 발송");
@@ -409,7 +419,7 @@ $(function () {
 				});
 
 				const data = await res.json().catch(() => ({}));
-
+				
 				if (!res.ok) {
 					showEmailMsg(data.message || "인증 실패");
 					$(this).prop("disabled", false).text("확인");
