@@ -114,6 +114,8 @@ $(function () {
 			position: center,
 			map
 		});
+		
+		bindMapEvents();
 	}
 
 	function clearHospitalMarkers() {
@@ -207,11 +209,10 @@ $(function () {
 	}
 
 	function renderPaging() {
-		// 카카오 제한: pageable_count 기준 페이지 수
-		const tp = Math.max(1, Math.ceil((state.pageable || state.total) / PAGE_SIZE));
+		const tp = Math.max(1, Math.ceil((state.total || 0) / PAGE_SIZE)); // ✅ total 기준(고정)
+		const groupSize = 3;
 		
 		$pages.innerHTML = '';
-		const groupSize = 5;
 		
 		// 현재 페이지가 속한 그룹의 시작/끝
 		const start = Math.floor((state.page - 1) / groupSize) * groupSize + 1;
@@ -229,40 +230,27 @@ $(function () {
 			$pages.appendChild(b);
 		}
 		
-		// 그룹 단위 이동: 이전 그룹이 있나? 다음 그룹이 있나?
-		const hasPrevGroup = start > 1;
-		const hasNextGroup = end < tp;
-		
-		$prev.disabled = !hasPrevGroup;
-		$next.disabled = !hasNextGroup;
+		// 이전/다음 그룹 버튼
+		$prev.disabled = start <= 1;
+		$next.disabled = end >= tp;
 	}
 	
 	// prev/next 그룹 단위 이동
 	$prev.addEventListener('click', async () => {
-		const tp = Math.max(1, Math.ceil((state.pageable || state.total) / PAGE_SIZE));
-		const groupSize = 5;
-
+		const groupSize = 3;
 		const start = Math.floor((state.page - 1) / groupSize) * groupSize + 1;
 		if (start <= 1) return;
-
-		// 이전 그룹의 마지막 페이지로 점프
-		state.page = start - 1;
+		state.page = start - 1; // 이전 그룹 마지막 페이지
 		await load();
 	});
 
 	$next.addEventListener('click', async () => {
-		// is_end면 절대 못 넘어가게
-		if (state.isEnd) return;
-		
-		const tp = Math.max(1, Math.ceil((state.pageable || state.total) / PAGE_SIZE));
-		const groupSize = 5;
-
+		const tp = Math.max(1, Math.ceil((state.total || 0) / PAGE_SIZE));
+		const groupSize = 3;
 		const start = Math.floor((state.page - 1) / groupSize) * groupSize + 1;
 		const end = Math.min(start + groupSize - 1, tp);
 		if (end >= tp) return;
-
-		// 다음 그룹의 첫 페이지로 점프
-		state.page = end + 1;
+		state.page = end + 1; // 다음 그룹 첫 페이지
 		await load();
 	});
 
@@ -306,11 +294,11 @@ $(function () {
 	// ===== Load =====
 	async function load() {
 		const data = await fetchHospitals();
+		
 		state.total = data.meta?.total_count ?? 0;
 		state.pageable = data.meta?.pageable_count ?? state.total;
-
-		// documents에 id가 없을 수 있음(키가 document마다 따로 없음)
-		// 그래서 안정적으로 "place_url" 또는 "x+y+name" 조합으로 id 만들기
+		
+		// id 생성 포함해서 state.docs 만들기
 		state.docs = (data.documents || []).map(d => ({
 			...d,
 			id: d.place_url || `${d.place_name}_${d.x}_${d.y}`
@@ -385,6 +373,53 @@ $(function () {
 		}
 	})();
 	
-	
+	function getMapCenter() {
+		if (!map) return null;
+		const center = map.getCenter();	// kakao.maps.LatLng
+		return { lat: center.getLat(), lng: center.getLng() };
+	}
+
+
+	const $btnSearchHere = document.getElementById('btnSearchHere');
+
+	function searchHere() {
+		const c = getMapCenter();
+		if (!c) return;
+
+		state.lat = c.lat;
+		state.lng = c.lng;
+		state.page = 1;
+		state.selectedId = null;
+
+		showMapLoading('이 위치 주변 병원을 찾는 중...');
+		load()
+			.then(() => {
+				hideMapLoading();
+				if (state.docs.length > 0) selectDoc(state.docs[0].id);
+			})
+			.catch((e) => {
+				console.error(e);
+				hideMapLoading();
+			});
+	}
+
+	if ($btnSearchHere) {
+		$btnSearchHere.addEventListener('click', searchHere);
+	}
+
+
+	function bindMapEvents() {
+		if (!map || !$btnSearchHere) return;
+
+		$btnSearchHere.disabled = true;
+
+		kakao.maps.event.addListener(map, 'dragend', function () {
+			$btnSearchHere.disabled = false;
+		});
+
+		kakao.maps.event.addListener(map, 'zoom_changed', function () {
+			$btnSearchHere.disabled = false;
+		});
+	}
 
 });

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.duck.petcareproject.domain.CommunityComment;
 import com.duck.petcareproject.domain.Member;
 import com.duck.petcareproject.domain.Pet;
+import com.duck.petcareproject.dto.KakaoKeywordResponse;
 import com.duck.petcareproject.service.CommunityCommentService;
 import com.duck.petcareproject.service.KakaoLocalService;
 import com.duck.petcareproject.service.MemberService;
@@ -48,22 +49,18 @@ public class ApiController {
 	
 	// 병원정보
 	@GetMapping("/api/hospitals")
-	public ResponseEntity<String> list(@RequestParam("lat") double lat,
+	public ResponseEntity<KakaoKeywordResponse> list(@RequestParam("lat") double lat,
 										@RequestParam("lng") double lng,
 										@RequestParam(value = "q", required = false) String q,
 										@RequestParam(value = "page", defaultValue = "1") int page,
-										@RequestParam(value = "size", defaultValue = "5") int size) {
+										@RequestParam(value = "size", defaultValue = "6") int size) {
 		try {
-			if (page < 1) page = 1;
-			if (size < 1) size = 5;
-			if (size > 15) size = 15;
-
-			String json = kakaoLocalService.searchHospitals(lat, lng, q, page, size);
-			return ResponseEntity.ok(json);
+			KakaoKeywordResponse data = kakaoLocalService.searchHospitals(lat, lng, q, page, size);
+			return ResponseEntity.ok(data);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(500).body("{\"error\":\"kakao api failed\"}");
+			return ResponseEntity.status(500).build();
 		}
 	}
 	
