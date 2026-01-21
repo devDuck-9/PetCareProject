@@ -112,14 +112,22 @@ public class MemberController {
 	public Map<String, Object> uploadProfile(@RequestParam("profile") MultipartFile file, Authentication authentication, HttpServletRequest request) {
 			
 		if (authentication == null) return Map.of("ok", false, "message", "로그인이 필요합니다.");
-
+		
+		 // 파일이 실제로 들어왔는지 확인
+		System.out.println("[PROFILE] file=" + (file == null ? "null" : file.getOriginalFilename())
+						+ ", size=" + (file == null ? -1 : file.getSize())
+						+ ", empty=" + (file == null || file.isEmpty()));
+		
 		try {
 			String userId = authentication.getName();
 			String url = memberService.saveProfilePhoto(userId, file);
 			return Map.of("ok", true, "url", url);
 		} catch (IllegalArgumentException e) {
+			System.out.println("[PROFILE] IllegalArgumentException: " + e.getMessage());
 			return Map.of("ok", false, "message", e.getMessage());
 		} catch (Exception e) {
+			System.out.println("[PROFILE] Exception: " + e.getClass().getName() + " / " + e.getMessage());
+			e.printStackTrace();
 			return Map.of("ok", false, "message", "업로드에 실패했습니다.");
 		}
 	}

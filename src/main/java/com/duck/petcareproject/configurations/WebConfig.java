@@ -32,6 +32,8 @@ public class WebConfig implements WebMvcConfigurer{
 		registry.addResourceHandler("/resources/files/**")
 		.addResourceLocations("file:" + uploadDir + "/")
 		.setCachePeriod(1);
+		
+		System.out.println("[WEB] app.upload.dir=" + uploadDir);
 	}
 	
 }

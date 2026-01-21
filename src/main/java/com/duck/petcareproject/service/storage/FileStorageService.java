@@ -1,6 +1,7 @@
 package com.duck.petcareproject.service.storage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -35,9 +36,17 @@ public class FileStorageService {
 	// 웹 접근 경로
 	private String saveImage(MultipartFile file, String folder) throws Exception {
 		if (file == null || file.isEmpty()) return null;
-
-		File dir = new File(uploadDir, folder);
-		if (!dir.exists()) dir.mkdirs();
+		
+		File base = new File(uploadDir);
+		File dir = new File(base, folder);
+		
+		// 폴더 생성 + 실패 체크
+		if (!dir.exists()) {
+			boolean ok = dir.mkdirs();
+			if (!ok) {
+				throw new IOException("업로드 폴더 생성 실패: " + dir.getAbsolutePath());
+			}
+		}
 
 		String original = file.getOriginalFilename();
 		String ext = getExtLower(original);
@@ -49,9 +58,15 @@ public class FileStorageService {
 		String savedName = UUID.randomUUID().toString().replace("-", "") + "." + ext;
 
 		File target = new File(dir, savedName);
+		
+		// 디버그 로그
+		System.out.println("[UPLOAD] uploadDir=" + uploadDir);
+		System.out.println("[UPLOAD] dir(absolute)=" + dir.getAbsolutePath());
+		System.out.println("[UPLOAD] target(absolute)=" + target.getAbsolutePath());
+		System.out.println("[UPLOAD] existsAfter=" + target.exists() + ", size=" + target.length());
+		
 		file.transferTo(target);
-
-		// folder 에 따라 분리
+		
 		return "/resources/files/" + folder + "/" + savedName;
 	}
 	

@@ -101,6 +101,35 @@ petcareproject
 ```
 
 ---
+## ⚠️ application-local.properties은 보안상 커밋하지 않습니다.
+```gitignore
+민감 정보는 깃에서 제외하고, 실행자는 로컬 환경에 맞게 직접 설정하도록 구성했습니다.
+```
+
+
+## ⚙️ 실행 전 설정
+
+**1) 로컬 환경파일 생성 (필수)** <br>
+
+```properties
+# 파일 생성 후 항목 입력
+src/main/resources/application-local.properties
+
+· DB 접속 정보
+· 업로드 경로 (`app.upload.dir`)
+· Gmail SMTP (권장: `SPRING_MAIL_PASSWORD` 환경변수로 주입)
+· Kakao API 키 (권장: 환경변수로 주입)
+```
+
+**2) 환경변수 설정 (권장)** <br>
+
+```powershell
+# Windows (PowerShell)
+
+setx SPRING_MAIL_PASSWORD "gmail_app_password"
+setx KAKAO_REST_API_KEY "kakao_rest_key"
+setx KAKAO_JS_KEY "kakao_js_key"
+```
 
 ## 🚀 실행 방법
 
@@ -109,7 +138,9 @@ petcareproject
 git clone https://github.com/devDuck-9/petcareproject.git
 
 # 프로젝트 실행
-./gradlew bootRun
+· 기본 👉️ ./gradlew bootRun
+· dev 👉️ ./gradlew bootRun --args="--spring.profiles.active=dev"
+· prod 👉️ ./gradlew bootRun --args="--spring.profiles.active=prod"
 ```
 
 ---

@@ -109,6 +109,9 @@
 	font-weight: 900;
 	color: var(--ink);
 }
+.cf-select{
+	height: 50px;	
+}
 
 .cf-input,
 .cf-select,
