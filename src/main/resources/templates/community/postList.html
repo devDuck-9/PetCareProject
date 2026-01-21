@@ -67,7 +67,7 @@
 
 									<div class="pl-item__meta">
 										<span class="pl-meta">
-											<i class="bi bi-person-circle"></i>
+											<img class="avatar" th:src="${p.profileImg != null ? p.profileImg : '/images/profile.png'}" alt="프로필">
 											<span th:text="${p.userName}">작성자</span>
 										</span>
 										<span class="pl-dot">•</span>

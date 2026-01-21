@@ -16,8 +16,8 @@ public class CommunityPost {
 	private LocalDateTime createdAt, updatedAt;
 	private Category category; // FREE, GUIDE, INFO, BOAST, QNA
 	private String postImage;
-	
+	private String profileImg;
 	private String userName;
 	private Integer commentCount;
-
+	private String categoryName;
 }

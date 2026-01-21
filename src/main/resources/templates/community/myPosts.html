@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+			layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="content">
+
+	<link rel="stylesheet" th:href="@{/css/mypage.css}">
+	<link rel="stylesheet" th:href="@{/css/myposts.css}">
+
+	<main class="mp2-page">
+		<section class="mp2-shell">
+			<div class="mp2-grid">
+
+				<!-- ============ LEFT ============ -->
+				<aside class="mp2-left">
+
+					<!-- 프로필 이미지 -->
+					<div class="mp2-profileBox">
+						<div class="mp2-avatar">
+							<img id="profileImg"
+									 th:src="${profileMember != null && profileMember.profileImg != null ? profileMember.profileImg : '/images/profile.png'}"
+									 alt="프로필">
+						</div>
+
+						<button type="button" class="mp2-gear" id="btnProfilePhoto" aria-label="프로필 사진 변경" title="프로필 사진 변경">
+							<i class="bi bi-gear-fill"></i>
+						</button>
+
+						<input type="file" id="profileFile" accept="image/*" style="display:none;">
+					</div>
+
+					<div class="mp2-userPill"
+							 th:text="${profileMember != null && profileMember.userName != null ? profileMember.userName : '닉네임 설정이 필요합니다'}">
+						이름
+					</div>
+
+					<nav class="mp2-menu" aria-label="마이페이지 메뉴">
+						<a class="mp2-menuItem" th:href="@{/mypage}">내정보</a>
+						<a class="mp2-menuItem is-active" th:href="@{/community/myPosts}">내가 쓴 게시글</a>
+						<a class="mp2-menuItem danger" th:href="@{/member/withdraw}">회원탈퇴</a>
+					</nav>
+				</aside>
+
+				<!-- ============ RIGHT ============ -->
+				<section class="mp2-right">
+					<header class="mp2-head">
+						<h1 class="mp2-title">내가 쓴 글</h1>
+						<p class="mp2-sub">내가 작성한 게시글을 확인할 수 있어요.</p>
+					</header>
+
+					<div class="mp2-body mp-postsBody">
+
+						<!-- 리스트 -->
+						<div class="mp-postsCard">
+							<ul class="mp-postList" th:if="${posts != null && !#lists.isEmpty(posts)}">
+
+								<li class="mp-postRow" th:each="p : ${posts}">
+									<!-- row 전체 클릭 -->
+									<a href="javascript:void(0)"  class="mp-postItem" th:attr="data-href=@{/detailPost/{id}(id=${p.postSeq})}">
+										<div class="mp-postLeft">
+											<div class="mp-postAvatar" aria-hidden="true"></div>
+
+											<div class="mp-postText">
+												<div class="mp-postTitle" th:text="${p.title}">제목</div>
+
+												<div class="mp-postMeta">
+													<span>작성자</span>
+													<span class="mp-dot">|</span>
+													<span th:text="${p.userName}">닉네임</span>
+
+													<span class="mp-dot">·</span>
+
+													<span class="mp-comment">
+														<i class="bi bi-chat-dots-fill"></i>
+														<span th:text="${p.commentCount}">0</span>
+													</span>
+												</div>
+											</div>
+										</div>
+
+										<div class="mp-postRight">
+											<span class="mp-postBadge" th:text="${p.categoryName != null ? p.categoryName : '전체글'}">카테고리</span>
+										</div>
+									</a>
+								</li>
+
+							</ul>
+
+							<!-- 빈 화면 -->
+							<div class="mp-postEmpty" th:if="${posts == null || #lists.isEmpty(posts)}">
+								작성한 게시글이 없습니다.
+							</div>
+						</div>
+
+						<!-- 페이징 -->
+						<nav class="mp-page" th:if="${totalPage > 1}">
+							<!-- 이전(비활성) -->
+							<a class="mp-pageBtn is-disabled" th:if="${currentPage == 1}" href="javascript:void(0)">
+								◀
+							</a>
+
+							<!-- 이전(활성) -->
+							<a class="mp-pageBtn" th:if="${currentPage > 1}"
+								 th:href="@{/community/myPosts(page=${currentPage - 1}, size=${size})}">
+								◀
+							</a>
+
+							<!-- 페이지 번호 -->
+							<a class="mp-pageNum"
+								 th:each="i : ${#numbers.sequence(1, totalPage)}"
+								 th:text="${i}"
+								 th:classappend="${i == currentPage ? ' is-active' : ''}"
+								 th:href="@{/community/myPosts(page=${i}, size=${size})}">
+								1
+							</a>
+
+							<!-- 다음(활성) -->
+							<a class="mp-pageBtn" th:if="${currentPage < totalPage}"
+								 th:href="@{/community/myPosts(page=${currentPage + 1}, size=${size})}">
+								▶
+							</a>
+
+							<!-- 다음(비활성) -->
+							<a class="mp-pageBtn is-disabled" th:if="${currentPage == totalPage}" href="javascript:void(0)">
+								▶
+							</a>
+						</nav>
+						
+					</div>
+				</section>
+
+			</div>
+		</section>
+	</main>
+
+	<!-- 공통 액션 모달 (이동 확인용) -->
+	<div th:replace="~{fragments/modal :: actionModal('goPostModal', '게시글 이동')}"></div>
+
+	<script th:src="@{/js/components/modal.js}"></script>
+	<script>
+		// 기존 공통 모달 바인딩
+		Modal.bind('#goPostModal');
+	</script>
+
+	<script th:src="@{/js/member/uploadProfile.js}"></script>
+	<script th:src="@{/js/community/myPosts.js}"></script>
+
+</th:block>
+</html>

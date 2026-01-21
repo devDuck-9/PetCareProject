@@ -1,3 +1,22 @@
+.avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 6px;
+}
+
+.avatar-text {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: #eee;
+	color: #555;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+
 .comm-page{
 	margin-top: 10px;
 }

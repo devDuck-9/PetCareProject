@@ -5,12 +5,53 @@
 
 <mapper namespace="com.duck.petcareproject.mapper.CommunityPostMapper">
 		
+		<!-- 마이페이지: 내가 쓴 글 목록 (페이징) -->
+		<select id="selectMyPostsPaging" resultType="CommunityPost">
+			SELECT
+				p.post_seq,
+				p.user_seq,
+				m.user_name AS userName,
+				p.category,
+				/* 카테고리 한글 라벨(배지용) */
+				CASE p.category
+					WHEN 'GUIDE' THEN '공지사항'
+					WHEN 'FREE'	THEN '자유 게시판'
+					WHEN 'INFO'	THEN '정보 공유'
+					WHEN 'BOAST' THEN '자랑 하기'
+					WHEN 'QNA'	 THEN '질문 &amp; 답변'
+					ELSE '분류'
+				END AS categoryName,
+				p.title,
+				p.content,
+				p.view_count,
+				p.created_at,
+				p.updated_at,
+				(
+					SELECT COUNT(*)
+					FROM communication_comment c
+					WHERE c.post_seq = p.post_seq
+				) AS commentCount
+			FROM communication_post p
+			JOIN member m ON m.user_seq = p.user_seq
+			WHERE p.user_seq = #{userSeq}
+			ORDER BY p.post_seq DESC
+			LIMIT #{limit} OFFSET #{offset}
+		</select>
+		
+		<!-- 마이페이지: 내가 쓴 글 총 개수 -->
+		<select id="countMyPosts" resultType="int">
+			SELECT COUNT(*)
+			FROM communication_post
+			WHERE user_seq = #{userSeq}
+		</select>
+
 		<!-- 검색/정렬 포함 게시글 목록 (페이징) -->
 		<select id="selectPostsPagingSearch" resultType="CommunityPost">
 			SELECT
 				p.post_seq,
 				p.user_seq,
-				m.user_name AS userName,
+				m.user_name,
+				m.profile_img,
 				p.category,
 				p.title,
 				p.content,
@@ -76,7 +117,8 @@
 			SELECT
 				p.post_seq,
 				p.user_seq,
-				m.user_name AS userName,
+				m.user_name,
+				m.profile_img,
 				p.category,
 				p.title,
 				p.content,
@@ -193,7 +235,8 @@
 			SELECT
 				p.post_seq,
 				p.user_seq,
-				m.user_name AS userName,
+				m.user_name,
+				m.profile_img,
 				p.category,
 				p.title,
 				p.content,

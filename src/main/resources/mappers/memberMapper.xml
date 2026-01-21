@@ -49,15 +49,7 @@
 	<!-- 회원탈퇴 -->
 	<update id="withdrawSoft">
 		UPDATE member
-		SET status		= 'WITHDRAWN',
-				user_name = #{maskedName},
-				email		 = #{maskedEmail},
-				mobile		= #{maskedMobile},
-				zipcode	 = #{maskedZip},
-				address1	= #{maskedAddr1},
-				address2	= #{maskedAddr2}
-				<!-- 아이디 재사용 허용 -->
-				<!-- , user_id = #{maskedUserId} -->
+		SET status	= 'WITHDRAWN', withdrawn_at = NOW()
 		WHERE user_seq = #{userSeq}
 	</update>
 	

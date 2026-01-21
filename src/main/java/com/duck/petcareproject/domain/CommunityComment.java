@@ -13,8 +13,7 @@ public class CommunityComment {
 	private int userSeq;
 	private String content;
 	private LocalDateTime createdAt, updatedAt;
-	
-	// postList.html
+	private String profileImg;
 	private String userName;
 	private Boolean isOwner;
 }

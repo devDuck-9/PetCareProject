@@ -36,7 +36,9 @@ public class MemberController {
 	// 비밀번호 변경 폼
 	@GetMapping("/mypage/password")
 	public String passwordPage(Authentication auth, Model model, @RequestParam(value = "msg", required = false) String msg) {
-
+		// header 메뉴 활성화
+		model.addAttribute("activeMenu", "mypage");
+		
 		if (auth == null) return "redirect:/loginForm";
 
 		Member entity = memberService.findByUserId(auth.getName());
@@ -125,6 +127,9 @@ public class MemberController {
 	// 회원탈퇴 폼
 	@GetMapping("/member/withdraw")
 	public String withdrawPage(Authentication authentication, Model model) {
+		// header 메뉴 활성화
+		model.addAttribute("activeMenu", "mypage");
+		
 		String userId = (authentication != null) ? authentication.getName() : null;
 
 		Member member = null;

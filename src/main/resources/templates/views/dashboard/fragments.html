@@ -5,7 +5,7 @@
 			<th:block th:each="post : ${todayPosts}">
 				<a class="post-row" th:href="@{/detailPost/{id}(id=${post.postSeq})}">
 					<div class="post-left">
-						<div class="avatar" th:text="${post.userName != null ? #strings.substring(post.userName,0,1) : '🙂'}">프로필</div>
+						<img class="avatar" th:src="${post.profileImg != null ? post.profileImg : '/images/profile.png'}" alt="프로필">
 						<div class="post-title" th:text="${post.title != null ? post.title : '(제목 없음)'}">게시글 제목</div>
 					</div> <!-- 'post-left' END -->
 					

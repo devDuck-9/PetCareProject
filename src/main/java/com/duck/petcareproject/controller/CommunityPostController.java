@@ -20,6 +20,7 @@ import com.duck.petcareproject.service.CommunityCommentService;
 import com.duck.petcareproject.service.CommunityPostService;
 import com.duck.petcareproject.service.MemberService;
 import com.duck.petcareproject.service.storage.FileStorageService;
+import com.duck.petcareproject.util.PagingUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,42 @@ public class CommunityPostController {
 	private final MemberService memberService;
 	private final CommunityCommentService communityCommentService;
 	private final FileStorageService fileStorageService;
+	
+	// 마이페이지 게시글 목록
+	@GetMapping("/community/myPosts")
+	public String myPostList(Authentication auth,  Model model,
+								@RequestParam(value = "page", defaultValue = "1") int page,
+								@RequestParam(value = "size", defaultValue = "5") int size) {
+		// header 메뉴 활성화
+		model.addAttribute("activeMenu", "mypage");
+
+		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
+			return "redirect:/loginForm";
+		}
+		Member member = memberService.getMember(auth.getName());
+		if (member == null) return "redirect:/loginForm";
+		
+		int currentPage = PagingUtils.pageOrDefault(page);
+		
+		int totalCount = communityPostService.countMyPosts(member.getUserSeq());
+		int totalPage = (int) Math.ceil(totalCount / (double) size);
+		
+		if (currentPage > totalPage) currentPage = totalPage;
+		
+		int offset = (currentPage - 1) * size;
+		
+		List<CommunityPost> posts = communityPostService.findMyPosts(member.getUserSeq(), size, offset);
+
+		model.addAttribute("posts", posts);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("size", size);
+
+		// 왼쪽 프로필 표시용
+		model.addAttribute("profileMember", memberService.findByUserId(auth.getName()));
+		
+		return "community/myPosts";
+	}
 	
 	// 커뮤니티 목록 (카테고리별)
 	@GetMapping({"/community", "/community/{slug}"})

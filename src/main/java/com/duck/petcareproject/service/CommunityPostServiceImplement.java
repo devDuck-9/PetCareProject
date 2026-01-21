@@ -23,6 +23,18 @@ public class CommunityPostServiceImplement implements CommunityPostService {
 	private final CommunityPostImageMapper communityPostImageMapper;
 	private final FileStorageService fileStorageService;
 	
+	// 내가 쓴 글 총 개수
+	public int countMyPosts(int userSeq) {
+		return communityPostMapper.countMyPosts(userSeq);
+	}
+
+	// 내가 쓴 글 목록(페이징)
+	public List<CommunityPost> findMyPosts(int userSeq, int size, int offset) {
+		if (size <= 0) size = 5;
+		if (offset < 0) offset = 0;
+		return communityPostMapper.selectMyPostsPaging(userSeq, size, offset);
+	}
+	
 	// 게시글 이미지 조회
 	public List<CommunityPostImage> getPostImages(int postSeq) {
 		if (postSeq <= 0) return Collections.emptyList();

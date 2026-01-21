@@ -27,7 +27,7 @@
 								</div>
 
 								<div class="pd-actions">
-									<a class="btn-pill" th:href="@{${returnUrl}}" title="목록">목록</a>
+									<a class="btn-pill" th:href="@{${returnUrl}}" title="이전으로 가기">돌아가기</a>
 									
 									<!-- 내 글일 때만 노출 isOwner | 관리자는 유저글이여도 삭제 노출 canManage -->
 									<a class="btn-pill-orange" th:if="${isOwner}" th:href="@{/updatePost/{id}(id=${post.postSeq})}">수정</a>
@@ -41,7 +41,7 @@
 							<div class="pd-meta">
 								<div class="pd-meta-left">
 									<span class="pd-writer">
-										<i class="bi bi-person-circle"></i>
+										<img class="avatar" th:src="${post.profileImg != null ? post.profileImg : '/images/profile.png'}" alt="프로필">
 										<span th:text="${post != null ? post.userName : '작성자'}">작성자</span>
 									</span>
 									<span class="pd-dot">•</span>
@@ -103,7 +103,7 @@
 								<div class="pc-item" th:each="c : ${comments}">
 									<div class="pc-item-head">
 										<div class="pc-item-writer">
-											<i class="bi bi-person-circle"></i>
+											<img class="avatar" th:src="${c.profileImg != null ? c.profileImg : '/images/profile.png'}" alt="프로필">
 											<span th:text="${c.userName}">작성자</span>
 										</div>
 										<div class="pc-item-date" th:text="${c.createdAt != null ? #temporals.format(c.createdAt,'yyyy.MM.dd HH:mm') : ''}"></div>

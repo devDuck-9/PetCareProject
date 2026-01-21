@@ -10,6 +10,12 @@ import com.duck.petcareproject.domain.CommunityPost;
 @Mapper
 public interface CommunityPostMapper {
 	
+	// 내가쓴글 목록조회
+	List<CommunityPost> selectMyPostsPaging(@Param("userSeq") int userSeq, @Param("limit") int limit, @Param("offset") int offset);
+	
+	// 내가쓴글 전체 갯수
+	int countMyPosts(@Param("userSeq") int userSeq);
+
 	// 관리자 삭제(작성자 조건 없이)
 	int deletePostById(@Param("postSeq") int postSeq);
 	
@@ -51,8 +57,7 @@ public interface CommunityPostMapper {
 	int countPostsSearch(@Param("category") String category, @Param("keyword") String keyword);
 	
 	// userSeq 기준 오늘의 게시글 페이징 목록 - 대시보드용
-	List<CommunityPost> selectTodayPostsByUserPaging(@Param("userSeq") int userSeq, @Param("limit") int limit, @Param("offset") int offset
-	);
+	List<CommunityPost> selectTodayPostsByUserPaging(@Param("userSeq") int userSeq, @Param("limit") int limit, @Param("offset") int offset);
 
 	// userSeq 기준 오늘의 게시글 전체 수 - 대시보드용
 	int countTodayPostsByUser(@Param("userSeq") int userSeq);

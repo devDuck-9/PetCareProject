@@ -9,6 +9,11 @@ import com.duck.petcareproject.domain.CommunityPostImage;
 
 public interface CommunityPostService {
 	
+	// 내가 쓴 글 총 개수
+	int countMyPosts(int userSeq);
+	// 내가 쓴 글 목록
+	List<CommunityPost> findMyPosts(int userSeq, int size, int offset);
+	
 	// 단순 조회 (삭제/수정/권한체크용)
 	CommunityPost getPost(int postSeq);
 	

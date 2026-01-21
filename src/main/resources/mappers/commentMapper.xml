@@ -8,13 +8,14 @@
 		<!-- 댓글 목록 (작성자명 + isOwner 계산) -->
 		<select id="selectCommentsByPost" resultType="CommunityComment">
 			SELECT
-				c.comment_seq AS commentSeq,
-				c.post_seq AS postSeq,
-				c.user_seq AS userSeq,
-				c.content AS content,
-				c.created_at AS createdAt,
-				c.updated_at AS updatedAt,
-				m.user_name AS userName,
+				c.comment_seq,
+				c.post_seq,
+				c.user_seq,
+				c.content,
+				c.created_at,
+				c.updated_at,
+				m.user_name,
+				m.profile_img,
 				CASE WHEN c.user_seq = #{loginUserSeq} THEN TRUE ELSE FALSE END AS isOwner
 			FROM communication_comment c
 			JOIN member m ON m.user_seq = c.user_seq
@@ -25,12 +26,12 @@
 		<!-- 내 댓글 단건(수정/삭제 권한 체크) -->
 		<select id="selectCommentByIdAndUser" resultType="CommunityComment">
 			SELECT
-				c.comment_seq AS commentSeq,
-				c.post_seq AS postSeq,
-				c.user_seq AS userSeq,
-				c.content AS content,
-				c.created_at	AS createdAt,
-				c.updated_at	AS updatedAt
+				c.comment_seq,
+				c.post_seq,
+				c.user_seq,
+				c.content,
+				c.created_at,
+				c.updated_at
 			FROM communication_comment c
 			WHERE c.comment_seq = #{commentSeq}
 				AND c.user_seq = #{userSeq}
@@ -39,12 +40,12 @@
 		<!-- 댓글 단건(postSeq 확인용) -->
 		<select id="selectCommentById" resultType="CommunityComment">
 			SELECT
-				c.comment_seq AS commentSeq,
-				c.post_seq AS postSeq,
-				c.user_seq AS userSeq,
-				c.content AS content,
-				c.created_at	AS createdAt,
-				c.updated_at	AS updatedAt
+				c.comment_seq,
+				c.post_seq,
+				c.user_seq,
+				c.content,
+				c.created_at,
+				c.updated_at
 			FROM communication_comment c
 			WHERE c.comment_seq = #{commentSeq}
 		</select>
@@ -83,7 +84,7 @@
 				c.comment_seq,
 				c.post_seq,
 				c.user_seq,
-				m.user_name AS userName,
+				m.user_name,
 				c.content,
 				c.created_at,
 				c.updated_at
