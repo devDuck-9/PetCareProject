@@ -19,8 +19,16 @@
 	margin-bottom:18px;
 }
 
+.wd-text-note{
+	color:#c93a3a;
+	line-height:1.7;
+	font-weight:600;
+	margin-bottom:18px;
+	font-size: 15px;
+}
+
 .wd-bullets{
-	margin: 6px 0 22px;
+	margin: 3px 0 10px;
 	padding-left: 18px;
 	color:#2f3b5a;
 	font-weight:600;
@@ -44,7 +52,6 @@
 .wd-checkText{
 	color:#c93a3a;
 	font-weight:800;
-	font-size: 20px;
 }
 
 .wd-thanks{

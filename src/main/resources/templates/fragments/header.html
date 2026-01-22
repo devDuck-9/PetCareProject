@@ -33,12 +33,12 @@
 				<th:block sec:authorize="!hasRole('ADMIN')">
 					<div class="pc-profile-dd" id="profileDD">
 	
-						<button type="button" class="pc-profile-dd__btn" id="profileBtn" aria-expanded="false">
+						<button type="button" class="pc-profile-dd__btn" id="profileBtn" aria-expanded="false" th:classappend="${activeMenu == 'mypage'} ? ' is-active' : ''" >
 							프로필 <span class="pc-profile-dd__caret">▼</span>
 						</button>
 	
 						<div class="pc-profile-dd__menu" id="profileMenu" role="menu" aria-hidden="true">
-							<a class="pc-profile-dd__item" th:classappend="${activeMenu == 'mypage'} ? ' is-active' : ''" th:href="@{/mypage}">내정보</a>
+							<a class="pc-profile-dd__item" th:href="@{/mypage}">내정보</a>
 							<a class="pc-profile-dd__item" th:href="@{/logout}" role="menuitem">로그아웃</a>
 						</div>
 	
@@ -84,8 +84,24 @@
 				</th:block>
 					
 			</th:block>
+			
 		</div>
 
 	</div>
 	
+	<!-- 일정 알림 토스트 컨테이너 -->
+	<div id="scheduleToast" class="pc-toast" style="display:none;">
+		<div class="pc-toast__head">
+			<div class="pc-toast__title">내일 일정이 있습니다.</div>
+			<button type="button" class="pc-toast__x" id="btnToastClose">[X]</button>
+		</div>
+
+		<ul class="pc-toast__list" id="scheduleToastList"></ul>
+
+		<div class="pc-toast__foot">
+			<div class="pc-toast__more" id="scheduleToastMore"></div>
+			<button type="button" class="pc-toast__btn" id="btnToastDismissToday">[오늘만 알림 끄기]</button>
+		</div>
+	</div>
+
 </div>

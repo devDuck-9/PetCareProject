@@ -160,8 +160,22 @@ $(function () {
 						url: '/admin/dashboard/comment-delete',
 						data: { commentSeq },
 						success: function () {
-							// 해당 댓글 DOM만 제거
-							$(`[data-comment-seq="${commentSeq}"]`).remove();
+							// 상세 패널에 있는 postSeq
+							const postSeq = $('[data-admin-post-delete]').attr('data-admin-post-delete');
+							
+							// 목록의 해당 게시글 댓글 카운트 -1
+							const $row = $(`.ad-row[data-post-seq="${postSeq}"]`);
+							const $cnt = $row.find('.ad-cmt span').first();
+							if ($cnt.length) {
+								const n = parseInt($cnt.text(), 10) || 0;
+								$cnt.text(Math.max(0, n - 1));
+							}
+							
+							// 상세 다시 로드
+							$.get('/admin/dashboard/post-fragment', { postSeq }, function (html) {
+								$('#adminPostDetailArea').html(html);
+							});
+							
 						},
 						error: function () {
 							Modal.open('#alertModal', '댓글 삭제에 실패했습니다.');

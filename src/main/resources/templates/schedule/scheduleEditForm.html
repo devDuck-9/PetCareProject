@@ -32,8 +32,8 @@
 							<input type="hidden" name="scheduleDate" id="schDateHidden">
 
 							<!-- 제목 -->
-							<div class="se-field">
-								<div class="se-label">제목</div>
+							<div class="se-field is-required">
+								<div class="se-label">제목 <span class="is-required-span">*</span></div>
 								<input class="se-input" type="text" name="title" maxlength="50" th:value="${schedule.title}" placeholder="제목을 입력해주세요.">
 							</div>
 

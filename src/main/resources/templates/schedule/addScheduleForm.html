@@ -26,8 +26,8 @@
 						<form class="sch-form" id="schForm" th:action="@{/insertSchedule}" method="post">
 							<input type="hidden" name="petSeq" th:value="${petSeq}">
 							<!-- 제목 -->
-							<div class="sch-field">
-								<div class="sch-label">제목</div>
+							<div class="sch-field is-required">
+								<div class="sch-label">제목 <span class="is-required-span">*</span></div>
 								<input class="sch-input" type="text" name="title" placeholder="제목을 입력해주세요.">
 							</div>
 

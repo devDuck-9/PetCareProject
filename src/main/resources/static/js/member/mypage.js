@@ -149,7 +149,12 @@ $(function () {
 				Modal.open("#smsCheckModal", "휴대폰 번호를 먼저 정확히 입력해주세요.");
 				return;
 			}
-
+			
+			if (mobile === originalMobile) {
+				Modal.open("#smsCheckModal", "기존 정보와 같습니다.");
+				return;
+			}
+			
 			$(this).prop("disabled", true).text("전송중...");
 
 			try {
@@ -361,7 +366,12 @@ $(function () {
 				Modal.open("#emailCheckModal", "이메일을 먼저 정확히 입력해주세요.");
 				return;
 			}
-
+			
+			if (email === originalEmail) {
+				Modal.open("#emailCheckModal", "기존 정보와 같습니다.");
+				return;
+			}
+			
 			$(this).prop("disabled", true).text("전송중...");
 
 			try {
@@ -578,5 +588,80 @@ $(function () {
 	if (pageMsg) {
 		Modal.open("#saveModal", pageMsg);
 	}
+	
+	
+	// 핸드폰 인증 번호 입력 숨김
+	function getCurrentMobile() {
+		const m1 = document.getElementById('mobile1').value;
+		const m2 = document.getElementById('mobile2').value.trim();
+		const m3 = document.getElementById('mobile3').value.trim();
+		return `${m1}-${m2}-${m3}`;
+	}
+
+	const origin = document.getElementById('originMobile')?.value?.trim() || '';
+	const smsLine = document.getElementById('smsLine');
+	const mobileVerified = document.getElementById('mobileVerified');
+
+	function updateSmsUI() {
+		const cur = getCurrentMobile();
+		const changed = origin && cur !== origin;
+
+		if (changed) {
+			smsLine.style.display = 'flex';	 // mp2-line2가 flex면
+			mobileVerified.value = 'false';	 // 변경했으니 인증 다시 필요
+		} else {
+			smsLine.style.display = 'none';
+		}
+	}
+
+	['mobile1','mobile2','mobile3'].forEach(id => {
+		document.getElementById(id).addEventListener('input', updateSmsUI);
+		document.getElementById(id).addEventListener('change', updateSmsUI);
+	});
+
+	updateSmsUI();
+	
+	// 이메일 인증번호 입력 숨김
+	function getCurrentEmail() {
+		const emailId = document.querySelector('.mp2-emailId')?.value.trim() || '';
+
+		const select = document.querySelector('select[name="emailDomainSelect"]');
+		const manualInput = document.querySelector('input[name="emailDomainInput"]');
+
+		const selectVal = select?.value || '';
+		const domain = (selectVal && selectVal !== 'manual')
+			? selectVal
+			: (manualInput?.value.trim() || '');
+
+		return (emailId && domain) ? `${emailId}@${domain}` : '';
+	}
+
+	const originEmail = document.getElementById('originEmail')?.value?.trim() || '';
+	const emailLine = document.getElementById('emailLine');
+	const emailVerified = document.getElementById('emailVerified');
+
+	function updateEmailUI() {
+		const cur = getCurrentEmail();
+		const changed = originEmail && cur && cur !== originEmail;
+
+		if (changed) {
+			emailLine.style.display = 'flex';
+			emailVerified.value = 'false';
+		} else {
+			emailLine.style.display = 'none';
+		}
+	}
+
+	['.mp2-emailId', 'input[name="emailDomainInput"]', 'select[name="emailDomainSelect"]']
+		.forEach(sel => {
+			const el = document.querySelector(sel);
+			if (!el) return;
+			el.addEventListener('input', updateEmailUI);
+			el.addEventListener('change', updateEmailUI);
+		});
+
+	updateEmailUI();
+
+	
 	
 });

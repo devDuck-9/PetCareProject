@@ -1,5 +1,6 @@
 package com.duck.petcareproject.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,10 +22,12 @@ import com.duck.petcareproject.domain.CommunityComment;
 import com.duck.petcareproject.domain.Member;
 import com.duck.petcareproject.domain.Pet;
 import com.duck.petcareproject.dto.KakaoKeywordResponse;
+import com.duck.petcareproject.dto.ScheduleSoonResponse;
 import com.duck.petcareproject.service.CommunityCommentService;
 import com.duck.petcareproject.service.KakaoLocalService;
 import com.duck.petcareproject.service.MemberService;
 import com.duck.petcareproject.service.PetService;
+import com.duck.petcareproject.service.ScheduleService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +42,7 @@ public class ApiController {
 	private final CommunityCommentService communityCommentService;
 	private final JavaMailSender mailSender;
 	private final KakaoLocalService kakaoLocalService;
+	private final ScheduleService scheduleService;
 	
 	@Value("${app.sms.mock:false}")
 	private boolean smsMock;
@@ -51,13 +56,51 @@ public class ApiController {
 		System.out.println("SMS MOCK MODE = " + smsMock);
 	}
 	
-	// 병원정보
+
+	// 일정 알림
+	@GetMapping("/api/schedules/soon")
+	public ScheduleSoonResponse soonSchedules(Authentication auth) {
+		
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = today.plusDays(1);
+
+		if (auth == null) return new ScheduleSoonResponse(tomorrow, 0, List.of(), false);
+
+		Member m = memberService.findByUserId(auth.getName());
+		if (m == null) return new ScheduleSoonResponse(tomorrow, 0, List.of(), false);
+
+		boolean hiddenToday = (m.getScheduleToastHideUntil() != null && !m.getScheduleToastHideUntil().isBefore(today));
+		if (hiddenToday) return new ScheduleSoonResponse(tomorrow, 0, List.of(), true);
+
+		var list = scheduleService.findTomorrowPlannedNotifyY(m.getUserSeq(), tomorrow);
+		var items = list.stream()
+						.limit(3) // 토스트 3개 제한
+						.map(s -> new ScheduleSoonResponse.Item(s.getScheduleSeq(), s.getTitle()))
+						.toList();
+		return new ScheduleSoonResponse(tomorrow, list.size(), items, false);
+	}
+	
+	// 오늘 그만보기
+	@PostMapping("/api/schedules/toast/hide-today")
+	public Map<String, Object> hideToday(Authentication auth) {
+		if (auth == null) return Map.of("ok", false);
+		
+		Member m = memberService.findByUserId(auth.getName());
+		if (m == null) return Map.of("ok", false);
+		
+		// 오늘 하루 숨김: hide_until = 오늘
+		memberService.updateScheduleToastHideUntilByUser(m.getUserId());
+
+		return Map.of("ok", true);
+	}
+	
+	// 병원정보 API
 	@GetMapping("/api/hospitals")
 	public ResponseEntity<KakaoKeywordResponse> list(@RequestParam("lat") double lat,
 										@RequestParam("lng") double lng,
 										@RequestParam(value = "q", required = false) String q,
 										@RequestParam(value = "page", defaultValue = "1") int page,
-										@RequestParam(value = "size", defaultValue = "6") int size) {
+										@RequestParam(value = "size", defaultValue = "6") int size, Model model) {
 		try {
 			KakaoKeywordResponse data = kakaoLocalService.searchHospitals(lat, lng, q, page, size);
 			return ResponseEntity.ok(data);

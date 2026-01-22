@@ -5,6 +5,13 @@
 
 <mapper namespace="com.duck.petcareproject.mapper.MemberMapper">
 	
+	<!-- 오늘은 그만보기 (유저) -->
+	<update id="updateScheduleToastHideUntil">
+		UPDATE member
+		SET schedule_toast_hide_until = #{hideUntil}
+		WHERE user_id = #{userId}
+	</update>
+	
 	<!-- userId의 비밀번호 조회 -->
 	<select id="selectPassword" resultType="string">
 		SELECT password FROM member WHERE user_id = #{userId}
@@ -33,6 +40,7 @@
 			address2,
 			role,
 			status,
+			schedule_toast_hide_until,
 			created_at,
 			updated_at
 		FROM member
@@ -84,6 +92,7 @@
 			address2,
 			role,
 			status,
+			schedule_toast_hide_until,
 			created_at,
 			updated_at
 		FROM member

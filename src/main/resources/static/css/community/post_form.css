@@ -1,3 +1,13 @@
+/* 필수 항목 체크 */
+.cf-input.is-required,
+.cf-textarea.is-required{
+	box-shadow: 0 0 0 2px rgba(212, 89, 92, 0.7);
+}
+
+.is-required-span{
+	color: #D4595C;
+}
+
 .avatar {
 	width: 28px;
 	height: 28px;

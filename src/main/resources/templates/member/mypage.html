@@ -53,9 +53,9 @@
 
 							<!-- 닉네임 -->
 							<div class="mp2-row">
-								<div class="mp2-rowLabel">닉네임</div>
+								<div class="mp2-rowLabel">이름 <span class="is-required-span">*</span></div>
 								<div class="mp2-rowRight mp2-rightLine">
-									<div class="mp2-field mp2-fieldNick">
+									<div class="mp2-field mp2-fieldNick is-required">
 										<i class="bi bi-person-fill mp2-ico"></i>
 										<input class="mp2-input" type="text" th:field="*{userName}" placeholder="닉네임" minlength="2" maxlength="50" required>
 									</div>
@@ -65,12 +65,12 @@
 
 							<!-- 핸드폰 -->
 							<div class="mp2-row">
-								<div class="mp2-rowLabel">핸드폰</div>
+								<div class="mp2-rowLabel">핸드폰 <span class="is-required-span">*</span></div>
 								
 								<div class="mp2-rowRight mp2-twoLine">
 									<!-- line1: phone + send -->
 									<div class="mp2-line mp2-line1">
-										<div class="mp2-field mp2-fieldPhone">
+										<div class="mp2-field mp2-fieldPhone is-required">
 											<i class="bi bi-telephone-fill mp2-ico"></i>
 											
 											<select class="mp2-select mp2-phonePart" id="mobile1">
@@ -94,7 +94,8 @@
 									<p class="mp2-msg" id="mobileMsg" style="display:none;"></p>
 									
 									<!-- line2: code + confirm -->
-									<div class="mp2-line mp2-line2">
+									<input type="hidden" id="originMobile" th:value="*{mobile}">
+									<div class="mp2-line mp2-line2" id="smsLine" style="display:none;">
 										<div class="mp2-field mp2-fieldCode">
 											<input class="mp2-input" type="text" id="smsCode" placeholder="인증번호 6자리" maxlength="6" inputmode="numeric">
 										</div>
@@ -131,12 +132,12 @@
 							
 							<!-- 이메일 -->
 							<div class="mp2-row mp2-rowEmail">
-								<div class="mp2-rowLabel">이메일</div>
+								<div class="mp2-rowLabel">이메일 <span class="is-required-span">*</span></div>
 								
 								<div class="mp2-rowRight mp2-twoLine">
 									<!-- line1: email + send -->
 									<div class="mp2-line mp2-line1">
-										<div class="mp2-field mp2-fieldEmail">
+										<div class="mp2-field mp2-fieldEmail is-required">
 											<i class="bi bi-envelope-fill mp2-ico"></i>
 											
 											<input class="mp2-input mp2-emailId" type="text" th:field="*{emailId}" placeholder="이메일 입력" required>
@@ -159,7 +160,8 @@
 									</div>
 
 									<!-- line2: email code + confirm -->
-									<div class="mp2-line mp2-line2">
+									<input type="hidden" id="originEmail" th:value="${member.emailId + '@' + member.emailDomain}">
+									<div class="mp2-line mp2-line2" id="emailLine" style="display:none;">
 										<div class="mp2-field mp2-fieldCode">
 											<input class="mp2-input" type="text" id="emailCode" placeholder="이메일 인증번호" maxlength="6" inputmode="numeric">
 										</div>

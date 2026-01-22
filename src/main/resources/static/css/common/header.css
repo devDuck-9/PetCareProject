@@ -3,6 +3,12 @@
 	font-family: 'Cafe24Dangdanghae', sans-serif !important;
 }
 
+.pc-profile-dd__btn.is-active{
+	color: #5E6CAF;
+	border-color: #5E6CAF;
+	background: #f3f5ff;
+}
+
 /* 깨짐 방지 : a/nav/div 모두 box 정리 */
 .pc-header a { text-decoration: none; color: inherit; }
 .pc-header img { display: block; }
@@ -197,4 +203,135 @@
 	.pc-logo-text{
 		font-size: 14px;
 	}
+}
+
+
+/* 일정알림 Toast */
+/* ===== 원하는(첫번째) Toast 스타일 ===== */
+.pc-toast{
+	position: fixed;
+	right: 18px;
+	bottom: 18px;
+	z-index: 9999;
+
+	width: 380px;
+	max-width: calc(100vw - 36px);
+
+	border-radius: 18px;
+	padding: 14px;
+
+	background: rgba(20, 24, 36, .94);
+	color: #fff;
+
+	box-shadow: 0 18px 40px rgba(0,0,0,.25);
+	backdrop-filter: blur(10px);
+
+	display: none;
+	transform: translateY(14px);
+	opacity: 0;
+	transition: opacity .22s ease, transform .22s ease;
+}
+.pc-toast.is-show{
+	display: block;
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.pc-toast__head{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+.pc-toast__title{
+	font-size: 18px;
+	letter-spacing: -0.2px;
+}
+
+.pc-toast__x{
+	border: 0;
+	background: transparent;
+	color: #fff;
+	font-weight: 900;
+	cursor: pointer;
+	padding: 6px 8px;
+	border-radius: 10px;
+	opacity: .9;
+}
+.pc-toast__x:hover{ background: rgba(255,255,255,.10); }
+
+.pc-toast__list{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 10px;
+}
+
+.pc-toast__item{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	padding: 12px 14px;
+	border-radius: 14px;
+
+	background: rgba(255,255,255,0.08);
+	cursor: pointer;
+	user-select: none;
+}
+.pc-toast__item:hover{
+	background: rgba(255,255,255,0.13);
+}
+
+.pc-toast__text{
+	font-size: 16px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.pc-toast__arrow{
+	opacity: .8;
+	font-size: 18px;
+	margin-left: 12px;
+}
+
+.pc-toast__foot{
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	
+	flex-wrap: nowrap;
+}
+
+.pc-toast__more{
+	font-size: 14px;
+	font-weight: 800;
+	opacity: .85;
+	
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1 1 auto;
+}
+
+.pc-toast__btn{
+	border: 0;
+	background: transparent;
+	color: #fff;
+	font-weight: 900;
+	cursor: pointer;
+	opacity: .95;
+	padding: 6px 8px;
+	border-radius: 10px;
+	
+	white-space: nowrap;
+	flex: 0 0 auto;
+}
+.pc-toast__btn:hover{
+	background: rgba(255,255,255,.10);
 }

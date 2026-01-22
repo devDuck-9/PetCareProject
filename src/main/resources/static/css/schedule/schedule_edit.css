@@ -1,6 +1,9 @@
 /* =========================================
 	Schedule Edit UI
 ========================================= */
+.is-required-span{color: #D4595C;}
+
+.se-field.is-required{box-shadow: 0 0 0 2px rgba(212, 89, 92, 0.7);}
 
 .se-shell{
 	width: min(980px, 100%);

@@ -1,5 +1,6 @@
 package com.duck.petcareproject.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
@@ -44,7 +45,10 @@ public class Member {
 	private String profileImg;
 	
 	private LocalDateTime createdAt, updatedAt;
-
+	
+	//일정 알림 토스트 숨김 날짜 (오늘 포함)
+	private LocalDate scheduleToastHideUntil;
+	
 	// enum 적용
 	private Role role;
 	private Status status;

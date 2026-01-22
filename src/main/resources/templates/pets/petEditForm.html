@@ -38,13 +38,13 @@
 									th:action="@{/updatePet/{id}(id=${pet.petSeq})}"
 									method="post" enctype="multipart/form-data">
 
-							<div class="pet-field">
-								<div class="pet-label">이름</div>
+							<div class="pet-field is-required">
+								<div class="pet-label">이름 <span class="is-required-span">*</span></div>
 								<input class="pet-input" type="text" name="petName" th:value="${pet.petName}">
 							</div>
 
-							<div class="pet-field">
-								<div class="pet-label">품종</div>
+							<div class="pet-field is-required">
+								<div class="pet-label">품종 <span class="is-required-span">*</span></div>
 								<input class="pet-input" type="text" name="petType" th:value="${pet.petType}">
 							</div>
 

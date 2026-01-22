@@ -7,6 +7,9 @@ import com.duck.petcareproject.domain.MemberUpdateForm;
 
 public interface MemberService {
 	
+	// 일정알림 오늘그만보기(유저)
+	public void updateScheduleToastHideUntilByUser(String userId);
+	
 	// 기존 비밀번호 일치 여부
 	public boolean isPasswordMatched(String userId, String rawPassword);
 	

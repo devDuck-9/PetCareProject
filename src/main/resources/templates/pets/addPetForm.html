@@ -40,14 +40,14 @@
 						<form class="pet-form" id="petForm" th:action="@{/insertPet}" method="post" enctype="multipart/form-data">
 
 							<!-- 이름 -->
-							<div class="pet-field">
-								<div class="pet-label">이름</div>
+							<div class="pet-field is-required">
+								<div class="pet-label">이름 <span class="is-required-span">*</span></div>
 								<input class="pet-input" type="text" name="petName" placeholder="이름을 입력해주세요.">
 							</div>
 
 							<!-- 품종 -->
-							<div class="pet-field">
-								<div class="pet-label">품종</div>
+							<div class="pet-field is-required">
+								<div class="pet-label">품종 <span class="is-required-span">*</span></div>
 								<input class="pet-input" type="text" name="petType" placeholder="품종을 입력해주세요.">
 							</div>
 

@@ -1,8 +1,5 @@
 package com.duck.petcareproject.security;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,18 +9,30 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-	
+    
 		@Bean
 		public PasswordEncoder passwordEncoder() {
 			return new BCryptPasswordEncoder();
 		}
 		
 		@Bean
-		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		public DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+			DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+			provider.setPasswordEncoder(passwordEncoder);
+			provider.setHideUserNotFoundExceptions(false);
+			return provider;
+		}
+		
+		@Bean
+		public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authenticationProvider) throws Exception {
 
 				http
 					// CSRF 비활성화 (개발 단계 편의용)
@@ -33,6 +42,8 @@ public class SecurityConfig {
 					.headers(headers ->
 							headers.frameOptions(frame -> frame.disable())
 					)
+					
+					.authenticationProvider(authenticationProvider)
 	
 					// 권한 설정
 					.authorizeHttpRequests(auth -> auth
@@ -57,9 +68,22 @@ public class SecurityConfig {
 							.passwordParameter("password")
 //							.failureUrl("/loginForm?error")
 							.failureHandler((request, response, exception) -> {
-								exception.printStackTrace();
-								System.out.println("FAILURE HANDLER HIT: " + exception.getClass().getSimpleName());
-								request.getSession().setAttribute("LOGIN_ERROR_MSG", "아이디 또는 비밀번호가 올바르지 않습니다.");
+								String msg = "아이디 또는 비밀번호가 올바르지 않습니다.";
+								
+								// // 탈퇴회원
+								if (exception instanceof WithdrawnAccountException) {
+									msg = exception.getMessage();
+								} else if (exception.getCause() instanceof WithdrawnAccountException) {
+									// 내부적으로 InternalAuthenticationServiceException으로 감싸져 들어와도 getCause()로 잡힘
+									msg = exception.getCause().getMessage();
+								} else if (exception instanceof UsernameNotFoundException) {
+									// 존재하지 않는 아이디
+									msg = exception.getMessage();
+								} else if (exception instanceof BadCredentialsException) {
+									msg = "비밀번호가 올바르지 않습니다.";
+								}
+								
+								request.getSession().setAttribute("LOGIN_ERROR_MSG", msg);
 								response.sendRedirect("/loginForm");
 							})
 //							.defaultSuccessUrl("/", true)
@@ -80,5 +104,6 @@ public class SecurityConfig {
 
 			return http.build();
 		}
+		
 }
 

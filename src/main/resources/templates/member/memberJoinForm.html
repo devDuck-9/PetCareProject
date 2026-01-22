@@ -22,7 +22,7 @@
 						
 						<!-- 아이디 -->
 						<div class="field-row">
-							<div class="field">
+							<div class="field is-required">
 								<span class="icon" aria-hidden="true">
 									<svg viewBox="0 0 24 24" fill="none">
 										<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
@@ -37,7 +37,7 @@
 						<p class="error-text" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></p>
 						
 						<!-- 비밀번호 -->
-						<div class="field">
+						<div class="field is-required">
 							<span class="icon" aria-hidden="true">
 								<svg viewBox="0 0 24 24" fill="none">
 									<path d="M7.5 14.5 10 12a4.5 4.5 0 1 1 1.5 1.5l-1 1H9.5v1H8.5v1H7.5v1H6.5v-2.5Z"
@@ -49,7 +49,7 @@
 						<p class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
 						
 						<!-- 비밀번호 확인 -->
-						<div class="field">
+						<div class="field is-required">
 							<span class="icon" aria-hidden="true">
 								<svg viewBox="0 0 24 24" fill="none">
 									<path d="M7.5 14.5 10 12a4.5 4.5 0 1 1 1.5 1.5l-1 1H9.5v1H8.5v1H7.5v1H6.5v-2.5Z"
@@ -63,7 +63,7 @@
 						
 						<!-- 닉네임 -->
 						<div class="field-row">
-							<div class="field">
+							<div class="field is-required">
 								<span class="icon" aria-hidden="true">
 									<svg viewBox="0 0 24 24" fill="none">
 										<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2"/>
@@ -78,7 +78,7 @@
 						<p class="error-text" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
 												
 						<!-- 핸드폰 번호 -->
-						<div class="field phone-field">
+						<div class="field phone-field is-required">
 							<span class="icon" aria-hidden="true">
 								<svg viewBox="0 0 24 24" fill="none">
 									<path d="M7 4h3l1 5-2 1c1.2 2.4 3.1 4.3 5.5 5.5l1-2 5 1v3c0 1-1 2-2 2-8.8 0-16-7.2-16-16 0-1 1-2 2-2Z"
@@ -149,7 +149,7 @@
 						</div>
 						
 						<!-- 이메일 -->
-						<div class="field email-field">
+						<div class="field email-field is-required">
 							<span class="icon" aria-hidden="true">
 								<svg viewBox="0 0 24 24" fill="none">
 									<path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="2"/>

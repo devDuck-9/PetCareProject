@@ -1,5 +1,7 @@
 package com.duck.petcareproject.mapper;
 
+import java.time.LocalDate;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,6 +10,9 @@ import com.duck.petcareproject.domain.MemberUpdateForm;
 
 @Mapper
 public interface MemberMapper {
+	
+	// 알림 오늘은 그만보기(유저) 저장
+	void updateScheduleToastHideUntil(@Param("userId") String userId, @Param("hideUntil") LocalDate hideUntil);
 	
 	// userId의 비밀번호 조회
 	String selectPassword(String userId);

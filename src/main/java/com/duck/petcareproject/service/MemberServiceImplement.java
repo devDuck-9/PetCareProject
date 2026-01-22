@@ -1,5 +1,6 @@
 package com.duck.petcareproject.service;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,11 @@ public class MemberServiceImplement implements MemberService {
 	private final MemberMapper memberMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final FileStorageService fileStorageService;
+	
+	// 일정알림 오늘그만보기(유저)
+	public void updateScheduleToastHideUntilByUser(String userId) {
+		memberMapper.updateScheduleToastHideUntil(userId, LocalDate.now());
+	};
 	
 	// 기존 비밀번호 일치여부
 	public boolean isPasswordMatched(String userId, String rawPassword) {

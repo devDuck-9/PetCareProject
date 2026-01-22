@@ -1,5 +1,6 @@
 package com.duck.petcareproject.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -9,6 +10,9 @@ import com.duck.petcareproject.domain.Schedule;
 
 @Mapper
 public interface ScheduleMapper {
+	
+	// 내일 일정 조회
+	List<Schedule> selectSchedulesBetween(@Param("userSeq") int userSeq, @Param("tomorrow") LocalDate tomorrow);
 	
 	// 일정 수정
 	public int updateScheduleBySeqAndUser(Schedule schedule);

@@ -1,5 +1,6 @@
 package com.duck.petcareproject.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
@@ -18,4 +19,5 @@ public class Schedule {
 		private LocalDateTime createdAt, updatedAt;
 		
 		private int userSeq;
+		LocalDate tomorrow;
 }

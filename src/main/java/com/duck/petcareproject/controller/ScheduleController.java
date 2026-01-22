@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.duck.petcareproject.domain.Member;
@@ -19,6 +20,7 @@ import com.duck.petcareproject.domain.NotifyYn;
 import com.duck.petcareproject.domain.Pet;
 import com.duck.petcareproject.domain.Schedule;
 import com.duck.petcareproject.domain.ScheduleStatus;
+import com.duck.petcareproject.dto.ScheduleSoonResponse;
 import com.duck.petcareproject.service.MemberService;
 import com.duck.petcareproject.service.PetService;
 import com.duck.petcareproject.service.ScheduleService;

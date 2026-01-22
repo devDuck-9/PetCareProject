@@ -8,6 +8,11 @@
 /* =========================================
 	Pet Register (내 반려동물 등록) - UI
 =========================================== */
+
+.is-required-span{color: #D4595C;}
+
+.pet-field.is-required{box-shadow: 0 0 0 2px rgba(212, 89, 92, 0.7);}
+
 .pet-photo-hint{
 	margin: 6px 0 18px;
 	text-align: center;

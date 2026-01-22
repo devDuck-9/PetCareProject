@@ -60,34 +60,9 @@
 	</main>
 	<!-- fragment modal 준비 -->
 	<div th:replace="~{fragments/modal :: modal('loginFailModal', '로그인 실패')}"></div>
+	<input type="hidden" id="loginErrorMsg" th:value="${loginErrorMsg}">
+	
 	<script th:src="@{/js/components/modal.js}"></script>
-	
-	<!-- 로그인 실패 모달 오픈 -->
-	<script th:inline="javascript">
-		/*<![CDATA[*/
-		$(function () {
-			/*Security failureHandler 가 넘긴 메시지 : /loginForm?errorMsg=...
-			JS 주석을 빌린 Thymeleaf 전용 치환 문법 [[...]]
-			${param.errorMsg} 값이 있으면 → 그 값으로 치환 , 없으면 null 유지*/
-			const errorMsg = /*[[${loginErrorMsg}]]*/ null;
-
-			function openIfError() {
-				if (!errorMsg) return;
-				Modal.bind('#loginFailModal');
-				Modal.open('#loginFailModal', errorMsg);
-			}
-			
-			// 일반 로드
-			$(openIfError);
-			
-			// 뒤로가기(BFCache)로 복원되는 경우에도 안전하게
-			window.addEventListener('pageshow', function (e) {
-				openIfError();
-			});
-			
-		});
-		/*]]>*/
-	</script>
-	
+	<script th:src="@{/js/member/loginForm.js}"></script>
 	</th:block>
 </html>

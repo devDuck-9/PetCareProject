@@ -1,5 +1,9 @@
 package com.duck.petcareproject.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.duck.petcareproject.domain.Schedule;
@@ -12,6 +16,11 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleServiceImplement implements ScheduleService {
 	
 	private final ScheduleMapper scheduleMapper;
+	
+	// 내일 일정 조회
+	public List<Schedule> findTomorrowPlannedNotifyY(int userSeq, LocalDate tomorrow) {
+		return scheduleMapper.selectSchedulesBetween(userSeq, tomorrow);
+	}
 	
 	// 일정 수정
 	public int updateScheduleBySeqAndUser(Schedule schedule) {
