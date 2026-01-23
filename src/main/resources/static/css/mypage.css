@@ -314,7 +314,8 @@
 .mp2-fieldCode{ width: var(--code-w); max-width: 100%; }
 .mp2-fieldCode .mp2-input{ width: 100%; }
 
-#mobileMsg {
+#mobileMsg,
+#userNameFormatError {
 	display: none;
 	margin-top: 6px;
 	font-size: 13px;

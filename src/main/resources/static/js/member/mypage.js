@@ -100,14 +100,17 @@ $(function () {
 	function resetMobileVerify() {
 		if ($mobileVerified.length) $mobileVerified.val("false");
 		if ($smsMsg.length) $smsMsg.hide();
-		if ($smsCode.length) $smsCode.val("");
+		
+		// 인증번호 입력칸 다시 열기 + 초기화
+			if ($smsCode.length) $smsCode.val("").prop("disabled", false);
+
+		// 확인 버튼도 다시 열고 텍스트 원복
 		if ($verifySmsBtn.length) $verifySmsBtn.prop("disabled", false).text("확인");
 	}
 
 	// init mobile
 	splitMobileFromHidden();
 	syncMobile();
-	let originalMobile = ($mFinal.val() || "").trim();
 
 	// mobile input events (값 바뀌면 인증 무효)
 	if ($m2.length)
@@ -144,13 +147,15 @@ $(function () {
 		$sendSmsBtn.on("click", async function () {
 			syncMobile();
 			const mobile = $mFinal.val();
-
+			
+			const originMobile = ($("#originMobile").val() || "").trim();
+			
 			if (!mobile) {
 				Modal.open("#smsCheckModal", "휴대폰 번호를 먼저 정확히 입력해주세요.");
 				return;
 			}
 			
-			if (mobile === originalMobile) {
+			if (mobile === originMobile) {
 				Modal.open("#smsCheckModal", "기존 정보와 같습니다.");
 				return;
 			}
@@ -219,14 +224,16 @@ $(function () {
 					$(this).prop("disabled", false).text("확인");
 					return;
 				}
-
+				
 				showSmsMsg(data.message || "인증 완료! ✅");
 				if ($mobileVerified.length) $mobileVerified.val("true");
-
-				// 인증 성공 후 현재 값 기준으로 원래값 갱신
-				originalMobile = ($mFinal.val() || "").trim();
-
-				$(this).prop("disabled", true).text("확인");
+				
+				// 인증 성공 시 입력 잠금
+				if ($smsCode.length) $smsCode.prop("disabled", true);
+				
+				// 버튼 완료 처리
+				$(this).prop("disabled", true).text("완료");
+				
 			} catch (e) {
 				showSmsMsg("네트워크 오류가 발생했어요.");
 				$(this).prop("disabled", false).text("확인");
@@ -314,13 +321,16 @@ $(function () {
 	function resetEmailVerify() {
 		if ($emailVerified.length) $emailVerified.val("false");
 		if ($emailMsg.length) $emailMsg.hide();
-		if ($emailCodeInput.length) $emailCodeInput.val("");
+		
+		// 인증번호 입력칸 다시 열기 + 초기화
+		if ($emailCodeInput.length) $emailCodeInput.val("").prop("disabled", false);
+
+		// 확인 버튼도 다시 열고 텍스트 원복
 		if ($emailVerifyBtn.length) $emailVerifyBtn.prop("disabled", false).text("확인");
 	}
 
 	// init email
 	initEmailDomain();
-	let originalEmail = getFullEmail();
 
 	// domain select
 	if ($domainSelect.length) {
@@ -362,12 +372,15 @@ $(function () {
 	if ($emailSendBtn.length) {
 		$emailSendBtn.on("click", async function () {
 			const email = getFullEmail();
+			
 			if (!email) {
 				Modal.open("#emailCheckModal", "이메일을 먼저 정확히 입력해주세요.");
 				return;
 			}
 			
-			if (email === originalEmail) {
+			const originEmail = ($("#originEmail").val() || "").trim();
+			
+			if (email === originEmail) {
 				Modal.open("#emailCheckModal", "기존 정보와 같습니다.");
 				return;
 			}
@@ -439,10 +452,12 @@ $(function () {
 				showEmailMsg(data.message || "인증 완료! ✅");
 				if ($emailVerified.length) $emailVerified.val("true");
 
-				// 인증 성공 후 현재 값 기준으로 원래값 갱신
-				originalEmail = getFullEmail();
+				// 인증 성공 시 입력 잠금
+				if ($emailCodeInput.length) $emailCodeInput.prop("disabled", true);
 
-				$(this).prop("disabled", true).text("확인");
+				// 버튼 완료 처리
+				$(this).prop("disabled", true).text("완료");
+				
 			} catch (e) {
 				showEmailMsg("네트워크 오류가 발생했어요.");
 				$(this).prop("disabled", false).text("확인");
@@ -457,21 +472,57 @@ $(function () {
 	const $nameBtn = $("#btnCheckName");
 	let originalName = ($nameInput.val() || "").trim();
 	let isNameChecked = false;
+	
+	const $nameFormatErr = $('#userNameFormatError');
+	
+	function showNameFormatError() { if ($nameFormatErr.length) $nameFormatErr.show(); }
+	function hideNameFormatError() { if ($nameFormatErr.length) $nameFormatErr.hide(); }
+	
+	function validateUserNameFormat({ show = true } = {}) {
+		if (!$nameInput.length) return true;
 
+		const v = ($nameInput.val() || '').replace(/\s/g, ''); // 공백 제거
+		if (($nameInput.val() || '') !== v) $nameInput.val(v);
+
+		// 입력 전엔 숨김(원하면 false 처리 가능)
+		if (!v.length) {
+			if (show) showNameFormatError(); else hideNameFormatError();
+			return false;
+		}
+
+		const ok = /^[가-힣A-Za-z0-9_]{2,12}$/.test(v);
+
+		if (!ok && show) showNameFormatError();
+		else hideNameFormatError();
+
+		// 중복확인 버튼 상태: 형식 OK일 때만 활성화
+		if ($nameBtn.length) $nameBtn.prop('disabled', !ok);
+
+		return ok;
+	}
+	
 	function resetNameCheck() {
 		isNameChecked = false;
 		if ($nameBtn.length) {
-			$nameBtn.prop("disabled", false);
 			$nameBtn.removeClass("is-done");
 			$nameBtn.text("중복확인");
 		}
+		validateUserNameFormat({ show: false }); // 형식에 따라 disabled 재설정
 	}
 
 	if ($nameInput.length) {
 		$nameInput.on("input", function () {
 			const now = ($nameInput.val() || "").trim();
+
+			// 값 바뀌면 중복확인 무효화
 			if (now !== originalName) resetNameCheck();
+
+			// 형식검증(입력 중)
+			validateUserNameFormat({ show: now.length > 0 });
 		});
+
+		// 초기 상태 반영
+		validateUserNameFormat({ show: false });
 	}
 
 	if ($nameBtn.length) {
@@ -527,7 +578,11 @@ $(function () {
 
 			const nowMobile = ($mFinal.val() || "").trim();
 			const nowEmail = getFullEmail();
-
+			
+			// 서버에서 내려온 원래 값 (기존값)
+			const originMobile = ($("#originMobile").val() || "").trim();
+			const originEmail  = ($("#originEmail").val() || "").trim();
+			
 			// 1) 빈값 먼저
 			if (!nowMobile) {
 				e.preventDefault();
@@ -553,8 +608,17 @@ $(function () {
 				}
 			}
 
-			// 3) 닉네임 변경 시 중복확인
+			// 3) 닉네임 형식 먼저
 			const nowName = ($nameInput.val() || "").trim();
+			if (nowName) {
+				if (!validateUserNameFormat({ show: true })) {
+					e.preventDefault();
+					$nameInput.trigger("focus");
+					return;
+				}
+			}
+			
+			// 닉네임 변경 시 중복확인
 			if (nowName && nowName !== originalName && !isNameChecked) {
 				e.preventDefault();
 				Modal.open("#nameCheckModal", "닉네임 중복확인을 먼저 해주세요.");
@@ -563,7 +627,7 @@ $(function () {
 			}
 
 			// 4) 휴대폰 변경 시 인증 필요
-			const mobileChanged = nowMobile !== originalMobile;
+			const mobileChanged = nowMobile !== originMobile;
 			if (mobileChanged && $("#mobileVerified").val() !== "true") {
 				e.preventDefault();
 				Modal.open("#smsCheckModal", "휴대폰 번호가 변경되었습니다. 인증을 완료해주세요.");
@@ -572,7 +636,7 @@ $(function () {
 			}
 
 			// 5) 이메일 변경 시 인증 필요
-			const emailChanged = nowEmail !== originalEmail;
+			const emailChanged = nowEmail !== originEmail;
 			if (emailChanged && $("#emailVerified").val() !== "true") {
 				e.preventDefault();
 				Modal.open("#emailCheckModal", "이메일이 변경되었습니다. 인증을 완료해주세요.");
@@ -608,7 +672,8 @@ $(function () {
 
 		if (changed) {
 			smsLine.style.display = 'flex';	 // mp2-line2가 flex면
-			mobileVerified.value = 'false';	 // 변경했으니 인증 다시 필요
+			// 번호 바뀌면 인증 리셋(입력칸 다시 열림 포함)
+			resetMobileVerify();
 		} else {
 			smsLine.style.display = 'none';
 		}
@@ -646,7 +711,8 @@ $(function () {
 
 		if (changed) {
 			emailLine.style.display = 'flex';
-			emailVerified.value = 'false';
+			// 이메일 바뀌면 인증 리셋(입력칸 다시 열림 포함)
+			resetEmailVerify();
 		} else {
 			emailLine.style.display = 'none';
 		}

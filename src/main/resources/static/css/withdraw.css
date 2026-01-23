@@ -20,11 +20,11 @@
 }
 
 .wd-text-note{
-	color:#c93a3a;
+	color:#E27022;
 	line-height:1.7;
 	font-weight:600;
 	margin-bottom:18px;
-	font-size: 15px;
+	font-size: 17px;
 }
 
 .wd-bullets{
@@ -52,6 +52,7 @@
 .wd-checkText{
 	color:#c93a3a;
 	font-weight:800;
+	font-size: 20px;
 }
 
 .wd-thanks{

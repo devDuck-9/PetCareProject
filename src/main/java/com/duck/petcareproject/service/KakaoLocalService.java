@@ -27,83 +27,142 @@ public class KakaoLocalService {
 	private static final int KAKAO_MAX_SIZE = 15;
 
 	public KakaoKeywordResponse searchHospitals(double lat, double lng, String q, int page, int size) {
-			
-		if (page < 1) page = 1;
-			if (size < 1) size = 6;
-			if (size > 15) size = 15;
-	
-			String query = (q == null || q.isBlank()) ? "동물병원" : q.trim();
-	
-			int radius = 5000;
-	
-			// 1) 끝까지 긁어서 "동물병원" 결과 전체를 확보
-			List<Document> all = new ArrayList<>();
-	
-			for (int kakaoPage = 1; kakaoPage <= KAKAO_MAX_PAGE; kakaoPage++) {
-				
-				final int pageParam = kakaoPage; // 람다용 final 변수
-	
-				KakaoKeywordResponse raw = webClient.get()
-												.uri(uriBuilder -> uriBuilder
-													.path("/v2/local/search/keyword.json")
-													.queryParam("query", query)
-													.queryParam("y", lat)
-													.queryParam("x", lng)
-													.queryParam("radius", radius)
-													.queryParam("sort", "distance")
-													.queryParam("page", pageParam)
-													.queryParam("size", KAKAO_MAX_SIZE) // 최대치로 빠르게 수집
-													.queryParam("category_group_code", "HP8") // 병원 카테고리
-													.build())
-												.header("Authorization", "KakaoAK " + kakaoRestKey)
-												.retrieve()
-												.bodyToMono(KakaoKeywordResponse.class)
-												.block();
-					
-					if (raw == null) break;
-					
-					// HP8인데도 섞이면 안전하게 한번 더 필터
-					List<Document> docs = raw.getDocuments();
-					if (docs != null && !docs.isEmpty()) {
-							for (Document d : docs) {
-									String cat = d.getCategory_name() == null ? "" : d.getCategory_name();
-									if (cat.contains("동물병원")) {
-											all.add(d);
-									}
-							}
-					}
-	
-					Meta m = raw.getMeta();
-					if (m != null && Boolean.TRUE.equals(m.getIs_end())) {
-							break;
-					}
-			}
-	
-			// 2) 서버 페이징(6개씩) -> all에서 잘라서 내려줌
-			int total = all.size();
-			int from = (page - 1) * size;
-			int to = Math.min(from + size, total);
-	
-			List<Document> slice;
-			if (from >= total) {
-					slice = List.of();
-			} else {
-					slice = all.subList(from, to);
-			}
-	
-			boolean isEnd = to >= total;
-	
-			// 카카오 meta 형태 맞춰서 응답
-			Meta meta = new Meta();
-			meta.setTotal_count(total);
-			meta.setPageable_count(total); 
-			meta.setIs_end(isEnd);
-	
-			KakaoKeywordResponse result = new KakaoKeywordResponse();
-			result.setMeta(meta);
-			result.setDocuments(slice);
-	
-			return result;
+
+		int safePage = Math.max(1, page);
+		int safeSize = Math.min(15, Math.max(1, size));
+
+		boolean nationwide = (q != null && !q.isBlank());
+		String query = nationwide ? q.trim() : "동물병원";
+
+		return nationwide
+				? searchHospitalsNationwide(query, safePage, safeSize)
+				: searchHospitalsNearby(lat, lng, query, safePage, safeSize);
 	}
+	
+	
+	private KakaoKeywordResponse searchHospitalsNationwide(String query, int page, int size) {
+		// 검색어 있을 때는 동물병원을 같이 붙여서 전국 검색
+		String q = query.contains("동물병원") ? query : (query + " 동물병원");
+		
+		List<Document> all = new ArrayList<>();
+		for (int kakaoPage = 1; kakaoPage <= KAKAO_MAX_PAGE; kakaoPage++) {
+			final int pageParam = kakaoPage;
+	
+			KakaoKeywordResponse raw = webClient.get()
+					.uri(uriBuilder -> uriBuilder
+							.path("/v2/local/search/keyword.json")
+							.queryParam("query", q)
+							.queryParam("page", pageParam)
+							.queryParam("size", KAKAO_MAX_SIZE) // 최대 15로 빨리 수집
+							.queryParam("sort", "accuracy")
+							.queryParam("category_group_code", "HP8")
+							.build())
+					.header("Authorization", "KakaoAK " + kakaoRestKey)
+					.retrieve()
+					.bodyToMono(KakaoKeywordResponse.class)
+					.block();
+	
+			if (raw == null) break;
+	
+			List<Document> docs = raw.getDocuments();
+			if (docs != null && !docs.isEmpty()) {
+				for (Document d : docs) {
+					String cat = d.getCategory_name() == null ? "" : d.getCategory_name();
+					if (cat.contains("동물병원")) {
+						all.add(d);
+					}
+				}
+			}
+	
+			Meta m = raw.getMeta();
+			if (m != null && Boolean.TRUE.equals(m.getIs_end())) break;
+		}
+	
+		// 표시 가능한 리스트만
+		int total = all.size();
+		int from = (page - 1) * size;
+		int to = Math.min(from + size, total);
+	
+		List<Document> slice = (from >= total) ? List.of() : all.subList(from, to);
+		boolean isEnd = to >= total;
+	
+		Meta meta = new Meta();
+		meta.setTotal_count(total);	// total_count = 표시가능 개수
+		meta.setPageable_count(total);
+		meta.setIs_end(isEnd);
+		meta.setMax_page((int)Math.ceil((double) total / size));
+	
+		KakaoKeywordResponse result = new KakaoKeywordResponse();
+		result.setMeta(meta);
+		result.setDocuments(slice);
+	
+		return result;
+	}
+	
+	private KakaoKeywordResponse searchHospitalsNearby(double lat, double lng, String query, int page, int size) {
+
+		final int clientPage = page; // 서버 페이지(6개씩) -> 나중에 slice 에서 사용
+		final int clientSize = size;
+		
+		int radius = 5000;
+		
+		List<Document> all = new ArrayList<>();
+		
+		for (int kakaoPage = 1; kakaoPage <= KAKAO_MAX_PAGE; kakaoPage++) {
+
+			final int pageParam = kakaoPage; // 람다용 final
+
+			KakaoKeywordResponse raw = webClient.get()
+					.uri(uriBuilder -> uriBuilder
+							.path("/v2/local/search/keyword.json")
+							.queryParam("query", query)
+							.queryParam("y", lat)
+							.queryParam("x", lng)
+							.queryParam("radius", radius)
+							.queryParam("sort", "distance")
+							.queryParam("page", pageParam)
+							.queryParam("size", KAKAO_MAX_SIZE)
+							.queryParam("category_group_code", "HP8")
+							.build())
+					.header("Authorization", "KakaoAK " + kakaoRestKey)
+					.retrieve()
+					.bodyToMono(KakaoKeywordResponse.class)
+					.block();
+
+			if (raw == null) break;
+
+			List<Document> docs = raw.getDocuments();
+			if (docs != null && !docs.isEmpty()) {
+				for (Document d : docs) {
+					String cat = d.getCategory_name() == null ? "" : d.getCategory_name();
+					if (cat.contains("동물병원")) all.add(d);
+				}
+			}
+
+			Meta m = raw.getMeta();
+			if (m != null && Boolean.TRUE.equals(m.getIs_end())) break;
+		}
+
+		// 서버 페이징 slice
+		int total = all.size();
+		int from = (clientPage - 1) * clientSize;
+		int to = Math.min(from + clientSize, total);
+
+		List<Document> slice = (from >= total) ? List.of() : all.subList(from, to);
+		boolean isEnd = to >= total;
+
+		Meta meta = new Meta();
+		meta.setTotal_count(total);
+		meta.setPageable_count(total);
+		meta.setIs_end(isEnd);
+		meta.setMax_page((int)Math.ceil((double)total / clientSize));
+		
+		KakaoKeywordResponse result = new KakaoKeywordResponse();
+		result.setMeta(meta);
+		result.setDocuments(slice);
+		
+		return result;
+	}
+
 	
 }

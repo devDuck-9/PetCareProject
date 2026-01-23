@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.duck.petcareproject.domain.DashboardDTO;
 import com.duck.petcareproject.service.DashboardService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -21,7 +24,7 @@ public class DashBoardController {
 	private final DashboardService dashboardService;
 		
 	@GetMapping("/")
-	public String dashboard(Model model, Authentication authentication,
+	public String dashboard(Model model, Authentication authentication, HttpServletRequest request,
 						@RequestParam(value = "petPage", required = false) Integer petPage,
 						@RequestParam(value = "schPage", required = false) Integer schPage,
 						@RequestParam(value = "postPage", required = false) Integer postPage) {
@@ -46,6 +49,14 @@ public class DashBoardController {
 		 // 대시보드 데이터 한 번에 조립해서 받기
 		DashboardDTO dto = dashboardService.getDashboard(userId, petPage, schPage, postPage);
 		
+		// 로그인은 되어있는데 DB 사용자 없을 경우 -> 강제 로그아웃
+		if (dto == null || dto.getLoginMember() == null) {
+			SecurityContextHolder.clearContext();
+			HttpSession session = request.getSession(false);
+			if (session != null) session.invalidate();
+			return "redirect:/loginForm?error=account";
+		}
+
 		// 사용자
 		model.addAttribute("loginMember", dto.getLoginMember());
 		

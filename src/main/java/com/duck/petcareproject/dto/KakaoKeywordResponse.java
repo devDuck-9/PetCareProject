@@ -22,6 +22,7 @@ public class KakaoKeywordResponse {
 		private Integer total_count;	// 검색된 전체 결과 수
 		private Integer pageable_count;	// 실제 페이지네이션 가능한 결과 수
 		private Boolean is_end;	// 현재 페이지가 마지막인지 여부
+		private int max_page;
 	}
 
 	@Getter

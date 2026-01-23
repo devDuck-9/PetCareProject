@@ -57,7 +57,17 @@
 	<!-- 회원탈퇴 -->
 	<update id="withdrawSoft">
 		UPDATE member
-		SET status	= 'WITHDRAWN', withdrawn_at = NOW()
+		SET
+			status = 'WITHDRAWN',
+			withdrawn_at = NOW(),
+			user_name = #{maskedName},
+			email = #{maskedEmail},
+			mobile = #{maskedMobile},
+			zipcode = #{maskedZip},
+			address1 = #{maskedAddr1},
+			address2 = #{maskedAddr2},
+			profile_img = NULL,
+			updated_at = NOW()
 		WHERE user_seq = #{userSeq}
 	</update>
 	

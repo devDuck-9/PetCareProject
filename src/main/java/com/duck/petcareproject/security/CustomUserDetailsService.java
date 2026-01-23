@@ -30,9 +30,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         	throw new UsernameNotFoundException("존재하지 않는 아이디입니다.");
         }
         
-        if (member.getStatus() == Status.WITHDRAWN) {
-        	// 탈퇴 계정
-        	throw new WithdrawnAccountException("해당 계정은 탈퇴 처리 중입니다.");
+        Status st = member.getStatus();
+        if (st == null || st == Status.WITHDRAWN || st == Status.PURGED) {
+        	throw new WithdrawnAccountException("해당 계정은 이용할 수 없습니다.");
         }
         
         // 권한 적용 (ADMIN/USER) / Spring Security 는 "ROLE_" prefix 형태를 권장

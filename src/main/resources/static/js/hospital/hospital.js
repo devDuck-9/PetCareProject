@@ -1,5 +1,15 @@
 $(function () {
 	
+	const $pageInfo = document.getElementById('pageInfo');
+	const $modeText = document.getElementById('modeText');
+
+	function updateModeText() {
+	  if (!$modeText) return;
+	  $modeText.textContent = (state.mode === 'nationwide')
+	    ? '전국 동물병원 검색 결과'
+	    : '내 주변 동물병원';
+	}
+	
 	const $btnRoute = document.getElementById('btnRoute');
 	
 	function openKakaoRouteTo(d) {
@@ -73,7 +83,8 @@ $(function () {
 		pageable: 0,
 		isEnd: false,
 		selectedId: null,
-		docs: []
+		docs: [],
+		mode: 'nearby' // nearby | nationwide
 	};
 
 	const $q = document.getElementById('q');
@@ -183,12 +194,21 @@ $(function () {
 		$total.textContent = String(state.total);
 
 		$list.innerHTML = '';
+		
+		if (!state.docs || state.docs.length === 0) {
+			$list.innerHTML = `<div class="detail-name">검색 결과가 없습니다.</div>`;
+			return;
+		}
+		
 		state.docs.forEach((d) => {
 			const row = document.createElement('div');
 			row.className = 'hos-item' + (d.id === state.selectedId ? ' is-active' : '');
+			
+			const distText = (state.mode === 'nationwide') ? '' : (d.distance ? d.distance + 'm' : ''); // 전국이면 거리 숨김
+			
 			row.innerHTML = `
 				<div>
-					<div class="name">${d.place_name} <span class="dist">${d.distance ? d.distance + 'm' : ''}</span></div>
+					<div class="name">${d.place_name} ${distText ? `<span class="dist">${distText}</span>` : ``}</div>
 				</div>
 				<button class="btn" type="button">맵 확인</button>
 			`;
@@ -200,8 +220,6 @@ $(function () {
 			row.querySelector('.btn').addEventListener('click', (e) => {
 				e.stopPropagation();	// 리스트 클릭 막기
 				selectDoc(d.id);		// 병원 선택
-				document
-					.getElementById('map')
 			});
 			
 			$list.appendChild(row);
@@ -209,7 +227,7 @@ $(function () {
 	}
 
 	function renderPaging() {
-		const tp = Math.max(1, Math.ceil((state.total || 0) / PAGE_SIZE)); // ✅ total 기준(고정)
+		const tp = state.meta?.max_page || 1;
 		const groupSize = 3;
 		
 		$pages.innerHTML = '';
@@ -245,7 +263,7 @@ $(function () {
 	});
 
 	$next.addEventListener('click', async () => {
-		const tp = Math.max(1, Math.ceil((state.total || 0) / PAGE_SIZE));
+		const tp = state.meta?.max_page || 1;
 		const groupSize = 3;
 		const start = Math.floor((state.page - 1) / groupSize) * groupSize + 1;
 		const end = Math.min(start + groupSize - 1, tp);
@@ -257,7 +275,12 @@ $(function () {
 	function updateDetail(d) {
 		if (!d) return;
 		$detailName.textContent = d.place_name;
-		$detailDist.textContent = d.distance ? d.distance + 'm' : '-';
+		if (state.mode === 'nationwide') {
+			$detailDist.textContent = '-';
+			// $pageInfo.textContent = `(최대 ${state.meta.max_page}페이지)`;
+		} else {
+			$detailDist.textContent = d.distance ? d.distance + 'm' : '-';
+		}
 		$detailTel.textContent = d.phone || '-';
 	}
 
@@ -295,6 +318,7 @@ $(function () {
 	async function load() {
 		const data = await fetchHospitals();
 		
+		state.meta = data.meta;
 		state.total = data.meta?.total_count ?? 0;
 		state.pageable = data.meta?.pageable_count ?? state.total;
 		
@@ -319,19 +343,21 @@ $(function () {
 	function doSearch() {
 		state.q = ($q.value || '').trim();
 		state.page = 1;
-
-		showMapLoading('주변 병원을 찾는 중...');
-
+		
+		// 맵|검색 모드 결정
+		state.mode = state.q ? 'nationwide' : 'nearby';
+		updateModeText();
+		
+		showMapLoading(state.mode === 'nationwide' ? '전국에서 검색 중...' : '주변 병원을 찾는 중...');
+		
+		// 상세 초기화
 		$detailName.textContent = '병원을 선택하세요';
 		$detailDist.textContent = '-';
 		$detailTel.textContent = '-';
 
 		load()
 			.then(() => hideMapLoading())
-			.catch((e) => {
-				console.error(e);
-				hideMapLoading();
-			});
+			.catch((e) => { console.error(e); hideMapLoading(); });
 	}
 
 	// ===== Bind =====
@@ -342,6 +368,7 @@ $(function () {
 	
 	// ===== init =====
 	(async function init() {
+		updateModeText();
 		try {
 			showMapLoading('현재 위치 확인 중...');
 			
@@ -390,6 +417,11 @@ $(function () {
 		state.lng = c.lng;
 		state.page = 1;
 		state.selectedId = null;
+		
+		state.q = '';	// 전국 검색어 제거
+		state.mode = 'nearby';	// 강제 주변 모드
+		if ($q) $q.value = '';	// 입력창 비우기
+		updateModeText();
 
 		showMapLoading('이 위치 주변 병원을 찾는 중...');
 		load()
@@ -397,10 +429,7 @@ $(function () {
 				hideMapLoading();
 				if (state.docs.length > 0) selectDoc(state.docs[0].id);
 			})
-			.catch((e) => {
-				console.error(e);
-				hideMapLoading();
-			});
+			.catch((e) => { console.error(e); hideMapLoading(); });
 	}
 
 	if ($btnSearchHere) {

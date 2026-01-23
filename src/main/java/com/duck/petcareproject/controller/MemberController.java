@@ -294,7 +294,19 @@ public class MemberController {
 		if (bindingResult.hasErrors()) {
 			return "member/memberJoinForm";
 		}
+		
+		// 비밀번호 정책
+		if (!member.isPasswordPolicyValid()) {
+			bindingResult.rejectValue("password", "pw.policy", "비밀번호는 영문/숫자/특수문자 중 2종류 이상을 포함해야 합니다.");
+			return "member/memberJoinForm";
+		}
 
+		// 이메일 정책(조합 검증)
+		if (!member.isEmailValid()) {
+			bindingResult.rejectValue("emailId", "email.invalid", "이메일 형식이 올바르지 않습니다.");
+			return "member/memberJoinForm";
+		}
+		
 		// 성별 빈값 방지
 		if (member.getGender() == null) member.setGender(Gender.U);
 
@@ -303,6 +315,9 @@ public class MemberController {
 			String email = member.getEmailId().trim() + "@" + member.getEmailDomain().trim();
 			member.setEmail(email);
 		}
+		
+		// 상세주소
+		member.setAddress2(sanitizeAddress2(member.getAddress2()));
 		
 		// 휴대폰
 		Boolean verified = (Boolean) session.getAttribute("SMS_VERIFIED");
@@ -338,7 +353,6 @@ public class MemberController {
 			return "member/memberJoinForm";
 		}
 		
-		
 		// 저장
 		try {
 			memberService.addMember(member);
@@ -362,6 +376,18 @@ public class MemberController {
 		}
 		
 		
+	}
+	
+	private String sanitizeAddress2(String s) {
+		if (s == null) return null;
+		
+		// 태그 제거
+		s = s.replaceAll("<[^>]*>", "");
+		
+		// 제어문자 제거
+		s = s.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		
+		return s.trim();
 	}
 
 }
